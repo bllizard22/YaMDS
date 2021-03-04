@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="stockCell" rowHeight="180" id="ODL-pW-kIb" customClass="StockTableViewCell" customModule="YaMDS" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="328" height="68"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ODL-pW-kIb" id="ihr-Rg-gFO">
+                <rect key="frame" x="0.0" y="0.0" width="328" height="68"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AAPL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9bH-wS-A0f">
+                        <rect key="frame" x="72" y="14" width="47" height="22"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Inc." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-mQ-rHe">
+                        <rect key="frame" x="72" y="39.5" width="58.5" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4WS-hv-fkC">
+                        <rect key="frame" x="8" y="8" width="52" height="52"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="4WS-hv-fkC" secondAttribute="height" multiplier="1:1" id="6WL-U5-kvY"/>
+                        </constraints>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98P-Pw-SjZ">
+                        <rect key="frame" x="125" y="15" width="22" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <state key="normal">
+                            <imageReference key="image" image="star.fill" catalog="system" symbolScale="medium" renderingMode="template"/>
+                        </state>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$126" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbd-Eu-E71">
+                        <rect key="frame" x="267.5" y="14" width="43.5" height="22"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+$ 0.30 (0,87%)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rKK-j2-nGR">
+                        <rect key="frame" x="221" y="39" width="95" height="15"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <color key="textColor" red="0.14117647058823529" green="0.69803921568627447" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="kbd-Eu-E71" firstAttribute="top" secondItem="ihr-Rg-gFO" secondAttribute="top" constant="14" id="9ph-H5-1vl"/>
+                    <constraint firstItem="9bH-wS-A0f" firstAttribute="leading" secondItem="4WS-hv-fkC" secondAttribute="trailing" constant="12" id="DVX-7j-ts4"/>
+                    <constraint firstItem="98P-Pw-SjZ" firstAttribute="leading" secondItem="9bH-wS-A0f" secondAttribute="trailing" constant="6" id="HCo-os-BOG"/>
+                    <constraint firstAttribute="bottom" secondItem="rKK-j2-nGR" secondAttribute="bottom" constant="14" id="IM0-Mq-kZo"/>
+                    <constraint firstItem="98P-Pw-SjZ" firstAttribute="centerY" secondItem="9bH-wS-A0f" secondAttribute="centerY" id="JJf-r6-pw1"/>
+                    <constraint firstAttribute="bottom" secondItem="Unh-mQ-rHe" secondAttribute="bottom" constant="14" id="MUe-lb-fOo"/>
+                    <constraint firstAttribute="trailing" secondItem="kbd-Eu-E71" secondAttribute="trailing" constant="17" id="j60-6I-v6i"/>
+                    <constraint firstAttribute="bottom" secondItem="4WS-hv-fkC" secondAttribute="bottom" constant="8" id="k1w-c1-1Pk"/>
+                    <constraint firstItem="9bH-wS-A0f" firstAttribute="top" secondItem="ihr-Rg-gFO" secondAttribute="top" constant="14" id="khC-Xb-ttT"/>
+                    <constraint firstAttribute="trailing" secondItem="rKK-j2-nGR" secondAttribute="trailing" constant="12" id="mjn-HO-7oX"/>
+                    <constraint firstItem="4WS-hv-fkC" firstAttribute="leading" secondItem="ihr-Rg-gFO" secondAttribute="leading" constant="8" id="mst-SE-PaK"/>
+                    <constraint firstItem="Unh-mQ-rHe" firstAttribute="leading" secondItem="4WS-hv-fkC" secondAttribute="trailing" constant="12" id="r8X-bh-PX2"/>
+                    <constraint firstItem="4WS-hv-fkC" firstAttribute="top" secondItem="ihr-Rg-gFO" secondAttribute="top" constant="8" id="uBG-Fr-kbc"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="companyLabel" destination="Unh-mQ-rHe" id="Tw9-Dx-BKj"/>
+                <outlet property="favouriteButton" destination="98P-Pw-SjZ" id="VgX-KE-axk"/>
+                <outlet property="logoImage" destination="4WS-hv-fkC" id="GLz-aM-AWD"/>
+                <outlet property="priceChangeLabel" destination="rKK-j2-nGR" id="AAH-CZ-pta"/>
+                <outlet property="priceLabel" destination="kbd-Eu-E71" id="O5w-Xu-vuf"/>
+                <outlet property="tickerLabel" destination="9bH-wS-A0f" id="4KQ-pT-TDh"/>
+            </connections>
+            <point key="canvasLocation" x="144.92753623188406" y="44.196428571428569"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
+    </resources>
+</document>

@@ -14,6 +14,11 @@
 		85A163CD25EF495F00600654 /* YaMDS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 85A163CB25EF495F00600654 /* YaMDS.xcdatamodeld */; };
 		85A163CF25EF496200600654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85A163CE25EF496200600654 /* Assets.xcassets */; };
 		85A163D225EF496200600654 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85A163D025EF496200600654 /* LaunchScreen.storyboard */; };
+		85A163DC25F09CA700600654 /* StockCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85A163DB25F09CA700600654 /* StockCell.xib */; };
+		85A163E125F0A0F900600654 /* StockTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163E025F0A0F900600654 /* StockTableView.swift */; };
+		85A163E425F0A1B500600654 /* StockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163E325F0A1B500600654 /* StockTableViewCell.swift */; };
+		85A163EC25F0A2EB00600654 /* StockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163EB25F0A2EB00600654 /* StockData.swift */; };
+		85B58D5F25F0AC9900206828 /* StockList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B58D5E25F0AC9900206828 /* StockList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +31,11 @@
 		85A163CE25EF496200600654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85A163D125EF496200600654 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		85A163D325EF496200600654 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85A163DB25F09CA700600654 /* StockCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StockCell.xib; sourceTree = "<group>"; };
+		85A163E025F0A0F900600654 /* StockTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableView.swift; sourceTree = "<group>"; };
+		85A163E325F0A1B500600654 /* StockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableViewCell.swift; sourceTree = "<group>"; };
+		85A163EB25F0A2EB00600654 /* StockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockData.swift; sourceTree = "<group>"; };
+		85B58D5E25F0AC9900206828 /* StockList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,16 +68,53 @@
 		85A163C125EF495F00600654 /* YaMDS */ = {
 			isa = PBXGroup;
 			children = (
-				85A163C225EF495F00600654 /* AppDelegate.swift */,
-				85A163C425EF495F00600654 /* SceneDelegate.swift */,
-				85A163C625EF495F00600654 /* ViewController.swift */,
-				85A163C825EF495F00600654 /* Main.storyboard */,
-				85A163CE25EF496200600654 /* Assets.xcassets */,
-				85A163D025EF496200600654 /* LaunchScreen.storyboard */,
+				85A163E725F0A1E300600654 /* Model */,
+				85A163DE25F09CB500600654 /* View */,
+				85A163E625F0A1DA00600654 /* Controllers */,
+				85A163E925F0A20300600654 /* Supporting Files */,
 				85A163D325EF496200600654 /* Info.plist */,
 				85A163CB25EF495F00600654 /* YaMDS.xcdatamodeld */,
 			);
 			path = YaMDS;
+			sourceTree = "<group>";
+		};
+		85A163DE25F09CB500600654 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				85A163DB25F09CA700600654 /* StockCell.xib */,
+				85A163E025F0A0F900600654 /* StockTableView.swift */,
+				85A163E325F0A1B500600654 /* StockTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		85A163E625F0A1DA00600654 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				85A163C625EF495F00600654 /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		85A163E725F0A1E300600654 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				85A163EB25F0A2EB00600654 /* StockData.swift */,
+				85B58D5E25F0AC9900206828 /* StockList.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		85A163E925F0A20300600654 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				85A163C225EF495F00600654 /* AppDelegate.swift */,
+				85A163C425EF495F00600654 /* SceneDelegate.swift */,
+				85A163C825EF495F00600654 /* Main.storyboard */,
+				85A163CE25EF496200600654 /* Assets.xcassets */,
+				85A163D025EF496200600654 /* LaunchScreen.storyboard */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,6 +176,7 @@
 			files = (
 				85A163D225EF496200600654 /* LaunchScreen.storyboard in Resources */,
 				85A163CF25EF496200600654 /* Assets.xcassets in Resources */,
+				85A163DC25F09CA700600654 /* StockCell.xib in Resources */,
 				85A163CA25EF495F00600654 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,7 +190,11 @@
 			files = (
 				85A163CD25EF495F00600654 /* YaMDS.xcdatamodeld in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
+				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
+				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
+				85A163EC25F0A2EB00600654 /* StockData.swift in Sources */,
 				85A163C325EF495F00600654 /* AppDelegate.swift in Sources */,
+				85A163E425F0A1B500600654 /* StockTableViewCell.swift in Sources */,
 				85A163C525EF495F00600654 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
