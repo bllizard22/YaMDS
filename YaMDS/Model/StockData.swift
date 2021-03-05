@@ -26,9 +26,11 @@ class StockData {
 //                print(data_1)
                 self.dadta.append(data_1)
 //                print(self.dadta.count)
+                let stockData = StockData()
+                stockData.dadta.append(data_1)
+//                print(data_1)
             }
         }
-//        print(dadta.count)
         
     }
     
@@ -64,9 +66,6 @@ class StockData {
 //                    print(json["currency"]!)
 //                    print(json["logo"]!)
                     completion(data!)
-//                    print(type(of: json["logo"]!))
-//                    jsonData = ["": ]
-//                    jsonData = data!
                 } catch let error {
                     print(error)
                 }
