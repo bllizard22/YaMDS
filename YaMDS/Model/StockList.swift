@@ -9,4 +9,7 @@ import Foundation
 
 struct StockList {
     let stockList = ["AAPL", "TSLA", "YNDX", "GOOGL", "MSFT", "AMZN"]
+    
+    var stockListData = ["": ["": ""]]
+    
 }

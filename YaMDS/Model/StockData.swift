@@ -14,8 +14,27 @@ class StockData {
     ]
     let session = URLSession.shared
     
-    func getStockInfo(stockSymbol symbol: String) {
+    var dadta = [Data()]
         
+    func getStockList(){
+//        var dadta: Data
+        
+        let stockList = StockList()
+        for company in stockList.stockList {
+//            let price = getPrice(stockSymbol: company)
+            getStockInfo(stockSymbol: company) { (data_1) in
+//                print(data_1)
+                self.dadta.append(data_1)
+//                print(self.dadta.count)
+            }
+        }
+//        print(dadta.count)
+        
+    }
+    
+    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
+        
+//        var jsonData: Data
         let request = NSMutableURLRequest(
             //            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/?symbol=AAPL,FB")! as URL,
             url: NSURL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(symbol)")! as URL,
@@ -33,18 +52,21 @@ class StockData {
                 let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
                 do {
+//                    print(type(of: data!))
                     let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
                     //                    print("JSON size \(json.count)")
-                    print(json)
-                    //                    for stock in json {
-                    ////                        print(json[0])
-                    print(json["name"]!)
-                    print(json["ticker"]!)
-                    print(json["finnhubIndustry"]!)
-                    print(json["currency"]!)
-                    print(json["logo"]!)
-                    //                        print(type(of: json))
-                    //                    }
+//                    print(type(of: json))
+////                    print(json)
+//                    print(json["name"]!)
+////                    print(type(of: json["name"]!))
+//                    print(json["ticker"]!)
+//                    print(json["finnhubIndustry"]!)
+//                    print(json["currency"]!)
+//                    print(json["logo"]!)
+                    completion(data!)
+//                    print(type(of: json["logo"]!))
+//                    jsonData = ["": ]
+//                    jsonData = data!
                 } catch let error {
                     print(error)
                 }
