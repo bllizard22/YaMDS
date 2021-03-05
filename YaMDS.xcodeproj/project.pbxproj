@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
 		85A163C325EF495F00600654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C225EF495F00600654 /* AppDelegate.swift */; };
 		85A163C525EF495F00600654 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C425EF495F00600654 /* SceneDelegate.swift */; };
 		85A163C725EF495F00600654 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C625EF495F00600654 /* ViewController.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
 		85A163BF25EF495F00600654 /* YaMDS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaMDS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A163C225EF495F00600654 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85A163C425EF495F00600654 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			children = (
 				85A163EB25F0A2EB00600654 /* StockData.swift */,
 				85B58D5E25F0AC9900206828 /* StockList.swift */,
+				855A459225F29A68006DD798 /* StockCardData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85A163CD25EF495F00600654 /* YaMDS.xcdatamodeld in Sources */,
+				855A459325F29A68006DD798 /* StockCardData.swift in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,

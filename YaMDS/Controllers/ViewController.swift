@@ -18,50 +18,61 @@ struct quoteData: Decodable {
 class ViewController: UIViewController {
 
     var stockTableView: UITableView!
-    var dataGet = [Data()]
+    var dataGet = Array<Data>()
+    var stockCards = Array<StockTableCard>()
     var jsonName = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+
+        loadAllStocksData()
         
-        let stockData = StockData()
-//        stockData.getStockList()
-        stockData.getStockInfo(stockSymbol: "AAPL")
-        stockData.getStockInfo(stockSymbol: "TSLA")
-        stockData.getStockInfo(stockSymbol: "YNDX")
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) { [self] in [self]
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+            if dataGet[0].count == 0 {
+                dataGet.removeFirst()
+            }
             self.loadStocksInView()
+            
+            parseStocksDataToJSON()
         }
-        
-//        let stockData = StockData()
-//        print(dataGet)
-//        print("Here!\(stockData.dadta)")
-//
-//        stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
-//                                                   width: view.bounds.width, height: view.bounds.height-200))
-//        stockTableView.rowHeight = 68
-//        stockTableView.separatorStyle = .none
-//        stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
-//        stockTableView.dataSource = self
-//        stockTableView.delegate = self
-//
-//        view.addSubview(stockTableView)
-        
+    }
+    
+    func loadAllStocksData() {
+        let stockData = StockData()
+        for company in StockList().stockList {
+            stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
+                self.dataGet.append(dataIn)
+            }
+        }
+    }
+    
+    func parseStocksDataToJSON () {
+        print(dataGet.count)
+        var json: [String: Any]
+        for data in dataGet {
+            do {
+                let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                json = _json
+                // TODO: - Set price and logo URL
+                let card = StockTableCard(name: json["name"] as! String,
+                                          logo: json["logo"] as! String,
+                                          ticker: json["ticker"] as! String,
+                                          currentPrice: 1.2,
+                                          previousClosePrice: 1.3,
+                                          isFavourite: false)
+                stockCards.append(card)
+            } catch let error {
+                print(error)
+            }
+        }
+        stockCards.sort(by: { $0.ticker < $1.ticker })
     }
     
     func loadStocksInView() {
-        let stockData = StockData()
-        print(stockData.dadta.count)
-        dataGet = stockData.dadta
-        
-        print(dataGet)
-        print("Here!\(stockData.dadta)")
         
         stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
                                                    width: view.bounds.width, height: view.bounds.height-200))
-        stockTableView.rowHeight = 68
+        stockTableView.rowHeight = 86
         stockTableView.separatorStyle = .none
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
@@ -81,14 +92,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-        do {
-            print("in tabledelegate \(dataGet.count)")
-            let json = try JSONSerialization.jsonObject(with: dataGet[indexPath.row], options: .allowFragments) as! [String: Any]
-            self.jsonName = json["name"] as! String
-        } catch let error {
-            print(error)
-        }
-        cell.companyLabel.text = jsonName
+        cell.companyLabel.text = stockCards[indexPath.row].name
+        cell.tickerLabel.text = stockCards[indexPath.row].ticker
+        cell.priceLabel.text = "$" + String(stockCards[indexPath.row].currentPrice)
+        // TODO: -  insert setting of logo via Kingfisher
         
         return cell
     }

@@ -37,8 +37,9 @@
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98P-Pw-SjZ">
                         <rect key="frame" x="125" y="15" width="22" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="tintColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <state key="normal">
-                            <imageReference key="image" image="star.fill" catalog="system" symbolScale="medium" renderingMode="template"/>
+                            <imageReference key="image" image="star" catalog="system" symbolScale="medium" renderingMode="template"/>
                         </state>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$126" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbd-Eu-E71">
@@ -82,6 +83,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="star.fill" catalog="system" width="128" height="116"/>
+        <image name="star" catalog="system" width="128" height="116"/>
     </resources>
 </document>

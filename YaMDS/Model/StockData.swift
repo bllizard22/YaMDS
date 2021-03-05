@@ -16,18 +16,21 @@ class StockData {
     
     var dadta = [Data()]
     
-    func getStockList(){
+    func getStockList(completion: @escaping ([Data]) -> ()) {
         
-        let stockList = StockList()
-        for company in stockList.stockList {
-            getStockInfo(stockSymbol: company)
-            print(dadta.count)
+        //
+        for company in StockList().stockList {
+            getStockInfo(stockSymbol: company) { (dataIn) -> () in
+                self.dadta.append(dataIn)
+                print(self.dadta.count)
+            }
         }
-        print("get \(dadta.count) elements")
+//        print("get \(dadta.count) elements")
         dadta.removeFirst()
+        completion(dadta)
     }
     
-    func getStockInfo(stockSymbol symbol: String) {
+    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
         
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(symbol)")! as URL,
@@ -38,25 +41,26 @@ class StockData {
         
         let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
             
-            DispatchQueue.global(qos: .background).async {
+//            DispatchQueue.global(qos: .background).async {
                 
                 if (error != nil) {
                     print(error!)
                 } else {
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                            as! [String: Any]
+//                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+//                            as! [String: Any]
                         
-                        DispatchQueue.main.async {
-                            self.dadta.append(data!)
-                            print("append")
-                        }
+                        completion(data!)
+//                        DispatchQueue.main.async {
+//                            self.dadta.append(data!)
+//                            print("append")
+//                        }
 
                     } catch let error {
                         print(error)
                     }
                 }
-            }
+//            }
         }
         )
         dataTask.resume()
