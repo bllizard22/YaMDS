@@ -18,38 +18,45 @@ struct quoteData: Decodable {
 class ViewController: UIViewController {
 
     var stockTableView: UITableView!
-    var dataGet = Data()
+    var dataGet = [Data()]
     var jsonName = ""
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        print(dataGet)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        let stockData = StockData()
-//        stockData.getPrice(stockSymbol: "AAPL")
-//        stockData.getStockInfo(stockSymbol: "AAPL")
         
+        let stockData = StockData()
 //        stockData.getStockList()
-//        for company in StockList().stockList {
-//            stockData.getStockInfo(stockSymbol: company) { (data_1) in
-//    //                print(data_1)
-//                self.dataGet = data_1
-//                print(data_1)
-//    //                print(self.dadta.count)
-//            }
-//        }
-        stockData.getStockInfo(stockSymbol: "TSLA") { (outputData) in
-            self.dataGet = outputData
+        stockData.getStockInfo(stockSymbol: "AAPL")
+        stockData.getStockInfo(stockSymbol: "TSLA")
+        stockData.getStockInfo(stockSymbol: "YNDX")
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) { [self] in [self]
+            self.loadStocksInView()
         }
         
-        print(dataGet.count)
+//        let stockData = StockData()
+//        print(dataGet)
+//        print("Here!\(stockData.dadta)")
+//
+//        stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
+//                                                   width: view.bounds.width, height: view.bounds.height-200))
+//        stockTableView.rowHeight = 68
+//        stockTableView.separatorStyle = .none
+//        stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
+//        stockTableView.dataSource = self
+//        stockTableView.delegate = self
+//
+//        view.addSubview(stockTableView)
+        
+    }
+    
+    func loadStocksInView() {
+        let stockData = StockData()
+        print(stockData.dadta.count)
+        dataGet = stockData.dadta
+        
         print(dataGet)
-        stockData.getStockList()
         print("Here!\(stockData.dadta)")
         
         stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
@@ -74,20 +81,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-//        print(indexPath.row)
         do {
-//                    print(type(of: data!))
-            let json = try JSONSerialization.jsonObject(with: dataGet, options: .allowFragments) as! [String: Any]
+            print("in tabledelegate \(dataGet.count)")
+            let json = try JSONSerialization.jsonObject(with: dataGet[indexPath.row], options: .allowFragments) as! [String: Any]
             self.jsonName = json["name"] as! String
-            //                    print("JSON size \(json.count)")
-//                    print(type(of: json))
-////                    print(json)
-//                    print(json["name"]!)
-////                    print(type(of: json["name"]!))
-//                    print(json["ticker"]!)
-//                    print(json["finnhubIndustry"]!)
-//                    print(json["currency"]!)
-//                    print(json["logo"]!)
         } catch let error {
             print(error)
         }

@@ -15,63 +15,50 @@ class StockData {
     let session = URLSession.shared
     
     var dadta = [Data()]
-        
+    
     func getStockList(){
-//        var dadta: Data
         
         let stockList = StockList()
         for company in stockList.stockList {
-//            let price = getPrice(stockSymbol: company)
-            getStockInfo(stockSymbol: company) { (data_1) in
-//                print(data_1)
-                self.dadta.append(data_1)
-//                print(self.dadta.count)
-                let stockData = StockData()
-                stockData.dadta.append(data_1)
-//                print(data_1)
-            }
+            getStockInfo(stockSymbol: company)
+            print(dadta.count)
         }
-        
+        print("get \(dadta.count) elements")
+        dadta.removeFirst()
     }
     
-    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
+    func getStockInfo(stockSymbol symbol: String) {
         
-//        var jsonData: Data
         let request = NSMutableURLRequest(
-            //            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/?symbol=AAPL,FB")! as URL,
             url: NSURL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(symbol)")! as URL,
             cachePolicy: .useProtocolCachePolicy,
             timeoutInterval: 10.0)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            if (error != nil) {
-                print(error)
-            } else {
-                let httpResponse = response as? HTTPURLResponse
-                //        print(httpResponse)
-                let dataString = String(data: data!, encoding: .utf8)!
-                //                print(dataString.count)
-                do {
-//                    print(type(of: data!))
-                    let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
-                    //                    print("JSON size \(json.count)")
-//                    print(type(of: json))
-////                    print(json)
-//                    print(json["name"]!)
-////                    print(type(of: json["name"]!))
-//                    print(json["ticker"]!)
-//                    print(json["finnhubIndustry"]!)
-//                    print(json["currency"]!)
-//                    print(json["logo"]!)
-                    completion(data!)
-                } catch let error {
-                    print(error)
-                }
+        let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
+            
+            DispatchQueue.global(qos: .background).async {
                 
+                if (error != nil) {
+                    print(error!)
+                } else {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+                            as! [String: Any]
+                        
+                        DispatchQueue.main.async {
+                            self.dadta.append(data!)
+                            print("append")
+                        }
+
+                    } catch let error {
+                        print(error)
+                    }
+                }
             }
-        })
+        }
+        )
         dataTask.resume()
     }
     
@@ -88,11 +75,11 @@ class StockData {
         //        let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             if (error != nil) {
-                print(error)
+                print(error!)
             } else {
-                let httpResponse = response as? HTTPURLResponse
+//                let httpResponse = response as? HTTPURLResponse
                 //        print(httpResponse)
-                let dataString = String(data: data!, encoding: .utf8)!
+//                let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
@@ -134,11 +121,11 @@ class StockData {
         
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             if (error != nil) {
-                print(error)
+                print(error!)
             } else {
-                let httpResponse = response as? HTTPURLResponse
+//                let httpResponse = response as? HTTPURLResponse
                 //        print(httpResponse)
-                let dataString = String(data: data!, encoding: .utf8)!
+//                let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
@@ -148,7 +135,7 @@ class StockData {
                     //                    print(type(of: json["metric"]!["peNormalizedAnnual"]))
                     let metric = json["metric"] as! Dictionary<String,Any>
                     print(metric)
-                    print(metric["peNormalizedAnnual"])
+                    print(metric["peNormalizedAnnual"]!)
                     
                 } catch let error {
                     print(error)
