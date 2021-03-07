@@ -21,6 +21,13 @@ struct StockTableCard {
     
 }
 
+extension StockTableCard: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.name)
+        hasher.combine(self.ticker)
+    }
+}
+
 // MARK: -API Requests (Finnhub)
 
 /*

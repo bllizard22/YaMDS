@@ -18,9 +18,12 @@ struct quoteData: Decodable {
 class ViewController: UIViewController {
 
     var stockTableView: UITableView!
-    var dataGet = Array<Data>()
-    var stockCards = Array<StockTableCard>()
+    var dataStockInfo = Array<Data>()
+    var dataStockPrice = Array<(String, Data)>()
+//    var stockCards = Array<StockTableCard>()
+    var stockCards = Dictionary<String, StockTableCard>()
     var jsonName = ""
+    var stockList = StockList().stockList
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +31,8 @@ class ViewController: UIViewController {
         loadAllStocksData()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-            if dataGet[0].count == 0 {
-                dataGet.removeFirst()
+            if dataStockInfo[0].count == 0 {
+                dataStockInfo.removeFirst()
             }
             self.loadStocksInView()
             
@@ -39,17 +42,21 @@ class ViewController: UIViewController {
     
     func loadAllStocksData() {
         let stockData = StockData()
-        for company in StockList().stockList {
+        for company in stockList {
             stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
-                self.dataGet.append(dataIn)
+                self.dataStockInfo.append(dataIn)
+            }
+            
+            stockData.getPrice(stockSymbol: company) { (company, dataIn) in
+                self.dataStockPrice.append((company, dataIn))
             }
         }
     }
     
     func parseStocksDataToJSON () {
-        print(dataGet.count)
+        print(dataStockInfo.count)
         var json: [String: Any]
-        for data in dataGet {
+        for data in dataStockInfo {
             do {
                 let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 json = _json
@@ -57,15 +64,27 @@ class ViewController: UIViewController {
                 let card = StockTableCard(name: json["name"] as! String,
                                           logo: json["logo"] as! String,
                                           ticker: json["ticker"] as! String,
-                                          currentPrice: 1.2,
-                                          previousClosePrice: 1.3,
+                                          currentPrice: 0.0,
+                                          previousClosePrice: 0.0,
                                           isFavourite: false)
-                stockCards.append(card)
+                stockCards[card.ticker] = card
             } catch let error {
                 print(error)
             }
         }
-        stockCards.sort(by: { $0.ticker < $1.ticker })
+        print("stockCards:", stockCards)
+        for (key, data) in dataStockPrice {
+//            print(data)
+            do {
+                let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                print(key, _json)
+                stockCards[key]?.currentPrice = Float(_json["c"] as! NSNumber)
+                stockCards[key]?.previousClosePrice = Float(_json["pc"] as! NSNumber)
+            } catch let error {
+                print(error)
+            }
+        }
+//        stockCards.values.sort(by: { $0.ticker < $1.ticker })
     }
     
     func loadStocksInView() {
@@ -92,9 +111,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-        cell.companyLabel.text = stockCards[indexPath.row].name
-        cell.tickerLabel.text = stockCards[indexPath.row].ticker
-        cell.priceLabel.text = "$" + String(stockCards[indexPath.row].currentPrice)
+        let key = stockList[indexPath.row]
+        cell.companyLabel.text = stockCards[key]!.name
+        cell.tickerLabel.text = stockCards[key]!.ticker
+        cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
+        cell.priceChangeLabel.text = StockData().calcPriceChange(card: stockCards[key]!)
         // TODO: -  insert setting of logo via Kingfisher
         
         return cell
