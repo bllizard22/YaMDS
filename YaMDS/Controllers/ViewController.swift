@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     var stockCards = Dictionary<String, StockTableCard>()
     var jsonName = ""
     var stockList = StockList().stockList
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 

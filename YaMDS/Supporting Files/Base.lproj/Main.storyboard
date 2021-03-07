@@ -30,9 +30,13 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
-                            <searchBar contentMode="redraw" placeholder="Find company or ticker" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-vf-ZVB">
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Find company or ticker" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-vf-ZVB">
                                 <rect key="frame" x="16" y="60" width="382" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
                             </searchBar>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="yxN-qF-T2L">
                                 <rect key="frame" x="20" y="136" width="223" height="32"/>
