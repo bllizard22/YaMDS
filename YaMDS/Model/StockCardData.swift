@@ -10,7 +10,7 @@ import Foundation
 struct StockTableCard {
     // Data from Company Profile 2 request
     let name: String
-    let logo: String
+    let logo: URL
     let ticker: String
     
     // Data from request

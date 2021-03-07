@@ -11,6 +11,7 @@ class StockData {
     
     let headers = [
         "X-Finnhub-Token": "c0vhf5748v6pqdk9hmq0"
+//        "X-Finnhub-Token": "sandbox_c0vhf5748v6pqdk9hmqg"
     ]
     let session = URLSession.shared
     
@@ -49,7 +50,6 @@ class StockData {
                     do {
 //                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
 //                            as! [String: Any]
-                        
                         completion(data!)
 //                        DispatchQueue.main.async {
 //                            self.dadta.append(data!)

@@ -7,6 +7,7 @@
 
 import UIKit
 import Foundation
+import Kingfisher
 
 struct quoteData: Decodable {
     let ask: Int
@@ -61,8 +62,13 @@ class ViewController: UIViewController {
                 let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 json = _json
                 // TODO: - Set price and logo URL
+                var stringLogoURL = json["logo"] as? String
+                if stringLogoURL == "" {
+                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
+                }
+                print(stringLogoURL)
                 let card = StockTableCard(name: json["name"] as! String,
-                                          logo: json["logo"] as! String,
+                                          logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
                                           currentPrice: 0.0,
                                           previousClosePrice: 0.0,
@@ -117,6 +123,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
         cell.priceChangeLabel.text = StockData().calcPriceChange(card: stockCards[key]!)
         // TODO: -  insert setting of logo via Kingfisher
+        let resource = ImageResource(downloadURL: stockCards[key]!.logo)
+        cell.logoImage.kf.setImage(with: resource) { (result) in
+            switch result {
+            case .success(_):
+//                    self?.checkLike()
+                break
+            case .failure(_):
+                print("fail")
+            }
+        }
         
         return cell
     }

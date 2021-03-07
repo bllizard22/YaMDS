@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 854FAE7725F4C351006B3122 /* Kingfisher */; };
 		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
 		85A163C325EF495F00600654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C225EF495F00600654 /* AppDelegate.swift */; };
 		85A163C525EF495F00600654 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C425EF495F00600654 /* SceneDelegate.swift */; };
@@ -45,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +138,9 @@
 			dependencies = (
 			);
 			name = YaMDS;
+			packageProductDependencies = (
+				854FAE7725F4C351006B3122 /* Kingfisher */,
+			);
 			productName = YaMDS;
 			productReference = 85A163BF25EF495F00600654 /* YaMDS.app */;
 			productType = "com.apple.product-type.application";
@@ -163,6 +168,9 @@
 				Base,
 			);
 			mainGroup = 85A163B625EF495F00600654;
+			packageReferences = (
+				854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 85A163C025EF495F00600654 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -403,6 +411,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		854FAE7725F4C351006B3122 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		85A163CB25EF495F00600654 /* YaMDS.xcdatamodeld */ = {
