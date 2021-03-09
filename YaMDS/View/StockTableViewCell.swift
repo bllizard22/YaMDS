@@ -19,7 +19,7 @@ class StockTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        logoImage.layer.cornerRadius = 10
+        logoImage.layer.cornerRadius = 12
         companyLabel.font = companyLabel.font.withSize(14)
         
     }

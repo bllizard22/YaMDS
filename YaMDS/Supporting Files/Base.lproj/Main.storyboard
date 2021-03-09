@@ -7,6 +7,11 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -19,11 +24,11 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yRr-7M-rDD" customClass="StockTableView" customModule="YaMDS" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="196" width="414" height="666"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="68" id="6aQ-Gz-wbi" customClass="StockTableViewCell" customModule="YaMDS" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="68"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="96" id="6aQ-Gz-wbi" customClass="StockTableViewCell" customModule="YaMDS" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="96"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6aQ-Gz-wbi" id="zaW-9p-sgD">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="68"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="96"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -38,15 +43,15 @@
                                     <string>Title</string>
                                 </scopeButtonTitles>
                             </searchBar>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="yxN-qF-T2L">
-                                <rect key="frame" x="20" y="136" width="258" height="40"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxN-qF-T2L">
+                                <rect key="frame" x="20" y="136" width="280" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UO2-Wn-gw5">
-                                        <rect key="frame" x="0.0" y="0.0" width="98" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="98" id="y75-SX-zVK"/>
+                                            <constraint firstAttribute="width" constant="120" id="y75-SX-zVK"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="32"/>
                                         <state key="normal" title="Stocks">
                                             <color key="titleColor" systemColor="labelColor"/>
                                         </state>
@@ -55,11 +60,11 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MuA-1i-pBF">
-                                        <rect key="frame" x="118" y="0.0" width="140" height="40"/>
+                                        <rect key="frame" x="120" y="0.0" width="160" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="140" id="cwv-PA-eZY"/>
+                                            <constraint firstAttribute="width" constant="160" id="cwv-PA-eZY"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="20"/>
                                         <state key="normal" title="Favourite">
                                             <color key="titleColor" systemColor="systemGray2Color"/>
                                         </state>

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01D53E4425F7AF410061BF91 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01D53E4225F7AF400061BF91 /* Montserrat-SemiBold.ttf */; };
+		01D53E4525F7AF410061BF91 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */; };
 		854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 854FAE7725F4C351006B3122 /* Kingfisher */; };
 		854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */; };
 		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01D53E4225F7AF400061BF91 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
+		01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
 		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
 		85A163BF25EF495F00600654 /* YaMDS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaMDS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +120,8 @@
 		85A163E925F0A20300600654 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */,
+				01D53E4225F7AF400061BF91 /* Montserrat-SemiBold.ttf */,
 				85A163C225EF495F00600654 /* AppDelegate.swift */,
 				85A163C425EF495F00600654 /* SceneDelegate.swift */,
 				85A163C825EF495F00600654 /* Main.storyboard */,
@@ -190,8 +196,10 @@
 			files = (
 				85A163D225EF496200600654 /* LaunchScreen.storyboard in Resources */,
 				85A163CF25EF496200600654 /* Assets.xcassets in Resources */,
+				01D53E4525F7AF410061BF91 /* Montserrat-Bold.ttf in Resources */,
 				85A163DC25F09CA700600654 /* StockCell.xib in Resources */,
 				85A163CA25EF495F00600654 /* Main.storyboard in Resources */,
+				01D53E4425F7AF410061BF91 /* Montserrat-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

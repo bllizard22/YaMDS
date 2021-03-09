@@ -56,9 +56,9 @@ class ViewController: UIViewController {
     
     func loadStocksInView() {
         
-        stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
-                                                   width: view.bounds.width, height: view.bounds.height-200))
-        stockTableView.rowHeight = 86
+        stockTableView = UITableView(frame: CGRect(x: 12, y: 200,
+                                                   width: view.bounds.width-12*2, height: view.bounds.height-200))
+        stockTableView.rowHeight = 96
         stockTableView.separatorStyle = .none
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
         stockCardsList = StockList().stockList
         
-        favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(24)
+        favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
         favouriteButton.setTitleColor(.systemGray2, for: .normal)
         
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
@@ -109,7 +109,7 @@ class ViewController: UIViewController {
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
         favouriteButton.setTitleColor(.black, for: .normal)
         
-        stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(24)
+        stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(20)
         stocksButton.setTitleColor(.systemGray2, for: .normal)
 
         favouriteIsSelected = true
@@ -204,6 +204,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 print("fail")
             }
         }
+        
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor(named: "AccentColor")
+        }
+        cell.layer.cornerRadius = 16
         
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
