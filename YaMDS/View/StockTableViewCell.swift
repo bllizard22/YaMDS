@@ -20,6 +20,7 @@ class StockTableViewCell: UITableViewCell {
         super.awakeFromNib()
         
         logoImage.layer.cornerRadius = 10
+        companyLabel.font = companyLabel.font.withSize(14)
         
     }
 

@@ -41,6 +41,9 @@
                         <state key="normal">
                             <imageReference key="image" image="star" catalog="system" symbolScale="medium" renderingMode="template"/>
                         </state>
+                        <connections>
+                            <action selector="likeButtonDidPressed:" destination="-1" eventType="touchUpInside" id="noD-T7-8h1"/>
+                        </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$126" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbd-Eu-E71">
                         <rect key="frame" x="267.5" y="14" width="43.5" height="22"/>

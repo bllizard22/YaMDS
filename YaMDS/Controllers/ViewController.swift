@@ -7,6 +7,7 @@
 
 import UIKit
 import Foundation
+import CoreData
 import Kingfisher
 
 struct quoteData: Decodable {
@@ -25,6 +26,9 @@ class ViewController: UIViewController {
     var stockCards = Dictionary<String, StockTableCard>()
     var jsonName = ""
     var stockList = StockList().stockList
+    
+//    var likedStocksList = [String]()
+    var favourites = Favourites()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,6 +110,22 @@ class ViewController: UIViewController {
         view.addSubview(stockTableView)
     }
     
+    @IBAction func likeButtonDidPressed(_ sender: UIButton) {
+        let key = stockList[sender.tag]
+        let cardIsFav = stockCards[key]!.isFavourite
+        if cardIsFav {
+            sender.setImage(UIImage(systemName: "star"), for: .normal)
+            favourites.deleteString(withTicker: key)
+            stockCards[key]!.isFavourite = false
+            print("\(key) did disliked")
+        } else {
+            sender.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            favourites.saveString(withTicker: key)
+            stockCards[key]!.isFavourite = true
+            print("\(key) did liked")
+        }
+    }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -133,6 +153,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 print("fail")
             }
         }
+        
+        if favourites.stockList.first(where: {$0.ticker == key}) != nil {
+            cell.favouriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            stockCards[key]!.isFavourite = true
+            print("\(key) is liked")
+        } else {
+            cell.favouriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+            stockCards[key]!.isFavourite = false
+            print("\(key) is not liked")
+        }
+        cell.favouriteButton.tag = indexPath.row
         
         return cell
     }
