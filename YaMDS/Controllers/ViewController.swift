@@ -10,29 +10,37 @@ import Foundation
 import CoreData
 import Kingfisher
 
-struct quoteData: Decodable {
-    let ask: Int
-//    let symbol: String
-//    let shortName: String
-//    let postMarketPrice: Int
-}
+//struct quoteData: Decodable {
+//    let ask: Int
+////    let symbol: String
+////    let shortName: String
+////    let postMarketPrice: Int
+//}
 
 class ViewController: UIViewController {
-
+    
     var stockTableView: UITableView!
+    
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
-//    var stockCards = Array<StockTableCard>()
     var stockCards = Dictionary<String, StockTableCard>()
-    var jsonName = ""
-    var stockList = StockList().stockList
     
-    //    var likedStocksList = [String]()
+    var stockList = StockList().stockList
+    var stockCardsList = Array<String>()
+//    var likedStockCards = Array<String>()
+    
+    var jsonName = ""
+    
+    
+    //    @IBOutlet weak var tableV: StockTableView!
+    @IBOutlet weak var stocksButton: UIButton!
+    @IBOutlet weak var favouriteButton: UIButton!
+    
     var favourites = Favourites()
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         loadAllStocksData()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
@@ -44,6 +52,63 @@ class ViewController: UIViewController {
             parseStocksDataToJSON()
         }
     }
+    
+    func loadStocksInView() {
+        
+        stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
+                                                   width: view.bounds.width, height: view.bounds.height-200))
+        stockTableView.rowHeight = 86
+        stockTableView.separatorStyle = .none
+        stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
+        stockTableView.dataSource = self
+        stockTableView.delegate = self
+        
+        view.addSubview(stockTableView)
+    }
+    
+    // MARK: - IBActions
+    
+    @IBAction func likeButtonDidPressed(_ sender: UIButton) {
+        let key = stockList[sender.tag]
+        let cardIsFav = stockCards[key]!.isFavourite
+        if cardIsFav {
+            sender.setImage(UIImage(systemName: "star"), for: .normal)
+            favourites.deleteTicker(withTicker: key)
+            stockCards[key]!.isFavourite = false
+            print("\(key) did disliked")
+        } else {
+            sender.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            favourites.saveTicker(withTicker: key)
+            stockCards[key]!.isFavourite = true
+            print("\(key) did liked")
+        }
+    }
+    
+    @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
+        stockCardsList = StockList().stockList
+        
+        favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(24)
+        favouriteButton.setTitleColor(.systemGray2, for: .normal)
+        
+        stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
+        stocksButton.setTitleColor(.black, for: .normal)
+        
+        stockTableView.reloadData()
+    }
+    
+    @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
+        stockCardsList = favourites.likedList()
+        
+        favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
+        favouriteButton.setTitleColor(.black, for: .normal)
+        
+        stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(24)
+        stocksButton.setTitleColor(.systemGray2, for: .normal)
+
+        stockTableView.reloadData()
+    }
+    
+    // MARK: - API load funcs
     
     func loadAllStocksData() {
         let stockData = StockData()
@@ -78,13 +143,13 @@ class ViewController: UIViewController {
                                           previousClosePrice: 0.0,
                                           isFavourite: false)
                 stockCards[card.ticker] = card
+                stockCardsList.append(card.ticker)
             } catch let error {
                 print(error)
             }
         }
         print("stockCards:", stockCards)
         for (key, data) in dataStockPrice {
-//            print(data)
             do {
                 let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 print(key, _json)
@@ -94,68 +159,41 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
-//        stockCards.values.sort(by: { $0.ticker < $1.ticker })
-    }
-    
-    func loadStocksInView() {
-        
-        stockTableView = UITableView(frame: CGRect(x: 0, y: 200,
-                                                   width: view.bounds.width, height: view.bounds.height-200))
-        stockTableView.rowHeight = 86
-        stockTableView.separatorStyle = .none
-        stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
-        stockTableView.dataSource = self
-        stockTableView.delegate = self
-        
-        view.addSubview(stockTableView)
-//        tableV.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
-    }
-    
-    @IBAction func likeButtonDidPressed(_ sender: UIButton) {
-        let key = stockList[sender.tag]
-        let cardIsFav = stockCards[key]!.isFavourite
-        if cardIsFav {
-            sender.setImage(UIImage(systemName: "star"), for: .normal)
-            favourites.deleteString(withTicker: key)
-            stockCards[key]!.isFavourite = false
-            print("\(key) did disliked")
-        } else {
-            sender.setImage(UIImage(systemName: "star.fill"), for: .normal)
-            favourites.saveString(withTicker: key)
-            stockCards[key]!.isFavourite = true
-            print("\(key) did liked")
-        }
     }
     
 }
 
+// MARK: - TableView extension
+
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return StockList().stockList.count
+//        return StockList().stockList.count
+        return stockCardsList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-        let key = stockList[indexPath.row]
+//        let key = stockList[indexPath.row]
+        let key = stockCardsList[indexPath.row]
         cell.companyLabel.text = stockCards[key]!.name
         cell.tickerLabel.text = stockCards[key]!.ticker
         cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
         cell.priceChangeLabel.text = StockData().calcPriceChange(card: stockCards[key]!)
-        // TODO: -  insert setting of logo via Kingfisher
+        
         let resource = ImageResource(downloadURL: stockCards[key]!.logo)
         cell.logoImage.kf.setImage(with: resource) { (result) in
             switch result {
             case .success(_):
-//                    self?.checkLike()
                 break
             case .failure(_):
                 print("fail")
             }
         }
         
-        if favourites.stockList.first(where: {$0.ticker == key}) != nil {
+        //TODO: - Replace with single func
+        if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
             stockCards[key]!.isFavourite = true
             print("\(key) is liked")
