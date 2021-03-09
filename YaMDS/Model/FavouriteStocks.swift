@@ -35,9 +35,9 @@ class Favourites {
         
         do {
             try stockList = context.fetch(fetchRequest)
-            for value in stockList{
+//            for value in stockList{
 //                likedList.append(value.ticker!)
-            }
+//            }
         } catch let error as NSError {
             print(error.localizedDescription)
         }

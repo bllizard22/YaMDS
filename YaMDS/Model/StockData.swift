@@ -47,7 +47,7 @@ class StockData {
                 if (error != nil) {
                     print(error!)
                 } else {
-                    do {
+//                    do {
 //                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
 //                            as! [String: Any]
                         completion(data!)
@@ -56,9 +56,9 @@ class StockData {
 //                            print("append")
 //                        }
 
-                    } catch let error {
-                        print(error)
-                    }
+//                    } catch let error {
+//                        print(error)
+//                    }
                 }
 //            }
         }
@@ -84,7 +84,7 @@ class StockData {
                 //        print(httpResponse)
 //                let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
-                do {
+//                do {
                     completion(symbol, data!)
 //                    let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
 //                    let current = json["c"] as! NSNumber.FloatLiteralType
@@ -99,9 +99,9 @@ class StockData {
 //                    print("Change 24h: \(change!)")
 //                    print(json)
                     
-                } catch let error {
-                    print(error)
-                }
+//                } catch let error {
+//                    print(error)
+//                }
                 
             }
         })

@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     var jsonName = ""
     var stockList = StockList().stockList
     
-//    var likedStocksList = [String]()
+    //    var likedStocksList = [String]()
     var favourites = Favourites()
         
     override func viewDidLoad() {
@@ -70,7 +70,7 @@ class ViewController: UIViewController {
                 if stringLogoURL == "" {
                     stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
                 }
-                print(stringLogoURL)
+                print(stringLogoURL!)
                 let card = StockTableCard(name: json["name"] as! String,
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
@@ -88,8 +88,8 @@ class ViewController: UIViewController {
             do {
                 let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 print(key, _json)
-                stockCards[key]?.currentPrice = Float(_json["c"] as! NSNumber)
-                stockCards[key]?.previousClosePrice = Float(_json["pc"] as! NSNumber)
+                stockCards[key]?.currentPrice = Float(truncating: _json["c"] as! NSNumber)
+                stockCards[key]?.previousClosePrice = Float(truncating: _json["pc"] as! NSNumber)
             } catch let error {
                 print(error)
             }
@@ -108,6 +108,7 @@ class ViewController: UIViewController {
         stockTableView.delegate = self
         
         view.addSubview(stockTableView)
+//        tableV.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
