@@ -12,10 +12,11 @@ import UIKit
 class Favourites {
     
     var stockList: [StockCardLikes] = []
-//    var likedList: [String] = []
+    var likedList: [String] = []
     
     init() {
         loadCoreData()
+        likedList = liked()
     }
     
     // Get context for app
@@ -40,17 +41,20 @@ class Favourites {
     }
     
     // Return array of all liked tickers
-    func likedList() -> Array<String> {
+    func liked() -> Array<String> {
         var likes = Array<String>()
         for item in stockList {
             likes.append(item.ticker!)
         }
+//        clearAllLikes()
         return likes
     }
     
     // Add new record in CoreData
     func saveTicker(withTicker title: String) {
         let context = getContext()
+        
+        print("will add \(title)")
         
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCardLikes", in: context) else {return}
         
@@ -61,7 +65,8 @@ class Favourites {
         // Save new task in memory at 0 position
         do {
             try context.save()
-            stockList.insert(taskObject, at: 0)
+            stockList.append(taskObject)
+            print("liked after add: ",stockList)
         } catch let error as NSError  {
             print(error.localizedDescription)
         }
@@ -71,16 +76,20 @@ class Favourites {
     func deleteTicker(withTicker title: String) {
         let context = getContext()
         
-        
+        print("will delete \(title)")
         
         let fetchRequest: NSFetchRequest<StockCardLikes> = StockCardLikes.fetchRequest()
         if let result = try? context.fetch(fetchRequest) {
-            for image in result {
-                context.delete(image)
-                guard let index = stockList.firstIndex(where: {$0.ticker == title}) else {return}
-                stockList.remove(at: index)
+            for item in result {
+                if item.ticker == title {
+                    context.delete(item)
+                    guard let index = stockList.firstIndex(where: {$0.ticker == title}) else {return}
+                    stockList.remove(at: index)
+                }
             }
         }
+        
+        print("liked after delete: ",stockList)
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.saveContext()
@@ -115,6 +124,7 @@ class Favourites {
         } catch let error as NSError  {
             print(error.localizedDescription)
         }
+        print("All likes deleted")
         stockList = []
     }
 }

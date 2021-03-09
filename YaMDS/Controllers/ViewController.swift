@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     
     var stockList = StockList().stockList
     var stockCardsList = Array<String>()
+    var favouriteIsSelected =  false
 //    var likedStockCards = Array<String>()
     
     var jsonName = ""
@@ -69,7 +70,7 @@ class ViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
-        let key = stockList[sender.tag]
+        let key = stockCardsList[sender.tag]
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
             sender.setImage(UIImage(systemName: "star"), for: .normal)
@@ -82,6 +83,10 @@ class ViewController: UIViewController {
             stockCards[key]!.isFavourite = true
             print("\(key) did liked")
         }
+        if favouriteIsSelected {
+            stockCardsList = favourites.liked()
+            stockTableView.reloadData()
+        }
     }
     
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
@@ -93,11 +98,13 @@ class ViewController: UIViewController {
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
         stocksButton.setTitleColor(.black, for: .normal)
         
+        favouriteIsSelected = false
+        
         stockTableView.reloadData()
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
-        stockCardsList = favourites.likedList()
+        stockCardsList = favourites.liked()
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
         favouriteButton.setTitleColor(.black, for: .normal)
@@ -105,6 +112,10 @@ class ViewController: UIViewController {
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(24)
         stocksButton.setTitleColor(.systemGray2, for: .normal)
 
+        favouriteIsSelected = true
+        
+//        favourites.clearAllLikes()
+        
         stockTableView.reloadData()
     }
     
@@ -125,17 +136,19 @@ class ViewController: UIViewController {
     
     func parseStocksDataToJSON () {
         print(dataStockInfo.count)
-        var json: [String: Any]
+        print("data for JSON", dataStockInfo)
+//        var json: [String: Any]
         for data in dataStockInfo {
             do {
-                let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                json = _json
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+
+                print(json)
                 // TODO: - Set price and logo URL
                 var stringLogoURL = json["logo"] as? String
                 if stringLogoURL == "" {
                     stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
                 }
-                print(stringLogoURL!)
+//                print(stringLogoURL!)
                 let card = StockTableCard(name: json["name"] as! String,
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
@@ -148,13 +161,13 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
-        print("stockCards:", stockCards)
+//        print("stockCards:", stockCards)
         for (key, data) in dataStockPrice {
             do {
-                let _json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                print(key, _json)
-                stockCards[key]?.currentPrice = Float(truncating: _json["c"] as! NSNumber)
-                stockCards[key]?.previousClosePrice = Float(truncating: _json["pc"] as! NSNumber)
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                print(key, json)
+                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
+                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
             } catch let error {
                 print(error)
             }
