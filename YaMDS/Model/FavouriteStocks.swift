@@ -14,9 +14,19 @@ class Favourites {
     var stockList: [StockCardLikes] = []
     var likedList: [String] = []
     
+    // Return array of all liked tickers
+    var liked: Array<String> {
+        var likes = Array<String>()
+        for item in stockList {
+            likes.append(item.ticker!)
+        }
+//        clearAllLikes()
+        return likes
+    }
+    
     init() {
         loadCoreData()
-        likedList = liked()
+        likedList = liked
     }
     
     // Get context for app
@@ -38,16 +48,6 @@ class Favourites {
         } catch let error as NSError {
             print(error.localizedDescription)
         }
-    }
-    
-    // Return array of all liked tickers
-    func liked() -> Array<String> {
-        var likes = Array<String>()
-        for item in stockList {
-            likes.append(item.ticker!)
-        }
-//        clearAllLikes()
-        return likes
     }
     
     // Add new record in CoreData

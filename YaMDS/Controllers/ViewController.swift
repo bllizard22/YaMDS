@@ -28,16 +28,16 @@ class ViewController: UIViewController {
     var stockList = StockList().stockList
     var stockCardsList = Array<String>()
     var favouriteIsSelected =  false
+    var favourites = Favourites()
 //    var likedStockCards = Array<String>()
     
     var jsonName = ""
     
-    
     //    @IBOutlet weak var tableV: StockTableView!
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
-    
-    var favourites = Favourites()
+    @IBOutlet weak var searchBar: UISearchBar!
+    var headerViewHeight = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,8 +63,15 @@ class ViewController: UIViewController {
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
         stockTableView.delegate = self
-        
         view.addSubview(stockTableView)
+        
+//        let navBar = (navigationController?.navigationBar)!
+//        navBar.setBackgroundImage(UIImage(), for: .default)
+//        navBar.shadowImage = UIImage()
+//        navBar.backgroundColor = .white
+//        let navigationAppearence = UINavigationBarAppearance()
+//        navigationAppearence.shadowColor = .clear
+//        navBar.scrollEdgeAppearance = navigationAppearence
     }
     
     // MARK: - IBActions
@@ -84,7 +91,7 @@ class ViewController: UIViewController {
             print("\(key) did liked")
         }
         if favouriteIsSelected {
-            stockCardsList = favourites.liked()
+            stockCardsList = favourites.liked
             stockTableView.reloadData()
         }
     }
@@ -104,7 +111,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
-        stockCardsList = favourites.liked()
+        stockCardsList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
         favouriteButton.setTitleColor(.black, for: .normal)
@@ -225,6 +232,35 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    
 }
+
+//extension ViewController {
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        // Value when headerview will hide
+//        if scrollView.contentOffset.y > 50 {
+//            view.layoutIfNeeded()
+//            //headerViewHeightConstraint.constant = -100
+//            headerViewHeight = -100
+//            if self.view.frame.origin.y == 0 {
+//                self.view.frame.origin.y -= 100
+//            }
+//            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+//                self.view.layoutIfNeeded()
+//            }, completion: nil)
+//            searchBar.isHidden = true
+//            
+//        }else {
+//            // Return header
+//            view.layoutIfNeeded()
+//            // Initial header view height
+//            headerViewHeight = 0
+//            self.view.frame.origin.y = 0
+//            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+//                self.view.layoutIfNeeded()
+//            }, completion: nil)
+//            searchBar.isHidden = false
+//        }
+//    }
+//}
+
 
