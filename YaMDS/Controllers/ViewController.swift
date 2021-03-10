@@ -29,15 +29,29 @@ class ViewController: UIViewController {
     var stockCardsList = Array<String>()
     var favouriteIsSelected =  false
     var favourites = Favourites()
-//    var likedStockCards = Array<String>()
     
     var jsonName = ""
     
-    //    @IBOutlet weak var tableV: StockTableView!
+    // IBOutlets
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     var headerViewHeight = 0
+    
+    // SearchController
+//    let searchController = UISearchController(searchResultsController: nil)
+    var filteredStockCardsList = Array<String>()
+    var searchBarIsEmpty: Bool {
+        guard let text = searchBar.text else {
+            return false
+        }
+        return text.isEmpty
+    }
+    var searchBarIsClicked = false
+    var isFiltering: Bool {
+        return !searchBarIsEmpty
+//        return searchBarIsClicked && !searchBarIsEmpty
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +79,15 @@ class ViewController: UIViewController {
         stockTableView.delegate = self
         view.addSubview(stockTableView)
         
+        searchBar.delegate = self
+//        let searchBar = UISearchBar(frame: CGRect(x: 16, y: 60, width: view.bounds.width-16*2, height: 56))
+//        let safeArea = self.view.safeAreaLayoutGuide
+//        let searchBarTopConstraint = searchBar.topAnchor.constraint(equalTo: safeArea.topAnchor,
+//                                                                    constant: 60)
+//        NSLayoutConstraint.activate([searchBarTopConstraint])
+//        searchBar.placeholder = "new search"
+//        view.addSubview(searchBar)
+        
 //        let navBar = (navigationController?.navigationBar)!
 //        navBar.setBackgroundImage(UIImage(), for: .default)
 //        navBar.shadowImage = UIImage()
@@ -77,7 +100,14 @@ class ViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
-        let key = stockCardsList[sender.tag]
+//        let key = stockCardsList[sender.tag]
+        var key: String
+        if isFiltering {
+            key = filteredStockCardsList[sender.tag]
+        } else {
+            key = stockCardsList[sender.tag]
+        }
+        
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
             sender.setImage(UIImage(systemName: "star"), for: .normal)
@@ -124,6 +154,23 @@ class ViewController: UIViewController {
 //        favourites.clearAllLikes()
         
         stockTableView.reloadData()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetailView" {
+            if let indexPath = stockTableView.indexPathForSelectedRow {
+                let key: String
+                if isFiltering {
+                    key = filteredStockCardsList[indexPath.row]
+                } else {
+                    key = stockCardsList[indexPath.row]
+                }
+                
+                let detailViewController = segue.destination as! DetailViewController
+                detailViewController.detailCard = stockCards[key]
+                
+            }
+        }
     }
     
     // MARK: - API load funcs
@@ -188,6 +235,9 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return StockList().stockList.count
+        if isFiltering {
+            return filteredStockCardsList.count
+        }
         return stockCardsList.count
     }
     
@@ -195,8 +245,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-//        let key = stockList[indexPath.row]
-        let key = stockCardsList[indexPath.row]
+        
+//        let key = stockCardsList[indexPath.row]
+        var key: String
+        if isFiltering {
+            key = filteredStockCardsList[indexPath.row]
+        } else {
+            key = stockCardsList[indexPath.row]
+        }
+        
         cell.companyLabel.text = stockCards[key]!.name
         cell.tickerLabel.text = stockCards[key]!.ticker
         cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
@@ -232,7 +289,48 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "showDetailView", sender: nil)
+    }
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        <#code#>
+//    }
 }
+
+
+// MARK: - SearchBar Delegate
+
+extension ViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        var list: Array<String>
+        if favouriteIsSelected {
+            list = favourites.liked
+        } else {
+            list = stockCardsList
+        }
+        filteredStockCardsList = list.filter({ (ticker: String) -> Bool in
+            let card = stockCards[ticker]?.name
+            let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
+            return result
+        })
+        
+        stockTableView.reloadData()
+    }
+    
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        isEditing
+//    }
+//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//        searchBarIsClicked = true
+//    }
+    
+//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//        searchBarIsClicked = false
+//    }
+}
+
+// MARK: - Hide SearchBar onScroll
 
 //extension ViewController {
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {

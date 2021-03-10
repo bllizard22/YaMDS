@@ -11,6 +11,9 @@
         <array key="Montserrat-Bold.ttf">
             <string>Montserrat-Bold</string>
         </array>
+        <array key="Montserrat-SemiBold.ttf">
+            <string>Montserrat-SemiBold</string>
+        </array>
     </customFonts>
     <scenes>
         <!--View Controller-->
@@ -18,11 +21,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="YaMDS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yRr-7M-rDD" customClass="StockTableView" customModule="YaMDS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="152" width="414" height="622"/>
+                                <rect key="frame" x="0.0" y="196" width="414" height="666"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="96" id="6aQ-Gz-wbi" customClass="StockTableViewCell" customModule="YaMDS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="96"/>
@@ -36,7 +39,7 @@
                                 <sections/>
                             </tableView>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Find company or ticker" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-vf-ZVB">
-                                <rect key="frame" x="16" y="16" width="382" height="56"/>
+                                <rect key="frame" x="16" y="60" width="382" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <scopeButtonTitles>
                                     <string>Title</string>
@@ -44,7 +47,7 @@
                                 </scopeButtonTitles>
                             </searchBar>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxN-qF-T2L">
-                                <rect key="frame" x="20" y="92" width="280" height="40"/>
+                                <rect key="frame" x="20" y="136" width="280" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UO2-Wn-gw5">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="40"/>
@@ -95,31 +98,75 @@
                     <navigationItem key="navigationItem" id="xtA-Lx-zfg"/>
                     <connections>
                         <outlet property="favouriteButton" destination="MuA-1i-pBF" id="cw9-RI-YJh"/>
-                        <outlet property="searchBar" destination="X0F-vf-ZVB" id="RZ5-ST-4UG"/>
+                        <outlet property="searchBar" destination="X0F-vf-ZVB" id="ovC-iA-Wwf"/>
                         <outlet property="stocksButton" destination="UO2-Wn-gw5" id="noU-Qp-YC4"/>
+                        <segue destination="MG6-bq-M9x" kind="show" identifier="showDetailView" id="VtG-8C-7DD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="130.58035714285714"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="1kc-6w-apT">
+        <!--Detail View Controller-->
+        <scene sceneID="stV-Oh-G4W">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sub-AE-N9x" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ruQ-bJ-lB3">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
+                <viewController modalPresentationStyle="fullScreen" id="MG6-bq-M9x" customClass="DetailViewController" customModule="YaMDS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tdO-Ex-6OX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AAPL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3kT-d8-WgH">
+                                <rect key="frame" x="172" y="92" width="70" height="30"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Inc." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XtQ-w2-QqG">
+                                <rect key="frame" x="165.5" y="137" width="83" height="20"/>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Summary info from API request about this company" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQh-H6-0Nl">
+                                <rect key="frame" x="100" y="219" width="214" height="187"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="214" id="Cn1-ak-32R"/>
+                                    <constraint firstAttribute="height" constant="187" id="LqQ-Jz-B73"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRi-rI-QhI">
+                                <rect key="frame" x="28" y="91" width="30" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2Ka-SA-LVc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3kT-d8-WgH" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="48" id="0Op-nd-IyV"/>
+                            <constraint firstItem="XtQ-w2-QqG" firstAttribute="top" secondItem="3kT-d8-WgH" secondAttribute="bottom" constant="15" id="F4E-dU-5kd"/>
+                            <constraint firstItem="PQh-H6-0Nl" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="JYt-BX-ZJQ"/>
+                            <constraint firstItem="3kT-d8-WgH" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="OL5-iD-7lW"/>
+                            <constraint firstItem="rRi-rI-QhI" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="47" id="deq-87-89X"/>
+                            <constraint firstItem="rRi-rI-QhI" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="28" id="hVh-mb-RtP"/>
+                            <constraint firstItem="XtQ-w2-QqG" firstAttribute="centerX" secondItem="3kT-d8-WgH" secondAttribute="centerX" id="nF6-E1-cm5"/>
+                            <constraint firstItem="PQh-H6-0Nl" firstAttribute="top" secondItem="XtQ-w2-QqG" secondAttribute="bottom" constant="62" id="wCK-jE-9XZ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Tz9-VW-BC7"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="DWe-A7-7oO"/>
+                        <outlet property="companyNameLabel" destination="XtQ-w2-QqG" id="DKv-S0-BYK"/>
+                        <outlet property="tickerLabel" destination="3kT-d8-WgH" id="1Lz-5w-r2F"/>
                     </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hMH-Si-CoD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="78t-bV-dBL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
+            <point key="canvasLocation" x="1924.6376811594205" y="130.58035714285714"/>
         </scene>
     </scenes>
     <resources>
