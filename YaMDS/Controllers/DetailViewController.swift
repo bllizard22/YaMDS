@@ -13,11 +13,14 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var tickerLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
+    @IBOutlet weak var industryLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tickerLabel.text = detailCard!.ticker
+        companyNameLabel.text = detailCard!.name
+        industryLabel.text = detailCard!.industry
         
         // Do any additional setup after loading the view.
     }

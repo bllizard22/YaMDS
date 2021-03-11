@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     var stockCards = Dictionary<String, StockTableCard>()
     
     var stockList = StockList().stockList
-    var stockCardsList = Array<String>()
+    var stockTickerList = Array<String>()
     var favouriteIsSelected =  false
     var favourites = Favourites()
     
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     
     // SearchController
 //    let searchController = UISearchController(searchResultsController: nil)
-    var filteredStockCardsList = Array<String>()
+    var filteredStockTickerList = Array<String>()
     var searchBarIsEmpty: Bool {
         guard let text = searchBar.text else {
             return false
@@ -80,21 +80,6 @@ class ViewController: UIViewController {
         view.addSubview(stockTableView)
         
         searchBar.delegate = self
-//        let searchBar = UISearchBar(frame: CGRect(x: 16, y: 60, width: view.bounds.width-16*2, height: 56))
-//        let safeArea = self.view.safeAreaLayoutGuide
-//        let searchBarTopConstraint = searchBar.topAnchor.constraint(equalTo: safeArea.topAnchor,
-//                                                                    constant: 60)
-//        NSLayoutConstraint.activate([searchBarTopConstraint])
-//        searchBar.placeholder = "new search"
-//        view.addSubview(searchBar)
-        
-//        let navBar = (navigationController?.navigationBar)!
-//        navBar.setBackgroundImage(UIImage(), for: .default)
-//        navBar.shadowImage = UIImage()
-//        navBar.backgroundColor = .white
-//        let navigationAppearence = UINavigationBarAppearance()
-//        navigationAppearence.shadowColor = .clear
-//        navBar.scrollEdgeAppearance = navigationAppearence
     }
     
     // MARK: - IBActions
@@ -103,9 +88,9 @@ class ViewController: UIViewController {
 //        let key = stockCardsList[sender.tag]
         var key: String
         if isFiltering {
-            key = filteredStockCardsList[sender.tag]
+            key = filteredStockTickerList[sender.tag]
         } else {
-            key = stockCardsList[sender.tag]
+            key = stockTickerList[sender.tag]
         }
         
         let cardIsFav = stockCards[key]!.isFavourite
@@ -121,13 +106,13 @@ class ViewController: UIViewController {
             print("\(key) did liked")
         }
         if favouriteIsSelected {
-            stockCardsList = favourites.liked
+            stockTickerList = favourites.liked
             stockTableView.reloadData()
         }
     }
     
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
-        stockCardsList = StockList().stockList
+        stockTickerList = StockList().stockList
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
         favouriteButton.setTitleColor(.systemGray2, for: .normal)
@@ -141,7 +126,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
-        stockCardsList = favourites.liked
+        stockTickerList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
         favouriteButton.setTitleColor(.black, for: .normal)
@@ -161,9 +146,9 @@ class ViewController: UIViewController {
             if let indexPath = stockTableView.indexPathForSelectedRow {
                 let key: String
                 if isFiltering {
-                    key = filteredStockCardsList[indexPath.row]
+                    key = filteredStockTickerList[indexPath.row]
                 } else {
-                    key = stockCardsList[indexPath.row]
+                    key = stockTickerList[indexPath.row]
                 }
                 
                 let detailViewController = segue.destination as! DetailViewController
@@ -206,16 +191,18 @@ class ViewController: UIViewController {
                 let card = StockTableCard(name: json["name"] as! String,
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
+                                          industry: json["finnhubIndustry"] as! String,
+                                          marketCap: json["marketCapitalization"] as! Float,
+                                          sharesOutstanding: json["shareOutstanding"] as! Float,
                                           currentPrice: 0.0,
                                           previousClosePrice: 0.0,
                                           isFavourite: false)
                 stockCards[card.ticker] = card
-                stockCardsList.append(card.ticker)
+                stockTickerList.append(card.ticker)
             } catch let error {
                 print(error)
             }
         }
-//        print("stockCards:", stockCards)
         for (key, data) in dataStockPrice {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
@@ -236,9 +223,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return StockList().stockList.count
         if isFiltering {
-            return filteredStockCardsList.count
+            return filteredStockTickerList.count
         }
-        return stockCardsList.count
+        return stockTickerList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -249,9 +236,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 //        let key = stockCardsList[indexPath.row]
         var key: String
         if isFiltering {
-            key = filteredStockCardsList[indexPath.row]
+            key = filteredStockTickerList[indexPath.row]
         } else {
-            key = stockCardsList[indexPath.row]
+            key = stockTickerList[indexPath.row]
         }
         
         cell.companyLabel.text = stockCards[key]!.name
@@ -292,10 +279,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "showDetailView", sender: nil)
     }
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        <#code#>
-//    }
 }
 
 
@@ -307,9 +290,9 @@ extension ViewController: UISearchBarDelegate {
         if favouriteIsSelected {
             list = favourites.liked
         } else {
-            list = stockCardsList
+            list = stockTickerList
         }
-        filteredStockCardsList = list.filter({ (ticker: String) -> Bool in
+        filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
             let card = stockCards[ticker]?.name
             let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
             return result

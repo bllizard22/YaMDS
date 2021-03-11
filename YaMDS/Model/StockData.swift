@@ -66,6 +66,27 @@ class StockData {
         dataTask.resume()
     }
     
+    //https://finnhub.io/api/v1/stock/profile?symbol=AAPL
+    
+    func getStockProfile(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
+        
+        let request = NSMutableURLRequest(
+            url: NSURL(string: "https://finnhub.io/api/v1/stock/profile?symbol=\(symbol)")! as URL,
+            cachePolicy: .useProtocolCachePolicy,
+            timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+        
+        let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
+            if (error != nil) {
+                print(error!)
+            } else {
+                completion(data!)
+            }
+        })
+        dataTask.resume()
+    }
+    
     func getPrice(stockSymbol symbol: String, completion: @escaping (String, Data) -> ()) {
         
         let request = NSMutableURLRequest(

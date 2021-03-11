@@ -127,8 +127,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Summary info from API request about this company" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQh-H6-0Nl">
-                                <rect key="frame" x="100" y="219" width="214" height="187"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Summary info from API request about this company" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQh-H6-0Nl">
+                                <rect key="frame" x="100" y="451" width="214" height="187"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="214" id="Cn1-ak-32R"/>
                                     <constraint firstAttribute="height" constant="187" id="LqQ-Jz-B73"/>
@@ -144,23 +144,67 @@
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Industry:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCg-hg-rYd">
+                                <rect key="frame" x="36" y="212" width="80" height="21"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Technology" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTg-oA-Tda">
+                                <rect key="frame" x="131" y="212" width="102" height="21"/>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Market Cap:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="393-nV-78F">
+                                <rect key="frame" x="36" y="242" width="114" height="22"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="$ 1,953.46B" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="33I-Jd-v8v">
+                                <rect key="frame" x="158" y="243" width="107.5" height="22"/>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Market Cap:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgW-og-nEx">
+                                <rect key="frame" x="36" y="272" width="114" height="22"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="$ 1,953.4M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C42-Dl-RJy">
+                                <rect key="frame" x="157" y="273" width="107.5" height="22"/>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2Ka-SA-LVc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="3kT-d8-WgH" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="48" id="0Op-nd-IyV"/>
+                            <constraint firstItem="33I-Jd-v8v" firstAttribute="leading" secondItem="393-nV-78F" secondAttribute="trailing" constant="15" id="25P-rS-FuT"/>
+                            <constraint firstItem="XTg-oA-Tda" firstAttribute="leading" secondItem="gCg-hg-rYd" secondAttribute="trailing" constant="15" id="AAr-D6-VVe"/>
                             <constraint firstItem="XtQ-w2-QqG" firstAttribute="top" secondItem="3kT-d8-WgH" secondAttribute="bottom" constant="15" id="F4E-dU-5kd"/>
+                            <constraint firstItem="33I-Jd-v8v" firstAttribute="centerY" secondItem="393-nV-78F" secondAttribute="centerY" id="HMz-Jv-wmd"/>
                             <constraint firstItem="PQh-H6-0Nl" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="JYt-BX-ZJQ"/>
+                            <constraint firstItem="C42-Dl-RJy" firstAttribute="centerY" secondItem="bgW-og-nEx" secondAttribute="centerY" id="Kbk-oy-GR9"/>
+                            <constraint firstItem="gCg-hg-rYd" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="36" id="NfM-4v-4xI"/>
                             <constraint firstItem="3kT-d8-WgH" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="OL5-iD-7lW"/>
+                            <constraint firstItem="gCg-hg-rYd" firstAttribute="top" secondItem="XtQ-w2-QqG" secondAttribute="bottom" constant="55" id="Tsk-Co-Qjc"/>
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="47" id="deq-87-89X"/>
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="28" id="hVh-mb-RtP"/>
                             <constraint firstItem="XtQ-w2-QqG" firstAttribute="centerX" secondItem="3kT-d8-WgH" secondAttribute="centerX" id="nF6-E1-cm5"/>
-                            <constraint firstItem="PQh-H6-0Nl" firstAttribute="top" secondItem="XtQ-w2-QqG" secondAttribute="bottom" constant="62" id="wCK-jE-9XZ"/>
+                            <constraint firstItem="C42-Dl-RJy" firstAttribute="leading" secondItem="bgW-og-nEx" secondAttribute="trailing" constant="15" id="qlD-tB-2rl"/>
+                            <constraint firstItem="XTg-oA-Tda" firstAttribute="centerY" secondItem="gCg-hg-rYd" secondAttribute="centerY" id="z79-xQ-eOb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Tz9-VW-BC7"/>
                     <connections>
                         <outlet property="companyNameLabel" destination="XtQ-w2-QqG" id="DKv-S0-BYK"/>
+                        <outlet property="industryLabel" destination="XTg-oA-Tda" id="hwv-If-GXN"/>
                         <outlet property="tickerLabel" destination="3kT-d8-WgH" id="1Lz-5w-r2F"/>
                     </connections>
                 </viewController>
