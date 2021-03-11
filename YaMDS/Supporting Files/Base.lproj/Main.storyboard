@@ -116,95 +116,163 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AAPL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3kT-d8-WgH">
-                                <rect key="frame" x="172" y="92" width="70" height="30"/>
+                                <rect key="frame" x="172.5" y="92" width="69.5" height="29.5"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Inc." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XtQ-w2-QqG">
-                                <rect key="frame" x="165.5" y="137" width="83" height="20"/>
+                                <rect key="frame" x="165.5" y="136.5" width="83" height="20"/>
                                 <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Summary info from API request about this company" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQh-H6-0Nl">
-                                <rect key="frame" x="100" y="451" width="214" height="187"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="214" id="Cn1-ak-32R"/>
-                                    <constraint firstAttribute="height" constant="187" id="LqQ-Jz-B73"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="18"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lLf-OS-dAb">
+                                <rect key="frame" x="15" y="447" width="384" height="879"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQh-H6-0Nl">
+                                        <rect key="frame" x="20" y="20" width="344" height="839"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <mutableString key="text">Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. It also sells various related services. The company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, HomePod, iPod touch, and other Apple-branded and third-party accessories. It also provides AppleCare support services; cloud services store services; and operates various platforms, including the App Store, that allow customers to discover and download applications and digital content, such as books, music, video, games, and podcasts. In addition, the company offers various services, such as Apple Arcade, a game subscription service; Apple Music, which offers users a curated listening experience with on-demand radio stations; Apple News+, a subscription news and magazine service; Apple TV+, which offers exclusive original content; Apple Card, a co-branded credit card; and Apple Pay, a cashless payment service, as well as licenses its intellectual property. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets. It sells and delivers third-party applications for its products through the App Store. The company also sells its products through its retail and online stores, and direct sales force; and third-party cellular network carriers, wholesalers, retailers, and resellers. Apple Inc. was founded in 1977 and is headquartered in Cupertino, California.</mutableString>
+                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <viewLayoutGuide key="contentLayoutGuide" id="ZVY-nr-K6h"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="MU4-Vw-LQa"/>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRi-rI-QhI">
                                 <rect key="frame" x="28" y="91" width="30" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="X">
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="backButtonDidPressed:" destination="MG6-bq-M9x" eventType="touchUpInside" id="sxW-xw-XTI"/>
+                                </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Industry:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCg-hg-rYd">
-                                <rect key="frame" x="36" y="212" width="80" height="21"/>
-                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Technology" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTg-oA-Tda">
-                                <rect key="frame" x="131" y="212" width="102" height="21"/>
-                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Market Cap:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="393-nV-78F">
-                                <rect key="frame" x="36" y="242" width="114" height="22"/>
-                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="$ 1,953.46B" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="33I-Jd-v8v">
-                                <rect key="frame" x="158" y="243" width="107.5" height="22"/>
-                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Market Cap:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgW-og-nEx">
-                                <rect key="frame" x="36" y="272" width="114" height="22"/>
-                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="$ 1,953.4M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C42-Dl-RJy">
-                                <rect key="frame" x="157" y="273" width="107.5" height="22"/>
-                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="L7H-PA-T9a">
+                                <rect key="frame" x="50" y="225" width="314" height="196"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="bp4-fV-4Bf">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="196"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Industry:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCg-hg-rYd">
+                                                <rect key="frame" x="0.0" y="0.0" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Market Cap:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="393-nV-78F">
+                                                <rect key="frame" x="0.0" y="35" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ebitda:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lNB-sF-oer">
+                                                <rect key="frame" x="0.0" y="70" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shares:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgW-og-nEx">
+                                                <rect key="frame" x="0.0" y="105" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="P/E:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mNJ-YL-eF9">
+                                                <rect key="frame" x="0.0" y="140" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="P/S:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j5k-OS-yyW">
+                                                <rect key="frame" x="0.0" y="175" width="120" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="120" id="MbY-9m-ol7"/>
+                                        </constraints>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="fxW-gW-lMS">
+                                        <rect key="frame" x="140" y="0.0" width="174" height="196"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Technology" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTg-oA-Tda">
+                                                <rect key="frame" x="0.0" y="0.0" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 1,953.46B" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="33I-Jd-v8v">
+                                                <rect key="frame" x="0.0" y="35" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 85,150M" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfA-vn-UV4">
+                                                <rect key="frame" x="0.0" y="70" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   16.79B" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C42-Dl-RJy">
+                                                <rect key="frame" x="0.0" y="105" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   35.15" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jm4-Dx-2so">
+                                                <rect key="frame" x="0.0" y="140" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   35.15" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOq-ig-Jp4">
+                                                <rect key="frame" x="0.0" y="175" width="174" height="21"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="bp4-fV-4Bf" firstAttribute="leading" secondItem="L7H-PA-T9a" secondAttribute="leading" id="JCt-6J-BE2"/>
+                                    <constraint firstAttribute="trailing" secondItem="fxW-gW-lMS" secondAttribute="trailing" id="jyv-2p-mgb"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2Ka-SA-LVc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="3kT-d8-WgH" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="48" id="0Op-nd-IyV"/>
-                            <constraint firstItem="33I-Jd-v8v" firstAttribute="leading" secondItem="393-nV-78F" secondAttribute="trailing" constant="15" id="25P-rS-FuT"/>
-                            <constraint firstItem="XTg-oA-Tda" firstAttribute="leading" secondItem="gCg-hg-rYd" secondAttribute="trailing" constant="15" id="AAr-D6-VVe"/>
                             <constraint firstItem="XtQ-w2-QqG" firstAttribute="top" secondItem="3kT-d8-WgH" secondAttribute="bottom" constant="15" id="F4E-dU-5kd"/>
-                            <constraint firstItem="33I-Jd-v8v" firstAttribute="centerY" secondItem="393-nV-78F" secondAttribute="centerY" id="HMz-Jv-wmd"/>
-                            <constraint firstItem="PQh-H6-0Nl" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="JYt-BX-ZJQ"/>
-                            <constraint firstItem="C42-Dl-RJy" firstAttribute="centerY" secondItem="bgW-og-nEx" secondAttribute="centerY" id="Kbk-oy-GR9"/>
-                            <constraint firstItem="gCg-hg-rYd" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="36" id="NfM-4v-4xI"/>
                             <constraint firstItem="3kT-d8-WgH" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="OL5-iD-7lW"/>
-                            <constraint firstItem="gCg-hg-rYd" firstAttribute="top" secondItem="XtQ-w2-QqG" secondAttribute="bottom" constant="55" id="Tsk-Co-Qjc"/>
+                            <constraint firstItem="2Ka-SA-LVc" firstAttribute="trailing" secondItem="L7H-PA-T9a" secondAttribute="trailing" constant="50" id="bGa-bP-wa6"/>
+                            <constraint firstItem="L7H-PA-T9a" firstAttribute="top" secondItem="XtQ-w2-QqG" secondAttribute="bottom" constant="68.5" id="cZx-J0-r4V"/>
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="47" id="deq-87-89X"/>
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="28" id="hVh-mb-RtP"/>
                             <constraint firstItem="XtQ-w2-QqG" firstAttribute="centerX" secondItem="3kT-d8-WgH" secondAttribute="centerX" id="nF6-E1-cm5"/>
-                            <constraint firstItem="C42-Dl-RJy" firstAttribute="leading" secondItem="bgW-og-nEx" secondAttribute="trailing" constant="15" id="qlD-tB-2rl"/>
-                            <constraint firstItem="XTg-oA-Tda" firstAttribute="centerY" secondItem="gCg-hg-rYd" secondAttribute="centerY" id="z79-xQ-eOb"/>
+                            <constraint firstItem="L7H-PA-T9a" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="50" id="yId-Wl-Gy8"/>
+                            <constraint firstItem="L7H-PA-T9a" firstAttribute="centerX" secondItem="2Ka-SA-LVc" secondAttribute="centerX" id="zIK-cV-PWF"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Tz9-VW-BC7"/>
                     <connections>
                         <outlet property="companyNameLabel" destination="XtQ-w2-QqG" id="DKv-S0-BYK"/>
+                        <outlet property="ebitdaLabel" destination="BfA-vn-UV4" id="SkM-Sw-e2W"/>
                         <outlet property="industryLabel" destination="XTg-oA-Tda" id="hwv-If-GXN"/>
+                        <outlet property="marketCapLabel" destination="33I-Jd-v8v" id="bPd-e4-RRC"/>
+                        <outlet property="peValueLabel" destination="Jm4-Dx-2so" id="lyH-m7-27q"/>
+                        <outlet property="psValueLabel" destination="hOq-ig-Jp4" id="nFH-Gq-y1V"/>
+                        <outlet property="sharesLabel" destination="C42-Dl-RJy" id="wSf-3b-GCc"/>
+                        <outlet property="summaryLabel" destination="PQh-H6-0Nl" id="7QC-Fe-eK8"/>
                         <outlet property="tickerLabel" destination="3kT-d8-WgH" id="1Lz-5w-r2F"/>
                     </connections>
                 </viewController>

@@ -101,12 +101,12 @@ class StockData {
             if (error != nil) {
                 print(error!)
             } else {
+                completion(symbol, data!)
 //                let httpResponse = response as? HTTPURLResponse
                 //        print(httpResponse)
 //                let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
 //                do {
-                    completion(symbol, data!)
 //                    let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
 //                    let current = json["c"] as! NSNumber.FloatLiteralType
 //                    let previous = json["pc"] as! NSNumber.FloatLiteralType
@@ -119,18 +119,16 @@ class StockData {
 //                    let change = format.string(from: NSNumber(value: ( current / previous - 1)))
 //                    print("Change 24h: \(change!)")
 //                    print(json)
-                    
+//
 //                } catch let error {
 //                    print(error)
 //                }
-                
             }
         })
-        
         dataTask.resume()
     }
     
-    func getMetric(stockSymbol symbol: String) {
+    func getMetric(stockSymbol symbol: String, completion: @escaping (String, Data) -> ()) {
         
         let request = NSMutableURLRequest(
             //            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/?symbol=AAPL,FB")! as URL,
@@ -144,27 +142,27 @@ class StockData {
             if (error != nil) {
                 print(error!)
             } else {
+                completion(symbol, data!)
 //                let httpResponse = response as? HTTPURLResponse
                 //        print(httpResponse)
 //                let dataString = String(data: data!, encoding: .utf8)!
                 //                print(dataString.count)
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                    
-                    print(type(of: json))
-                    print(type(of: json["metric"]!))
-                    //                    print(type(of: json["metric"]!["peNormalizedAnnual"]))
-                    let metric = json["metric"] as! Dictionary<String,Any>
-                    print(metric)
-                    print(metric["peNormalizedAnnual"]!)
-                    
-                } catch let error {
-                    print(error)
-                }
+//                do {
+//                    let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+//
+//                    print(type(of: json))
+//                    print(type(of: json["metric"]!))
+//                    //                    print(type(of: json["metric"]!["peNormalizedAnnual"]))
+//                    let metric = json["metric"] as! Dictionary<String,Any>
+//                    print(metric)
+//                    print(metric["peNormalizedAnnual"]!)
+//
+//                } catch let error {
+//                    print(error)
+//                }
                 
             }
         })
-        
         dataTask.resume()
     }
     

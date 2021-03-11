@@ -12,9 +12,14 @@ struct StockTableCard {
     let name: String
     let logo: URL
     let ticker: String
+    
+    // Data for DetailVC
     let industry: String
-    let marketCap: Float
-    let sharesOutstanding: Float
+    let marketCap: Float // marketCapitalization, M
+    let sharesOutstanding: Float // shareOutstanding, M
+    var peValue: Float  // peNormalizedAnnual
+    var psValue: Float // psTTM
+    var ebitda: Float // ebitdPerShareTTM * shareOutstanding, M
     
     // Data from Quote request
     var currentPrice: Float
@@ -41,7 +46,7 @@ extension StockTableCard: Hashable {
      "country": US,
      "currency": USD,
      "marketCapitalization": 1953463,
-     "shareOutstanding": 16788.096,
+     "shareOutstanding": 16788.096, - M
      "ipo": 1980-12-12,
      "phone": 14089961010.0,
      "ticker": AAPL,
@@ -193,5 +198,203 @@ extension StockTableCard: Hashable {
      "totalDebt/totalEquityQuarterly" = "169.1879";
      totalDebtCagr5Y = "11.94642";
      yearToDatePriceReturnDaily = "-12.30688";
+ }
+ 
+ MBOUM Company Profile - https://mboum.com/api/v1/qu/quote/profile/?symbol=AAPL
+ {
+ 
+ ["industry": Consumer Electronics, "fullTimeEmployees": 147000, "website": http://www.apple.com, "shareHolderRightsRisk": 1, "zip": 95014, "auditRisk": 6, "maxAge": 86400, "sector": Technology, "address1": One Apple Park Way, "boardRisk": 1, "state": CA, "phone": 408-996-1010, "compensationAsOfEpochDate": 1609372800, "country": United States, "overallRisk": 1, "companyOfficers": <__NSArrayI 0x600001a419e0>(
+ {
+     age = 59;
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     fiscalYear = 2020;
+     maxAge = 1;
+     name = "Mr. Timothy D. Cook";
+     title = "CEO & Director";
+     totalPay =     {
+         fmt = "14.77M";
+         longFmt = "14,769,259";
+         raw = 14769259;
+     };
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     yearBorn = 1961;
+ },
+ {
+     age = 56;
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     fiscalYear = 2020;
+     maxAge = 1;
+     name = "Mr. Luca  Maestri";
+     title = "CFO & Sr. VP";
+     totalPay =     {
+         fmt = "4.6M";
+         longFmt = "4,595,583";
+         raw = 4595583;
+     };
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     yearBorn = 1964;
+ },
+ {
+     age = 56;
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     fiscalYear = 2020;
+     maxAge = 1;
+     name = "Mr. Jeffrey E. Williams";
+     title = "Chief Operating Officer";
+     totalPay =     {
+         fmt = "4.59M";
+         longFmt = "4,594,137";
+         raw = 4594137;
+     };
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     yearBorn = 1964;
+ },
+ {
+     age = 56;
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     fiscalYear = 2020;
+     maxAge = 1;
+     name = "Ms. Katherine L. Adams";
+     title = "Sr. VP, Gen. Counsel & Sec.";
+     totalPay =     {
+         fmt = "4.59M";
+         longFmt = "4,591,310";
+         raw = 4591310;
+     };
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     yearBorn = 1964;
+ },
+ {
+     age = 53;
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     fiscalYear = 2020;
+     maxAge = 1;
+     name = "Ms. Deirdre  O'Brien";
+     title = "Sr. VP of People & Retail";
+     totalPay =     {
+         fmt = "4.61M";
+         longFmt = "4,614,684";
+         raw = 4614684;
+     };
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     yearBorn = 1967;
+ },
+ {
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     maxAge = 1;
+     name = "Mr. Chris  Kondo";
+     title = "Sr. Director of Corp. Accounting";
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+ },
+ {
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     maxAge = 1;
+     name = "Mr. James  Wilson";
+     title = "Chief Technology Officer";
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+ },
+ {
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     maxAge = 1;
+     name = "Ms. Mary  Demby";
+     title = "Chief Information Officer";
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+ },
+ {
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     maxAge = 1;
+     name = "Ms. Nancy  Paxton";
+     title = "Sr. Director of Investor Relations & Treasury";
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+ },
+ {
+     exercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+     maxAge = 1;
+     name = "Mr. Greg  Joswiak";
+     title = "Sr. VP of Worldwide Marketing";
+     unexercisedValue =     {
+         fmt = "<null>";
+         longFmt = 0;
+         raw = 0;
+     };
+ }
+ )
+ , "compensationRisk": 2, "city": Cupertino, "governanceEpochDate": 1606953600, "longBusinessSummary": Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. It also sells various related services. The company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, HomePod, iPod touch, and other Apple-branded and third-party accessories. It also provides AppleCare support services; cloud services store services; and operates various platforms, including the App Store, that allow customers to discover and download applications and digital content, such as books, music, video, games, and podcasts. In addition, the company offers various services, such as Apple Arcade, a game subscription service; Apple Music, which offers users a curated listening experience with on-demand radio stations; Apple News+, a subscription news and magazine service; Apple TV+, which offers exclusive original content; Apple Card, a co-branded credit card; and Apple Pay, a cashless payment service, as well as licenses its intellectual property. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets. It sells and delivers third-party applications for its products through the App Store. The company also sells its products through its retail and online stores, and direct sales force; and third-party cellular network carriers, wholesalers, retailers, and resellers. Apple Inc. was founded in 1977 and is headquartered in Cupertino, California.]
  }
  */

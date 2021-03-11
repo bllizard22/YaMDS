@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
+    var dataStockMetric = Array<(String, Data)>()
     var stockCards = Dictionary<String, StockTableCard>()
     
     var stockList = StockList().stockList
@@ -192,8 +193,11 @@ class ViewController: UIViewController {
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
                                           industry: json["finnhubIndustry"] as! String,
-                                          marketCap: json["marketCapitalization"] as! Float,
-                                          sharesOutstanding: json["shareOutstanding"] as! Float,
+                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
+                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
+                                          peValue: 0.0,
+                                          psValue: 0.0,
+                                          ebitda: 0.0,
                                           currentPrice: 0.0,
                                           previousClosePrice: 0.0,
                                           isFavourite: false)
@@ -277,7 +281,25 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showDetailView", sender: nil)
+        let ticker = stockTickerList[indexPath.row]
+        StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
+            self.dataStockMetric.append((company, dataIn))
+        }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0) { [self] in
+            for (key, data) in dataStockMetric {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                    print(key, json)
+                    let metric = json["metric"] as! Dictionary<String, Any>
+                    stockCards[key]?.peValue = Float(truncating: metric["peNormalizedAnnual"] as! NSNumber)
+                    stockCards[key]?.psValue = Float(truncating: metric["psTTM"] as! NSNumber)
+                    stockCards[key]?.ebitda = Float(truncating: metric["ebitdPerShareTTM"] as! NSNumber)
+                } catch let error {
+                    print(error)
+                }
+            }
+            performSegue(withIdentifier: "showDetailView", sender: nil)
+        }
     }
 }
 
