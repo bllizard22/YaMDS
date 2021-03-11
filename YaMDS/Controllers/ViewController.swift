@@ -198,6 +198,7 @@ class ViewController: UIViewController {
                                           peValue: 0.0,
                                           psValue: 0.0,
                                           ebitda: 0.0,
+                                          summary: "---",
                                           currentPrice: 0.0,
                                           previousClosePrice: 0.0,
                                           isFavourite: false)
@@ -285,7 +286,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
         }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0) { [self] in
+        let mboum = mboumStockData()
+        let summary = mboum.getCompanySummary(company: "AAPL")
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             for (key, data) in dataStockMetric {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
@@ -298,6 +302,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                     print(error)
                 }
             }
+            stockCards[ticker]?.summary = summary
             performSegue(withIdentifier: "showDetailView", sender: nil)
         }
     }

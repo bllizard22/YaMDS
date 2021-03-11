@@ -13,6 +13,7 @@
 		854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */; };
 		854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE8325F94357006B3122 /* DetailViewController.swift */; };
 		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
+		8570DF3F25FA995100A0271B /* mboumStockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF3E25FA995100A0271B /* mboumStockData.swift */; };
 		85A163C325EF495F00600654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C225EF495F00600654 /* AppDelegate.swift */; };
 		85A163C525EF495F00600654 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C425EF495F00600654 /* SceneDelegate.swift */; };
 		85A163C725EF495F00600654 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C625EF495F00600654 /* ViewController.swift */; };
@@ -33,6 +34,7 @@
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
 		854FAE8325F94357006B3122 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
+		8570DF3E25FA995100A0271B /* mboumStockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mboumStockData.swift; sourceTree = "<group>"; };
 		85A163BF25EF495F00600654 /* YaMDS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaMDS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A163C225EF495F00600654 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85A163C425EF495F00600654 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				85B58D5E25F0AC9900206828 /* StockList.swift */,
 				855A459225F29A68006DD798 /* StockCardData.swift */,
 				854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */,
+				8570DF3E25FA995100A0271B /* mboumStockData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				855A459325F29A68006DD798 /* StockCardData.swift in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
+				8570DF3F25FA995100A0271B /* mboumStockData.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
 				85A163EC25F0A2EB00600654 /* StockData.swift in Sources */,
 				854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */,

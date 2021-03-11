@@ -21,6 +21,9 @@ struct StockTableCard {
     var psValue: Float // psTTM
     var ebitda: Float // ebitdPerShareTTM * shareOutstanding, M
     
+    // MBOUM Data
+    var summary: String
+    
     // Data from Quote request
     var currentPrice: Float
     var previousClosePrice: Float
@@ -202,7 +205,7 @@ extension StockTableCard: Hashable {
  
  MBOUM Company Profile - https://mboum.com/api/v1/qu/quote/profile/?symbol=AAPL
  {
- 
+ {
  ["industry": Consumer Electronics, "fullTimeEmployees": 147000, "website": http://www.apple.com, "shareHolderRightsRisk": 1, "zip": 95014, "auditRisk": 6, "maxAge": 86400, "sector": Technology, "address1": One Apple Park Way, "boardRisk": 1, "state": CA, "phone": 408-996-1010, "compensationAsOfEpochDate": 1609372800, "country": United States, "overallRisk": 1, "companyOfficers": <__NSArrayI 0x600001a419e0>(
  {
      age = 59;

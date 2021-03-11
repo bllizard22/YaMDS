@@ -36,6 +36,7 @@ class DetailViewController: UIViewController {
         psValueLabel.text = String(detailCard!.psValue)
         ebitdaLabel.text = String(detailCard!.ebitda)
         
+        summaryLabel.text = detailCard!.summary
         // Do any additional setup after loading the view.
     }
     
