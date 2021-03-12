@@ -26,6 +26,8 @@ class ViewController: UIViewController {
     var dataStockMetric = Array<(String, Data)>()
     var stockCards = Dictionary<String, StockTableCard>()
     
+    var coreDataCards = Array<Data>()
+    
     var stockList = StockList().stockList
     var stockTickerList = Array<String>()
     var favouriteIsSelected =  false
@@ -219,6 +221,34 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - CoreData Load Cards
+    
+//    // Get context for app
+//    private func getContext() -> NSManagedObjectContext {
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        return appDelegate.persistentContainer.viewContext
+//    }
+//    
+//    // Reload data from CoreData
+//    private func loadCoreData() {
+//        let context = getContext()
+//        
+//        guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else {return}
+//        
+//        // Create new task
+//        let taskObject = stockCard(entity: entity, insertInto: context)
+//        taskObject.imageURL = title
+//        
+//        // Save new task in memory at 0 position
+//        do {
+//            try context.save()
+//            //            tasks.append(taskObject)
+//            imageLikes.insert(taskObject, at: 0)
+//        } catch let error as NSError  {
+//            print(error.localizedDescription)
+//        }
+//    }
     
 }
 
