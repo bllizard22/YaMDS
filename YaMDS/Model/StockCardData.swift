@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StockTableCard {
+struct StockTableCard: Codable {
     // Data from Company Profile 2 request
     let name: String
     let logo: URL

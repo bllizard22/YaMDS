@@ -22,6 +22,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        }
         guard let _ = (scene as? UIWindowScene) else { return }
     }
+    
+    func isAppAlreadyLaunchedOnce()->Bool{
+        let defaults = UserDefaults()
+        
+        if let isAppAlreadyLaunchedOnce = defaults.string(forKey: "isAppAlreadyLaunchedOnce"){
+            print("App already launched")
+            return true
+        }else{
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            print("App launched first time")
+            return false
+        }
+    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

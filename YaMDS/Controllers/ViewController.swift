@@ -61,16 +61,25 @@ class ViewController: UIViewController {
         
         loadAllStocksData()
         
+        let defaults = UserDefaults()
+        
+        if let isAppAlreadyLaunchedOnce = defaults.string(forKey: "isAppAlreadyLaunchedOnce") {
+            print("Launched not first time")
+            loadCoreData()
+        }
+        self.loadStocksInView()
+        
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-            if dataStockInfo[0].count == 0 {
+            if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
                 dataStockInfo.removeFirst()
             }
-            self.loadStocksInView()
+//            self.loadStocksInView()
             
             parseStocksDataToJSON()
+//            saveCoreData()
         }
     }
-    
+        
     func loadStocksInView() {
         
         stockTableView = UITableView(frame: CGRect(x: 12, y: 200,
@@ -224,31 +233,61 @@ class ViewController: UIViewController {
     
     // MARK: - CoreData Load Cards
     
-//    // Get context for app
-//    private func getContext() -> NSManagedObjectContext {
-//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//        return appDelegate.persistentContainer.viewContext
-//    }
-//    
-//    // Reload data from CoreData
-//    private func loadCoreData() {
-//        let context = getContext()
-//        
-//        guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else {return}
-//        
-//        // Create new task
-//        let taskObject = stockCard(entity: entity, insertInto: context)
-//        taskObject.imageURL = title
-//        
-//        // Save new task in memory at 0 position
-//        do {
-//            try context.save()
-//            //            tasks.append(taskObject)
-//            imageLikes.insert(taskObject, at: 0)
-//        } catch let error as NSError  {
-//            print(error.localizedDescription)
-//        }
-//    }
+    // Get context for app
+    private func getContext() -> NSManagedObjectContext {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }
+
+    // Reload data from CoreData
+    private func loadCoreData() {
+        let context = getContext()
+        
+        let fetchRequest: NSFetchRequest<StockCard> = StockCard.fetchRequest()
+        // Sorting of tasks list
+//        let sortDescriptor = NSSortDescriptor(key: "ticker", ascending: false)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        // Obtain data from context
+        do {
+            let dataStockList = try context.fetch(fetchRequest)
+            print(dataStockList)
+            print(type(of: dataStockList))
+            for record in dataStockList {
+                let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
+                stockCards[record.ticker!] = decodedCard
+            }
+            print(stockCards.count)
+            print(stockCards)
+            stockTickerList = StockList().stockList
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // Save all cards to CoreData as dictionary
+    private func saveCoreData() {
+        let context = getContext()
+        
+        guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else {return}
+        
+        for (key, value) in stockCards {
+            // Create new task
+            let taskObject = StockCard(entity: entity, insertInto: context)
+            taskObject.ticker = key
+            let encodedCard = try! JSONEncoder().encode(value)
+            taskObject.card = encodedCard
+            
+            // Save new task in memory at 0 position
+            do {
+                try context.save()
+                print(taskObject.ticker)
+                print(taskObject.card)
+            } catch let error as NSError  {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
 }
 

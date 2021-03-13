@@ -2,12 +2,13 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D80" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="StockCard" representedClassName="StockCard" syncable="YES" codeGenerationType="class">
         <attribute name="card" optional="YES" attributeType="Binary"/>
+        <attribute name="ticker" optional="YES" attributeType="String"/>
     </entity>
     <entity name="StockCardLikes" representedClassName="StockCardLikes" syncable="YES" codeGenerationType="class">
         <attribute name="ticker" optional="YES" attributeType="String"/>
     </entity>
     <elements>
+        <element name="StockCard" positionX="-63" positionY="-9" width="128" height="59"/>
         <element name="StockCardLikes" positionX="-63" positionY="-18" width="128" height="44"/>
-        <element name="StockCard" positionX="-63" positionY="-9" width="128" height="44"/>
     </elements>
 </model>
