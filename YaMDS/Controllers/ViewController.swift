@@ -312,6 +312,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.selectionStyle = .none
         let ticker = stockTickerList[indexPath.row]
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
@@ -358,16 +360,9 @@ extension ViewController: UISearchBarDelegate {
         stockTableView.reloadData()
     }
     
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        isEditing
-//    }
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        searchBarIsClicked = true
-//    }
-    
-//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-//        searchBarIsClicked = false
-//    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 // MARK: - Hide SearchBar onScroll
