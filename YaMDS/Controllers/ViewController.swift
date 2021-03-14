@@ -112,6 +112,10 @@ class ViewController: UIViewController {
         view.addSubview(stockTableView)
         
         searchBar.delegate = self
+//        let searchPlaceholder = searchBar.value(forKey: "placeholder") as! 
+//        print(searchPlaceholder)
+//        searchPlaceholder.font = UIFont(name: "Montserrat", size: 5)
+//        searchBar.placeholder = searchPlaceholder.text
     }
     
     // MARK: - IBActions
