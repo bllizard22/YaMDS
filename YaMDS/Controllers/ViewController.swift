@@ -19,30 +19,27 @@ import Kingfisher
 
 class ViewController: UIViewController {
     
-    var stockTableView: UITableView!
-    
+    // Stock Data
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
     var dataStockMetric = Array<(String, Data)>()
-    var stockCards = Dictionary<String, StockTableCard>()
-    
-    var coreDataCards = Array<Data>()
-    
+    var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockList = StockList().stockList
-    var stockTickerList = Array<String>()
+    var stockTickerList = Array<String>()   // List of tickers for Cards
     var favouriteIsSelected =  false
     var favourites = Favourites()
     
-    var jsonName = ""
+//    var coreDataCards = Array<Data>()
+//    var jsonName = ""
     
     // IBOutlets
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
+    var stockTableView: UITableView!
     var headerViewHeight = 0
     
     // SearchController
-//    let searchController = UISearchController(searchResultsController: nil)
     var filteredStockTickerList = Array<String>()
     var searchBarIsEmpty: Bool {
         guard let text = searchBar.text else {
@@ -56,30 +53,53 @@ class ViewController: UIViewController {
 //        return searchBarIsClicked && !searchBarIsEmpty
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadAllStocksData()
-        
         let defaults = UserDefaults()
         
-        if let isAppAlreadyLaunchedOnce = defaults.string(forKey: "isAppAlreadyLaunchedOnce") {
+        if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-            loadCoreData()
-        }
-        self.loadStocksInView()
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-            if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
-                dataStockInfo.removeFirst()
-            }
-//            self.loadStocksInView()
+            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+            print(defaults.bool(forKey: "isAppAlreadyLaunchedOnce"))
+            loadCardsFromCoreData()
             
-            parseStocksDataToJSON()
-//            saveCoreData()
+            loadPricesFromAPI()
+            self.loadStocksInView()
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+                if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
+                    dataStockInfo.removeFirst()
+                }
+                parsePricesDataJSON()
+                
+                // Should be turned on after testing
+//                saveCoreData()
+            }
+        } else {
+            loadCardsFromAPI()
+            print("First launch!")
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            
+            loadPricesFromAPI()
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+                if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
+                    dataStockInfo.removeFirst()
+                }
+                parseCardsDataJSON()
+                parsePricesDataJSON()
+                self.loadStocksInView()
+                
+                // Should be turned on after testing
+//                saveCoreData()
+            }
         }
     }
-        
+
+    // Create TableView for Cards
     func loadStocksInView() {
         
         stockTableView = UITableView(frame: CGRect(x: 12, y: 200,
@@ -107,12 +127,12 @@ class ViewController: UIViewController {
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
-            sender.setImage(UIImage(systemName: "star"), for: .normal)
+            sender.setImage(UIImage(named: "StarGold"), for: .normal)
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
         } else {
-            sender.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            sender.setImage(UIImage(named: "StarGray"), for: .normal)
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
             print("\(key) did liked")
@@ -172,34 +192,39 @@ class ViewController: UIViewController {
     
     // MARK: - API load funcs
     
-    func loadAllStocksData() {
+    // API request for company profile data
+    func loadCardsFromAPI() {
         let stockData = StockData()
         for company in stockList {
             stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
                 self.dataStockInfo.append(dataIn)
             }
-            
+        }
+    }
+    
+    // API request for prices data of Cards
+    func loadPricesFromAPI() {
+        let stockData = StockData()
+        for company in stockList {
             stockData.getPrice(stockSymbol: company) { (company, dataIn) in
                 self.dataStockPrice.append((company, dataIn))
             }
         }
+        print("loaded prices")
     }
     
-    func parseStocksDataToJSON () {
+    func parseCardsDataJSON () {
         print(dataStockInfo.count)
         print("data for JSON", dataStockInfo)
 //        var json: [String: Any]
         for data in dataStockInfo {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-
                 print(json)
-                // TODO: - Set price and logo URL
                 var stringLogoURL = json["logo"] as? String
                 if stringLogoURL == "" {
                     stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
                 }
-//                print(stringLogoURL!)
                 let card = StockTableCard(name: json["name"] as! String,
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"] as! String,
@@ -219,6 +244,42 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
+    }
+    
+    func parsePricesDataJSON () {
+        print(dataStockInfo.count)
+        print("data for JSON", dataStockInfo)
+//        var json: [String: Any]
+//        for data in dataStockInfo {
+//            do {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+//
+//                print(json)
+//                // TODO: - Set price and logo URL
+//                var stringLogoURL = json["logo"] as? String
+//                if stringLogoURL == "" {
+//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
+//                }
+////                print(stringLogoURL!)
+//                let card = StockTableCard(name: json["name"] as! String,
+//                                          logo: (URL.init(string: stringLogoURL!)!),
+//                                          ticker: json["ticker"] as! String,
+//                                          industry: json["finnhubIndustry"] as! String,
+//                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
+//                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
+//                                          peValue: 0.0,
+//                                          psValue: 0.0,
+//                                          ebitda: 0.0,
+//                                          summary: "---",
+//                                          currentPrice: 0.0,
+//                                          previousClosePrice: 0.0,
+//                                          isFavourite: false)
+//                stockCards[card.ticker] = card
+//                stockTickerList.append(card.ticker)
+//            } catch let error {
+//                print(error)
+//            }
+//        }
         for (key, data) in dataStockPrice {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
@@ -240,7 +301,7 @@ class ViewController: UIViewController {
     }
 
     // Reload data from CoreData
-    private func loadCoreData() {
+    private func loadCardsFromCoreData() {
         let context = getContext()
         
         let fetchRequest: NSFetchRequest<StockCard> = StockCard.fetchRequest()
@@ -271,6 +332,7 @@ class ViewController: UIViewController {
         
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else {return}
         
+        print("Saving Cards to CoreData")
         for (key, value) in stockCards {
             // Create new task
             let taskObject = StockCard(entity: entity, insertInto: context)
@@ -281,8 +343,8 @@ class ViewController: UIViewController {
             // Save new task in memory at 0 position
             do {
                 try context.save()
-                print(taskObject.ticker)
-                print(taskObject.card)
+                print(taskObject.ticker!)
+                print(taskObject.card!)
             } catch let error as NSError  {
                 print(error.localizedDescription)
             }
@@ -318,7 +380,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.companyLabel.text = stockCards[key]!.name
         cell.tickerLabel.text = stockCards[key]!.ticker
         cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
-        cell.priceChangeLabel.text = StockData().calcPriceChange(card: stockCards[key]!)
+        let (priceChange, isPositive) = StockData().calcPriceChange(card: stockCards[key]!)
+        cell.priceChangeLabel.text = priceChange
+        cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
         
         let resource = ImageResource(downloadURL: stockCards[key]!.logo)
         cell.logoImage.kf.setImage(with: resource) { (result) in
@@ -331,19 +395,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         if indexPath.row % 2 == 0 {
-            cell.backgroundColor = UIColor(named: "AccentColor")
+            cell.backgroundColor = UIColor(named: "EvenCell")
         }
         cell.layer.cornerRadius = 16
         
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
-            cell.favouriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
             stockCards[key]!.isFavourite = true
-            print("\(key) is liked")
+//            print("\(key) is liked")
         } else {
-            cell.favouriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+            cell.favouriteButton.setImage(UIImage(named: "StarGray"), for: .normal)
             stockCards[key]!.isFavourite = false
-            print("\(key) is not liked")
+//            print("\(key) is not liked")
         }
         cell.favouriteButton.tag = indexPath.row
         

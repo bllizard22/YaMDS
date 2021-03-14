@@ -166,7 +166,7 @@ class StockData {
         dataTask.resume()
     }
     
-    func calcPriceChange(card: StockTableCard) -> String{
+    func calcPriceChange(card: StockTableCard) -> (String, Bool) {
         let current = card.currentPrice
         let previous = card.previousClosePrice
         let change = current/previous - 1
@@ -179,6 +179,6 @@ class StockData {
         let changeString = format.string(from: NSNumber(value: change))!
 //        let change = format.string(from: NSNumber(value: ( current / previous - 1)))
         
-        return changeString
+        return (changeString, change >= 0)
     }
 }
