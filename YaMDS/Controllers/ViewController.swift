@@ -24,7 +24,6 @@ class ViewController: UIViewController {
     var dataStockPrice = Array<(String, Data)>()
     var dataStockMetric = Array<(String, Data)>()
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
-    var stockList = StockList().stockList
     var stockTickerList = Array<String>()   // List of tickers for Cards
     var favouriteIsSelected =  false
     var favourites = Favourites()
@@ -76,7 +75,7 @@ class ViewController: UIViewController {
                 parsePricesDataJSON()
                 
                 // Should be turned on after testing
-//                saveCoreData()
+                saveCoreData()
             }
         } else {
             loadCardsFromAPI()
@@ -94,7 +93,7 @@ class ViewController: UIViewController {
                 self.loadStocksInView()
                 
                 // Should be turned on after testing
-//                saveCoreData()
+                saveCoreData()
             }
         }
     }
@@ -112,10 +111,6 @@ class ViewController: UIViewController {
         view.addSubview(stockTableView)
         
         searchBar.delegate = self
-//        let searchPlaceholder = searchBar.value(forKey: "placeholder") as! 
-//        print(searchPlaceholder)
-//        searchPlaceholder.font = UIFont(name: "Montserrat", size: 5)
-//        searchBar.placeholder = searchPlaceholder.text
     }
     
     // MARK: - IBActions
@@ -131,12 +126,12 @@ class ViewController: UIViewController {
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
-            sender.setImage(UIImage(named: "StarGold"), for: .normal)
+            sender.setImage(UIImage(named: "StarGray"), for: .normal)
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
         } else {
-            sender.setImage(UIImage(named: "StarGray"), for: .normal)
+            sender.setImage(UIImage(named: "StarGold"), for: .normal)
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
             print("\(key) did liked")
@@ -171,9 +166,7 @@ class ViewController: UIViewController {
         stocksButton.setTitleColor(.systemGray2, for: .normal)
 
         favouriteIsSelected = true
-        
-//        favourites.clearAllLikes()
-        
+                
         stockTableView.reloadData()
     }
     
@@ -199,7 +192,7 @@ class ViewController: UIViewController {
     // API request for company profile data
     func loadCardsFromAPI() {
         let stockData = StockData()
-        for company in stockList {
+        for company in StockList().stockList {
             stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
                 self.dataStockInfo.append(dataIn)
             }
@@ -209,7 +202,7 @@ class ViewController: UIViewController {
     // API request for prices data of Cards
     func loadPricesFromAPI() {
         let stockData = StockData()
-        for company in stockList {
+        for company in StockList().stockList {
             stockData.getPrice(stockSymbol: company) { (company, dataIn) in
                 self.dataStockPrice.append((company, dataIn))
             }
@@ -361,7 +354,6 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return StockList().stockList.count
         if isFiltering {
             return filteredStockTickerList.count
         }
@@ -372,8 +364,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-        
-//        let key = stockCardsList[indexPath.row]
         var key: String
         if isFiltering {
             key = filteredStockTickerList[indexPath.row]
@@ -401,7 +391,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row % 2 == 0 {
             cell.backgroundColor = UIColor(named: "EvenCell")
         }
-        cell.layer.cornerRadius = 16
+        cell.layer.cornerRadius = 24
         
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {

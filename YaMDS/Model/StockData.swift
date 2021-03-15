@@ -169,16 +169,25 @@ class StockData {
     func calcPriceChange(card: StockTableCard) -> (String, Bool) {
         let current = card.currentPrice
         let previous = card.previousClosePrice
-        let change = current/previous - 1
+        let changeRatio = current/previous - 1
         
-        let format = NumberFormatter()
-        format.numberStyle = .percent
-        format.minimumIntegerDigits = 1
-        format.minimumFractionDigits = 2
-        format.maximumFractionDigits = 2
-        let changeString = format.string(from: NSNumber(value: change))!
-//        let change = format.string(from: NSNumber(value: ( current / previous - 1)))
+        let formatRatio = NumberFormatter()
+        formatRatio.numberStyle = .percent
+        formatRatio.minimumIntegerDigits = 1
+        formatRatio.minimumFractionDigits = 2
+        formatRatio.maximumFractionDigits = 2
         
-        return (changeString, change >= 0)
+        let formatValue = NumberFormatter()
+        formatValue.numberStyle = .currency
+        formatValue.locale = Locale(identifier: "en_US")
+        formatValue.minimumIntegerDigits = 1
+        formatValue.minimumFractionDigits = 2
+        formatValue.maximumFractionDigits = 2
+        let changeValue = formatRatio
+        
+        // TODO: - Refactor +/- formatting
+        let changeString = "\(formatValue.string(from: NSNumber(value: current-previous))!) (\(formatRatio.string(from: NSNumber(value: changeRatio))!))"
+        
+        return (changeString, changeRatio >= 0)
     }
 }
