@@ -75,7 +75,7 @@ class ViewController: UIViewController {
                 parsePricesDataJSON()
                 
                 // Should be turned on after testing
-                saveCoreData()
+                //saveCoreData()
             }
         } else {
             loadCardsFromAPI()
@@ -135,7 +135,7 @@ class ViewController: UIViewController {
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
             print("\(key) did liked")
-        }
+        }
         if favouriteIsSelected {
             stockTickerList = favourites.liked
             stockTableView.reloadData()

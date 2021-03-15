@@ -183,7 +183,7 @@ class StockData {
         formatValue.minimumIntegerDigits = 1
         formatValue.minimumFractionDigits = 2
         formatValue.maximumFractionDigits = 2
-        let changeValue = formatRatio
+//        let changeValue = formatRatio
         
         // TODO: - Refactor +/- formatting
         let changeString = "\(formatValue.string(from: NSNumber(value: current-previous))!) (\(formatRatio.string(from: NSNumber(value: changeRatio))!))"

@@ -65,9 +65,9 @@ class mboumStockData {
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             if (error != nil) {
-                print(error)
+                print(error!)
             } else {
-                let data = data as? Data
+//                let data = data
 //                print(data)
                 self.dataStockInfo.append(data!)
             }
