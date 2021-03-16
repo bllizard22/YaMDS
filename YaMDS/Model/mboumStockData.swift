@@ -39,7 +39,6 @@ class mboumStockData {
     func parseStocksDataToJSON (completion: @escaping (String) -> ()) {
         print(dataStockInfo.count)
         print("data for JSON", dataStockInfo)
-        //        var json: [String: Any]
         for data in dataStockInfo {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
@@ -67,8 +66,6 @@ class mboumStockData {
             if (error != nil) {
                 print(error!)
             } else {
-//                let data = data
-//                print(data)
                 self.dataStockInfo.append(data!)
             }
         })

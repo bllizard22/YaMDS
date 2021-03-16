@@ -18,15 +18,12 @@ class StockData {
     var dadta = [Data()]
     
     func getStockList(completion: @escaping ([Data]) -> ()) {
-        
-        //
         for company in StockList().stockList {
             getStockInfo(stockSymbol: company) { (dataIn) -> () in
                 self.dadta.append(dataIn)
                 print(self.dadta.count)
             }
         }
-//        print("get \(dadta.count) elements")
         dadta.removeFirst()
         completion(dadta)
     }
@@ -41,26 +38,11 @@ class StockData {
         request.allHTTPHeaderFields = headers
         
         let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
-            
-//            DispatchQueue.global(qos: .background).async {
-                
-                if (error != nil) {
-                    print(error!)
-                } else {
-//                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-//                            as! [String: Any]
-                        completion(data!)
-//                        DispatchQueue.main.async {
-//                            self.dadta.append(data!)
-//                            print("append")
-//                        }
-
-//                    } catch let error {
-//                        print(error)
-//                    }
-                }
-//            }
+            if (error != nil) {
+                print(error!)
+            } else {
+                completion(data!)
+            }
         }
         )
         dataTask.resume()
@@ -102,27 +84,6 @@ class StockData {
                 print(error!)
             } else {
                 completion(symbol, data!)
-//                let httpResponse = response as? HTTPURLResponse
-                //        print(httpResponse)
-//                let dataString = String(data: data!, encoding: .utf8)!
-                //                print(dataString.count)
-//                do {
-//                    let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: Any]
-//                    let current = json["c"] as! NSNumber.FloatLiteralType
-//                    let previous = json["pc"] as! NSNumber.FloatLiteralType
-//                    let format = NumberFormatter()
-//                    format.numberStyle = .percent
-//                    format.minimumIntegerDigits = 1
-//                    format.minimumFractionDigits = 2
-//                    format.maximumFractionDigits = 2
-//
-//                    let change = format.string(from: NSNumber(value: ( current / previous - 1)))
-//                    print("Change 24h: \(change!)")
-//                    print(json)
-//
-//                } catch let error {
-//                    print(error)
-//                }
             }
         })
         dataTask.resume()
@@ -143,24 +104,6 @@ class StockData {
                 print(error!)
             } else {
                 completion(symbol, data!)
-//                let httpResponse = response as? HTTPURLResponse
-                //        print(httpResponse)
-//                let dataString = String(data: data!, encoding: .utf8)!
-                //                print(dataString.count)
-//                do {
-//                    let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-//
-//                    print(type(of: json))
-//                    print(type(of: json["metric"]!))
-//                    //                    print(type(of: json["metric"]!["peNormalizedAnnual"]))
-//                    let metric = json["metric"] as! Dictionary<String,Any>
-//                    print(metric)
-//                    print(metric["peNormalizedAnnual"]!)
-//
-//                } catch let error {
-//                    print(error)
-//                }
-                
             }
         })
         dataTask.resume()
@@ -183,7 +126,6 @@ class StockData {
         formatValue.minimumIntegerDigits = 1
         formatValue.minimumFractionDigits = 2
         formatValue.maximumFractionDigits = 2
-//        let changeValue = formatRatio
         
         // TODO: - Refactor +/- formatting
         let changeString = "\(formatValue.string(from: NSNumber(value: current-previous))!) (\(formatRatio.string(from: NSNumber(value: changeRatio))!))"

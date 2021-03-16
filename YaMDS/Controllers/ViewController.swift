@@ -28,8 +28,11 @@ class ViewController: UIViewController {
     var favouriteIsSelected =  false
     var favourites = Favourites()
     
-//    var coreDataCards = Array<Data>()
-//    var jsonName = ""
+    // WebSockets
+    @objc let priceSocket = PriceSocket()
+    var priceObservation: NSKeyValueObservation?
+    var tickerObservation: NSKeyValueObservation?
+    var tickerKVO: String?
     
     // IBOutlets
     @IBOutlet weak var stocksButton: UIButton!
@@ -37,6 +40,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     var stockTableView: UITableView!
     var headerViewHeight = 0
+    var rowHeight = 0
     
     // SearchController
     var filteredStockTickerList = Array<String>()
@@ -59,6 +63,19 @@ class ViewController: UIViewController {
         
         let defaults = UserDefaults()
         
+        priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
+            guard let updatedPrice = change.newValue else { return }
+            print("New price \(updatedPrice)")
+            self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
+            self.stockTableView.reloadData()
+//            self.priceLabel.text = "\(self.tickerKVO!) \(String(updatedPrice))"
+        })
+        tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
+            guard let updatedTicker = change.newValue as? String else { return }
+            print("New ticker \(updatedTicker)")
+            self.tickerKVO = updatedTicker
+        })
+        
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
             defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
@@ -73,9 +90,10 @@ class ViewController: UIViewController {
                     dataStockInfo.removeFirst()
                 }
                 parsePricesDataJSON()
+                saveCoreData()
                 
-                // Should be turned on after testing
-                //saveCoreData()
+//                priceSocket.createConnection()
+                priceSocket.startWebSocket(tickerArray: ["AAPL"]) //"BINANCE:BTCUSDT"
             }
         } else {
             loadCardsFromAPI()
@@ -91,9 +109,10 @@ class ViewController: UIViewController {
                 parseCardsDataJSON()
                 parsePricesDataJSON()
                 self.loadStocksInView()
-                
-                // Should be turned on after testing
                 saveCoreData()
+                
+//                priceSocket.createConnection()
+                priceSocket.startWebSocket(tickerArray: ["AAPL"]) //"BINANCE:BTCUSDT"
             }
         }
     }

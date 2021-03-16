@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01A268E52600F1980097E848 /* WebSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A268E42600F1970097E848 /* WebSockets.swift */; };
+		01A268E92600F2190097E848 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 01A268E82600F2190097E848 /* Starscream */; };
+		01A268ED2600F2770097E848 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 01A268EC2600F2770097E848 /* SwiftyJSON */; };
 		01D53E4425F7AF410061BF91 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01D53E4225F7AF400061BF91 /* Montserrat-SemiBold.ttf */; };
 		01D53E4525F7AF410061BF91 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */; };
 		854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 854FAE7725F4C351006B3122 /* Kingfisher */; };
@@ -29,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01A268E42600F1970097E848 /* WebSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSockets.swift; sourceTree = "<group>"; };
 		01D53E4225F7AF400061BF91 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
@@ -56,7 +60,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01A268ED2600F2770097E848 /* SwiftyJSON in Frameworks */,
 				854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */,
+				01A268E92600F2190097E848 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +125,7 @@
 				855A459225F29A68006DD798 /* StockCardData.swift */,
 				854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */,
 				8570DF3E25FA995100A0271B /* mboumStockData.swift */,
+				01A268E42600F1970097E848 /* WebSockets.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -155,6 +162,8 @@
 			name = YaMDS;
 			packageProductDependencies = (
 				854FAE7725F4C351006B3122 /* Kingfisher */,
+				01A268E82600F2190097E848 /* Starscream */,
+				01A268EC2600F2770097E848 /* SwiftyJSON */,
 			);
 			productName = YaMDS;
 			productReference = 85A163BF25EF495F00600654 /* YaMDS.app */;
@@ -185,6 +194,8 @@
 			mainGroup = 85A163B625EF495F00600654;
 			packageReferences = (
 				854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				01A268E72600F2190097E848 /* XCRemoteSwiftPackageReference "Starscream" */,
+				01A268EB2600F2770097E848 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 85A163C025EF495F00600654 /* Products */;
 			projectDirPath = "";
@@ -220,6 +231,7 @@
 				85A163CD25EF495F00600654 /* YaMDS.xcdatamodeld in Sources */,
 				855A459325F29A68006DD798 /* StockCardData.swift in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
+				01A268E52600F1980097E848 /* WebSockets.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
 				8570DF3F25FA995100A0271B /* mboumStockData.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
@@ -433,6 +445,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		01A268E72600F2190097E848 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
+			};
+		};
+		01A268EB2600F2770097E848 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -444,6 +472,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		01A268E82600F2190097E848 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01A268E72600F2190097E848 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+		01A268EC2600F2770097E848 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01A268EB2600F2770097E848 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
 		854FAE7725F4C351006B3122 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 854FAE7625F4C351006B3122 /* XCRemoteSwiftPackageReference "Kingfisher" */;
