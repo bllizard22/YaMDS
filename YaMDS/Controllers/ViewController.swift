@@ -39,6 +39,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     var stockTableView: UITableView!
+    var cardsIsLoaded = false
     var headerViewHeight = 0
     var rowHeight = 0
     
@@ -81,6 +82,7 @@ class ViewController: UIViewController {
             defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             print(defaults.bool(forKey: "isAppAlreadyLaunchedOnce"))
             loadCardsFromCoreData()
+            cardsIsLoaded = true
             
             loadPricesFromAPI()
             self.loadStocksInView()
@@ -92,13 +94,15 @@ class ViewController: UIViewController {
                 parsePricesDataJSON()
                 saveCoreData()
                 
+                
 //                priceSocket.createConnection()
-                priceSocket.startWebSocket(tickerArray: ["AAPL"]) //"BINANCE:BTCUSDT"
+//                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
+                priceSocket.startWebSocket(tickerArray: stockTickerList) //"BINANCE:BTCUSDT"
             }
         } else {
             loadCardsFromAPI()
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadPricesFromAPI()
             
@@ -110,9 +114,11 @@ class ViewController: UIViewController {
                 parsePricesDataJSON()
                 self.loadStocksInView()
                 saveCoreData()
+                cardsIsLoaded = true
                 
 //                priceSocket.createConnection()
-                priceSocket.startWebSocket(tickerArray: ["AAPL"]) //"BINANCE:BTCUSDT"
+//                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
+                priceSocket.startWebSocket(tickerArray: stockTickerList) //"BINANCE:BTCUSDT"
             }
         }
     }
@@ -162,6 +168,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
+        if !cardsIsLoaded { return }
         stockTickerList = StockList().stockList
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
@@ -176,6 +183,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
+        if !cardsIsLoaded { return }
         stockTickerList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
@@ -265,37 +273,6 @@ class ViewController: UIViewController {
     func parsePricesDataJSON () {
         print(dataStockInfo.count)
         print("data for JSON", dataStockInfo)
-//        var json: [String: Any]
-//        for data in dataStockInfo {
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-//
-//                print(json)
-//                // TODO: - Set price and logo URL
-//                var stringLogoURL = json["logo"] as? String
-//                if stringLogoURL == "" {
-//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
-//                }
-////                print(stringLogoURL!)
-//                let card = StockTableCard(name: json["name"] as! String,
-//                                          logo: (URL.init(string: stringLogoURL!)!),
-//                                          ticker: json["ticker"] as! String,
-//                                          industry: json["finnhubIndustry"] as! String,
-//                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
-//                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
-//                                          peValue: 0.0,
-//                                          psValue: 0.0,
-//                                          ebitda: 0.0,
-//                                          summary: "---",
-//                                          currentPrice: 0.0,
-//                                          previousClosePrice: 0.0,
-//                                          isFavourite: false)
-//                stockCards[card.ticker] = card
-//                stockTickerList.append(card.ticker)
-//            } catch let error {
-//                print(error)
-//            }
-//        }
         for (key, data) in dataStockPrice {
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
@@ -392,11 +369,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.companyLabel.text = stockCards[key]!.name
         cell.tickerLabel.text = stockCards[key]!.ticker
-        cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
+//        cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
+        let price = NSNumber(value: stockCards[key]!.currentPrice)
+        cell.priceLabel.text = cell.priceFormatter.string(from: price)
         let (priceChange, isPositive) = StockData().calcPriceChange(card: stockCards[key]!)
         cell.priceChangeLabel.text = priceChange
         cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
         
+//        let urlString = String(stockCards[key]!.webpage.absoluteString[11...])
+//        let urlSplitted = stockCards[key]!.webpage.absoluteString.split(separator: ".")
+//        let urlString = String(stockCards[key]!.name.split(separator: " ").first!.lowercased())
+//        print(urlString)
+//        let resource = ImageResource(downloadURL: URL(string: "https://logo.uplead.com/\(urlString).com")!)
         let resource = ImageResource(downloadURL: stockCards[key]!.logo)
         cell.logoImage.kf.setImage(with: resource) { (result) in
             switch result {
@@ -431,6 +415,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.selectionStyle = .none
         let ticker = stockTickerList[indexPath.row]
+        loadDetailViewData(ticker: ticker)
+    }
+    
+    func loadDetailViewData(ticker: String) {
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
         }

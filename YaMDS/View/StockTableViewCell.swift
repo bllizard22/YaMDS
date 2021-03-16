@@ -18,16 +18,28 @@ class StockTableViewCell: UITableViewCell {
     
     var primaryFont = UIFont()
     var secondaryFont = UIFont()
+    let priceFormatter = NumberFormatter()
+    let priceChangeFormatter = NumberFormatter()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        priceFormatter.numberStyle = .currency
+        priceFormatter.locale = Locale(identifier: "en_US")
+        priceFormatter.minimumIntegerDigits = 1
+        priceFormatter.minimumFractionDigits = 2
+        priceFormatter.maximumFractionDigits = 2
+        priceChangeFormatter.numberStyle = .percent
+        priceChangeFormatter.minimumIntegerDigits = 1
+        priceChangeFormatter.minimumFractionDigits = 2
+        priceChangeFormatter.maximumFractionDigits = 2
+        
         if UIDevice().name == "iPhone 8" {
-            primaryFont = UIFont(name: "Montserrat-Bold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .bold)
-            secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 12) ?? UIFont.systemFont(ofSize: 12, weight: .semibold)
+            primaryFont = UIFont(name: "Montserrat-Bold", size: 20) ?? UIFont.systemFont(ofSize: 20, weight: .bold)
+            secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
         } else {
-            primaryFont = UIFont(name: "Montserrat-Bold", size: 24) ?? UIFont.systemFont(ofSize: 24, weight: .bold)
-            secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
+            primaryFont = UIFont(name: "Montserrat-Bold", size: 22) ?? UIFont.systemFont(ofSize: 22, weight: .bold)
+            secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
         }
         
         tickerLabel.font = primaryFont
