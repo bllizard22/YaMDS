@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     var stockTickerList = Array<String>()   // List of tickers for Cards
     var favouriteIsSelected =  false
     var favourites = Favourites()
+    var modelCD = ModelCD()
     
     // WebSockets
     @objc let priceSocket = PriceSocket()
@@ -102,9 +103,11 @@ class ViewController: UIViewController {
         } else {
             loadCardsFromAPI()
             print("First launch!")
-//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadPricesFromAPI()
+            
+            // TODO: - Add loading indicator/animation
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
                 if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
@@ -126,9 +129,10 @@ class ViewController: UIViewController {
     // Create TableView for Cards
     func loadStocksInView() {
         
+        // TODO: - Constraint to anchors instead of height
         stockTableView = UITableView(frame: CGRect(x: 12, y: 200,
                                                    width: view.bounds.width-12*2, height: view.bounds.height-200))
-        stockTableView.rowHeight = 96
+//        stockTableView.rowHeight = 96
         stockTableView.separatorStyle = .none
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
@@ -152,6 +156,9 @@ class ViewController: UIViewController {
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
             sender.setImage(UIImage(named: "StarGray"), for: .normal)
+//            UIView.animate(withDuration: 2.0, delay: 2.0, options: [.allowUserInteraction], animations: {
+//                sender.layoutIfNeeded()
+//            }, completion: nil)
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
@@ -200,16 +207,15 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetailView" {
             if let indexPath = stockTableView.indexPathForSelectedRow {
-                let key: String
-                if isFiltering {
-                    key = filteredStockTickerList[indexPath.row]
-                } else {
-                    key = stockTickerList[indexPath.row]
-                }
+                let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
+//                if isFiltering {
+//                    key = filteredStockTickerList[indexPath.row]
+//                } else {
+//                    key = stockTickerList[indexPath.row]
+//                }
                 
                 let detailViewController = segue.destination as! DetailViewController
                 detailViewController.detailCard = stockCards[key]
-                
             }
         }
     }
@@ -287,63 +293,19 @@ class ViewController: UIViewController {
     
     // MARK: - CoreData Load Cards
     
-    // Get context for app
-    private func getContext() -> NSManagedObjectContext {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        return appDelegate.persistentContainer.viewContext
-    }
-
     // Reload data from CoreData
     private func loadCardsFromCoreData() {
-        let context = getContext()
-        
-        let fetchRequest: NSFetchRequest<StockCard> = StockCard.fetchRequest()
-        // Sorting of tasks list
-//        let sortDescriptor = NSSortDescriptor(key: "ticker", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        // Obtain data from context
-        do {
-            let dataStockList = try context.fetch(fetchRequest)
-            print(dataStockList)
-            print(type(of: dataStockList))
-            for record in dataStockList {
-                let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
-                stockCards[record.ticker!] = decodedCard
-            }
-            print(stockCards.count)
-            print(stockCards)
-            stockTickerList = StockList().stockList
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
+        stockCards = modelCD.loadCardsFromCoreData()
+//        print(stockCards.count)
+//        print(stockCards)
+        stockTickerList = StockList().stockList
     }
     
     // Save all cards to CoreData as dictionary
     private func saveCoreData() {
-        let context = getContext()
-        
-        guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else {return}
-        
         print("Saving Cards to CoreData")
-        for (key, value) in stockCards {
-            // Create new task
-            let taskObject = StockCard(entity: entity, insertInto: context)
-            taskObject.ticker = key
-            let encodedCard = try! JSONEncoder().encode(value)
-            taskObject.card = encodedCard
-            
-            // Save new task in memory at 0 position
-            do {
-                try context.save()
-                print(taskObject.ticker!)
-                print(taskObject.card!)
-            } catch let error as NSError  {
-                print(error.localizedDescription)
-            }
-        }
+        modelCD.saveCoreData(cards: stockCards)
     }
-    
 }
 
 // MARK: - TableView extension
@@ -375,12 +337,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let (priceChange, isPositive) = StockData().calcPriceChange(card: stockCards[key]!)
         cell.priceChangeLabel.text = priceChange
         cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
-        
-//        let urlString = String(stockCards[key]!.webpage.absoluteString[11...])
-//        let urlSplitted = stockCards[key]!.webpage.absoluteString.split(separator: ".")
-//        let urlString = String(stockCards[key]!.name.split(separator: " ").first!.lowercased())
-//        print(urlString)
-//        let resource = ImageResource(downloadURL: URL(string: "https://logo.uplead.com/\(urlString).com")!)
+
         let resource = ImageResource(downloadURL: stockCards[key]!.logo)
         cell.logoImage.kf.setImage(with: resource) { (result) in
             switch result {
@@ -394,6 +351,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row % 2 == 0 {
             cell.backgroundColor = UIColor(named: "EvenCell")
         }
+        stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
         
         //TODO: - Replace with single func
@@ -422,7 +380,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
         }
-        let mboum = mboumStockData()
+        let mboum = MBOUMStockData()
         let summary = mboum.getCompanySummary(company: "AAPL")
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
@@ -469,6 +427,30 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - Animate Button
+
+//extension ViewController {
+//    func showAnimation(_ completionBlock: @escaping () -> Void) {
+////        self.isUserInteractionEnabled = false
+//        UIView.animate(withDuration: 0.1,
+//                       delay: 0,
+//                       options: .curveLinear,
+//                       animations: { [weak self] in
+//                        self?.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.95)
+//                       }) {  (done) in
+//            UIView.animate(withDuration: 0.1,
+//                           delay: 0,
+//                           options: .curveLinear,
+//                           animations: { [weak self] in
+//                            self?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+//                           }) { [weak self] (_) in
+////                self?.isUserInteractionEnabled = true
+//                completionBlock()
+//            }
+//       }
+//    }
+//}
+
 // MARK: - Hide SearchBar onScroll
 
 //extension ViewController {
@@ -485,7 +467,7 @@ extension ViewController: UISearchBarDelegate {
 //                self.view.layoutIfNeeded()
 //            }, completion: nil)
 //            searchBar.isHidden = true
-//            
+//
 //        }else {
 //            // Return header
 //            view.layoutIfNeeded()
@@ -499,5 +481,3 @@ extension ViewController: UISearchBarDelegate {
 //        }
 //    }
 //}
-
-

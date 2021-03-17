@@ -7,7 +7,7 @@
 
 import Foundation
 
-class mboumStockData {
+class MBOUMStockData {
     
     let headers = [
         "X-Mboum-Secret": "demo"

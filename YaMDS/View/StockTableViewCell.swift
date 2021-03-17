@@ -20,6 +20,7 @@ class StockTableViewCell: UITableViewCell {
     var secondaryFont = UIFont()
     let priceFormatter = NumberFormatter()
     let priceChangeFormatter = NumberFormatter()
+    var rawHeight = CGFloat()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,12 +35,17 @@ class StockTableViewCell: UITableViewCell {
         priceChangeFormatter.minimumFractionDigits = 2
         priceChangeFormatter.maximumFractionDigits = 2
         
-        if UIDevice().name == "iPhone 8" {
+        let screenWidth = UIScreen.main.bounds.width
+        print(screenWidth)
+        //if UIDevice().name == "iPhone 8" {
+        if screenWidth <= 375 {
             primaryFont = UIFont(name: "Montserrat-Bold", size: 20) ?? UIFont.systemFont(ofSize: 20, weight: .bold)
             secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
+            rawHeight = 96
         } else {
             primaryFont = UIFont(name: "Montserrat-Bold", size: 22) ?? UIFont.systemFont(ofSize: 22, weight: .bold)
             secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
+            rawHeight = 110
         }
         
         tickerLabel.font = primaryFont
