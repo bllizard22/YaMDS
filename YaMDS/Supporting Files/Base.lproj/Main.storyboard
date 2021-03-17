@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -80,6 +80,15 @@
                                     <constraint firstAttribute="height" constant="40" id="2rM-x1-gE6"/>
                                 </constraints>
                             </stackView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Find company" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="LJT-yW-B8b">
+                                <rect key="frame" x="37.5" y="64" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="90o-Ed-cqp"/>
+                                    <constraint firstAttribute="height" constant="30" id="TrU-kk-Vsu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -90,22 +99,25 @@
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="JgO-ID-lCZ"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MJV-gw-iTF"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="OrR-Pm-Iqe"/>
+                            <constraint firstItem="LJT-yW-B8b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="U2t-qw-wPI"/>
                             <constraint firstItem="X0F-vf-ZVB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="VJ5-ut-CMt"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X0F-vf-ZVB" secondAttribute="trailing" constant="16" id="Wsd-YY-S8g"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="top" secondItem="X0F-vf-ZVB" secondAttribute="bottom" constant="20" id="XVA-e2-jTL"/>
+                            <constraint firstItem="LJT-yW-B8b" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="64" id="qbk-6F-Lfb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xtA-Lx-zfg"/>
                     <connections>
                         <outlet property="favouriteButton" destination="MuA-1i-pBF" id="cw9-RI-YJh"/>
                         <outlet property="searchBar" destination="X0F-vf-ZVB" id="ovC-iA-Wwf"/>
+                        <outlet property="searchTF" destination="LJT-yW-B8b" id="TYP-QV-xC9"/>
                         <outlet property="stocksButton" destination="UO2-Wn-gw5" id="noU-Qp-YC4"/>
                         <segue destination="MG6-bq-M9x" kind="show" identifier="showDetailView" id="VtG-8C-7DD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.8260869565217" y="130.58035714285714"/>
+            <point key="canvasLocation" x="1047.2" y="129.98500749625188"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="stV-Oh-G4W">

@@ -10,13 +10,6 @@ import Foundation
 import CoreData
 import Kingfisher
 
-//struct quoteData: Decodable {
-//    let ask: Int
-////    let symbol: String
-////    let shortName: String
-////    let postMarketPrice: Int
-//}
-
 class ViewController: UIViewController {
     
     // Stock Data
@@ -25,7 +18,12 @@ class ViewController: UIViewController {
     var dataStockMetric = Array<(String, Data)>()
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
-    var favouriteIsSelected =  false
+    var favouriteIsSelected =  false {
+        didSet {
+            stockTableView.reloadData()
+            searchBar(searchBar, textDidChange: searchBar.text ?? "")
+        }
+    }
     var favourites = Favourites()
     var modelCD = ModelCD()
     
@@ -39,6 +37,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var searchTF: UITextField!
     var stockTableView: UITableView!
     var cardsIsLoaded = false
     var headerViewHeight = 0
@@ -58,6 +57,7 @@ class ViewController: UIViewController {
 //        return searchBarIsClicked && !searchBarIsEmpty
     }
     
+    // MARK: - Load Actions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -94,7 +94,7 @@ class ViewController: UIViewController {
                 saveCoreData()
 
 //                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
-//                priceSocket.startWebSocket(tickerArray: stockTickerList)
+                priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
         } else {
             loadCardsFromAPI()
@@ -124,10 +124,12 @@ class ViewController: UIViewController {
     // Create TableView for Cards
     func loadStocksInView() {
         
-        // TODO: - Constraint to anchors instead of height
-        stockTableView = UITableView(frame: CGRect(x: 12, y: 200,
-                                                   width: view.bounds.width-12*2, height: view.bounds.height-200))
-//        stockTableView.rowHeight = 96
+        let headerHeight = searchBar.frame
+        print(headerHeight)
+        let safeArea = UIApplication.shared.windows[0].safeAreaInsets.top
+        stockTableView = UITableView(frame: CGRect(x: 12, y: safeArea+150,
+                                                   width: view.bounds.width-12*2,
+                                                   height: view.bounds.height-(safeArea+150)))
         stockTableView.separatorStyle = .none
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
@@ -135,25 +137,18 @@ class ViewController: UIViewController {
         view.addSubview(stockTableView)
         
         searchBar.delegate = self
+//        searchTF.delegate = self
     }
     
     // MARK: - IBActions
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
 //        let key = stockCardsList[sender.tag]
-        var key: String
-        if isFiltering {
-            key = filteredStockTickerList[sender.tag]
-        } else {
-            key = stockTickerList[sender.tag]
-        }
+        let key = isFiltering ? filteredStockTickerList[sender.tag] : stockTickerList[sender.tag]
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
             sender.setImage(UIImage(named: "StarGray"), for: .normal)
-//            UIView.animate(withDuration: 2.0, delay: 2.0, options: [.allowUserInteraction], animations: {
-//                sender.layoutIfNeeded()
-//            }, completion: nil)
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
@@ -165,6 +160,7 @@ class ViewController: UIViewController {
         }
         if favouriteIsSelected {
             stockTickerList = favourites.liked
+            searchBar(searchBar, textDidChange: searchBar.text ?? "")
             stockTableView.reloadData()
         }
     }
@@ -181,7 +177,7 @@ class ViewController: UIViewController {
         
         favouriteIsSelected = false
         
-        stockTableView.reloadData()
+//        stockTableView.reloadData()
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
@@ -196,7 +192,7 @@ class ViewController: UIViewController {
 
         favouriteIsSelected = true
                 
-        stockTableView.reloadData()
+//        stockTableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -317,12 +313,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
-        var key: String
-        if isFiltering {
-            key = filteredStockTickerList[indexPath.row]
-        } else {
-            key = stockTickerList[indexPath.row]
-        }
+        let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
         
         cell.companyLabel.text = stockCards[key]!.name
         cell.tickerLabel.text = stockCards[key]!.ticker
@@ -343,12 +334,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
-        print("cell with \(stockCards[key]!.ticker) is at \(indexPath.row)")
-        if indexPath.row % 2 == 0 {
-            cell.backgroundColor = UIColor(named: "EvenCell")
-        } else {
-            cell.backgroundColor = .white
-        }
+//        print("cell with \(stockCards[key]!.ticker) is at \(indexPath.row)")
+        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
         
@@ -379,7 +366,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             self.dataStockMetric.append((company, dataIn))
         }
         let mboum = MBOUMStockData()
-        let summary = mboum.getCompanySummary(company: "AAPL")
+        let summary = mboum.getCompanySummary(company: ticker)
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             for (key, data) in dataStockMetric {
@@ -405,12 +392,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        var list: Array<String>
-        if favouriteIsSelected {
-            list = favourites.liked
-        } else {
-            list = stockTickerList
-        }
+        let list = favouriteIsSelected ? favourites.liked : stockTickerList
         filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
             let card = stockCards[ticker]?.name
             let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
@@ -419,6 +401,22 @@ extension ViewController: UISearchBarDelegate {
         
         stockTableView.reloadData()
     }
+    
+//    func searchTF(_ searchBar: UITextField, textDidChange searchText: String) {
+//        var list: Array<String>
+//        if favouriteIsSelected {
+//            list = favourites.liked
+//        } else {
+//            list = stockTickerList
+//        }
+//        filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
+//            let card = stockCards[ticker]?.name
+//            let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
+//            return result
+//        })
+//
+//        stockTableView.reloadData()
+//    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
@@ -454,25 +452,26 @@ extension ViewController: UISearchBarDelegate {
 //extension ViewController {
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        // Value when headerview will hide
+//        let searchBarHeight = searchBar.frame.height
 //        if scrollView.contentOffset.y > 50 {
 //            view.layoutIfNeeded()
 //            //headerViewHeightConstraint.constant = -100
-//            headerViewHeight = -100
+////            headerViewHeight = -100
 //            if self.view.frame.origin.y == 0 {
-//                self.view.frame.origin.y -= 100
+//                self.view.frame.origin.y -= searchBarHeight
 //            }
-//            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+//            UIView.animate(withDuration: 1.0, delay: 0, options: [.allowUserInteraction], animations: {
 //                self.view.layoutIfNeeded()
 //            }, completion: nil)
 //            searchBar.isHidden = true
 //
-//        }else {
+//        } else {
 //            // Return header
 //            view.layoutIfNeeded()
 //            // Initial header view height
-//            headerViewHeight = 0
+////            headerViewHeight = 0
 //            self.view.frame.origin.y = 0
-//            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+//            UIView.animate(withDuration: 1.0, delay: 0, options: [.allowUserInteraction], animations: {
 //                self.view.layoutIfNeeded()
 //            }, completion: nil)
 //            searchBar.isHidden = false
