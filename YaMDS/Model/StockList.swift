@@ -10,8 +10,7 @@ import Foundation
 struct StockList {
 //    let stockList = ["AAPL", "YNDX", "TSLA", "AMZN", "MSFT", "GOOGL",
 //                     "INTC", "JPM", "MMM", "KO", "FB", "NVDA",
-//                    "SQ", "NFLX", "ORCL", "IBM"]
-//    let stockList = ["AAPL", "TSLA", "YNDX", "AMZN", "NFLX"]
+//                    "SQ", "NFLX", "ORCL", "BAC", "CSCO", "BA"]
     let stockList = ["AAPL", "TSLA", "YNDX", "KO"]
 
 }

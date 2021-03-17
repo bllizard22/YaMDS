@@ -58,8 +58,6 @@ class ViewController: UIViewController {
 //        return searchBarIsClicked && !searchBarIsEmpty
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -94,11 +92,9 @@ class ViewController: UIViewController {
                 }
                 parsePricesDataJSON()
                 saveCoreData()
-                
-                
-//                priceSocket.createConnection()
+
 //                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
-                priceSocket.startWebSocket(tickerArray: stockTickerList) //"BINANCE:BTCUSDT"
+//                priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
         } else {
             loadCardsFromAPI()
@@ -120,7 +116,6 @@ class ViewController: UIViewController {
                 cardsIsLoaded = true
                 
 //                priceSocket.createConnection()
-//                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
                 priceSocket.startWebSocket(tickerArray: stockTickerList) //"BINANCE:BTCUSDT"
             }
         }
@@ -303,7 +298,7 @@ class ViewController: UIViewController {
     
     // Save all cards to CoreData as dictionary
     private func saveCoreData() {
-        print("Saving Cards to CoreData")
+//        print("Saving Cards to CoreData")
         modelCD.saveCoreData(cards: stockCards)
     }
 }
@@ -348,8 +343,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
+        print("cell with \(stockCards[key]!.ticker) is at \(indexPath.row)")
         if indexPath.row % 2 == 0 {
             cell.backgroundColor = UIColor(named: "EvenCell")
+        } else {
+            cell.backgroundColor = .white
         }
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
