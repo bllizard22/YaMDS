@@ -25,7 +25,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yRr-7M-rDD" customClass="StockTableView" customModule="YaMDS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="152" width="375" height="515"/>
+                                <rect key="frame" x="0.0" y="176" width="375" height="491"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="96" id="6aQ-Gz-wbi" customClass="StockTableViewCell" customModule="YaMDS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="96"/>
@@ -38,8 +38,11 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Find company or ticker" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-vf-ZVB">
-                                <rect key="frame" x="16" y="16" width="343" height="56"/>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Find company or ticker" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-vf-ZVB">
+                                <rect key="frame" x="16" y="16" width="343" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="BYe-lo-4Yd"/>
+                                </constraints>
                                 <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
                                 <scopeButtonTitles>
                                     <string>Title</string>
@@ -47,7 +50,7 @@
                                 </scopeButtonTitles>
                             </searchBar>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxN-qF-T2L">
-                                <rect key="frame" x="20" y="92" width="280" height="40"/>
+                                <rect key="frame" x="20" y="116" width="280" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UO2-Wn-gw5">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="40"/>
@@ -80,15 +83,13 @@
                                     <constraint firstAttribute="height" constant="40" id="2rM-x1-gE6"/>
                                 </constraints>
                             </stackView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Find company" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="LJT-yW-B8b">
-                                <rect key="frame" x="37.5" y="64" width="300" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mXP-QN-vYL">
+                                <rect key="frame" x="27" y="20" width="48" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="90o-Ed-cqp"/>
-                                    <constraint firstAttribute="height" constant="30" id="TrU-kk-Vsu"/>
+                                    <constraint firstAttribute="width" secondItem="mXP-QN-vYL" secondAttribute="height" multiplier="1:1" id="eFk-Fv-1WR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                                <state key="normal" image="Back"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -99,18 +100,15 @@
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="JgO-ID-lCZ"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MJV-gw-iTF"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="OrR-Pm-Iqe"/>
-                            <constraint firstItem="LJT-yW-B8b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="U2t-qw-wPI"/>
                             <constraint firstItem="X0F-vf-ZVB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="VJ5-ut-CMt"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X0F-vf-ZVB" secondAttribute="trailing" constant="16" id="Wsd-YY-S8g"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="top" secondItem="X0F-vf-ZVB" secondAttribute="bottom" constant="20" id="XVA-e2-jTL"/>
-                            <constraint firstItem="LJT-yW-B8b" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="64" id="qbk-6F-Lfb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xtA-Lx-zfg"/>
                     <connections>
                         <outlet property="favouriteButton" destination="MuA-1i-pBF" id="cw9-RI-YJh"/>
                         <outlet property="searchBar" destination="X0F-vf-ZVB" id="ovC-iA-Wwf"/>
-                        <outlet property="searchTF" destination="LJT-yW-B8b" id="TYP-QV-xC9"/>
                         <outlet property="stocksButton" destination="UO2-Wn-gw5" id="noU-Qp-YC4"/>
                         <segue destination="MG6-bq-M9x" kind="show" identifier="showDetailView" id="VtG-8C-7DD"/>
                     </connections>
@@ -317,6 +315,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Back" width="48" height="48"/>
         <image name="BackArrow" width="60" height="42"/>
         <image name="StarGold" width="48" height="54"/>
         <systemColor name="labelColor">

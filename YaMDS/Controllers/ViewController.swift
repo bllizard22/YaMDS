@@ -37,7 +37,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var searchTF: UITextField!
     var stockTableView: UITableView!
     var cardsIsLoaded = false
     var headerViewHeight = 0
@@ -61,6 +60,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchBar.isHidden = true
         let defaults = UserDefaults()
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
@@ -133,10 +133,33 @@ class ViewController: UIViewController {
         stockTableView.separatorStyle = .none
         stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
-        stockTableView.delegate = self
+//        stockTableView.delegate = self
         view.addSubview(stockTableView)
         
         searchBar.delegate = self
+//        searchBar.searchTextField.font = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
+        
+        searchBar.isHidden = false
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.backgroundColor = .white
+            if let backgroundView = textField.subviews.first {
+                backgroundView.backgroundColor = .white
+                backgroundView.layer.cornerRadius = 20
+                backgroundView.clipsToBounds = true
+                backgroundView.layer.borderWidth = 1
+                backgroundView.layer.borderColor = UIColor.black.cgColor
+            }
+            textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
+            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
+            
+            if let leftView = textField.leftView as? UIImageView {
+                let searchImage = UIImage(named: "Search_36")
+//                searchImage?.draw(in: CGRect(x: 0, y: 0, width: 14, height: 14))
+                leftView.image = searchImage!.withRenderingMode(.alwaysTemplate)
+                leftView.tintColor = .black
+            }
+        }
+//        searchBa
 //        searchTF.delegate = self
     }
     
@@ -334,7 +357,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
-//        print("cell with \(stockCards[key]!.ticker) is at \(indexPath.row)")
         cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
@@ -343,16 +365,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
             stockCards[key]!.isFavourite = true
-//            print("\(key) is liked")
         } else {
             cell.favouriteButton.setImage(UIImage(named: "StarGray"), for: .normal)
             stockCards[key]!.isFavourite = false
-//            print("\(key) is not liked")
         }
         cell.favouriteButton.tag = indexPath.row
         
         return cell
     }
+    
+//    func swapLikeOnCard()
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)

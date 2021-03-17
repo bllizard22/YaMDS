@@ -53,9 +53,7 @@ class Favourites {
     // Add new record in CoreData
     func saveTicker(withTicker title: String) {
         let context = getContext()
-        
-        print("will add \(title)")
-        
+                
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCardLikes", in: context) else {return}
         
         // Create new task
@@ -72,12 +70,10 @@ class Favourites {
         }
     }
     
-    // Add new record in CoreData
+    // Delete record in CoreData
     func deleteTicker(withTicker title: String) {
         let context = getContext()
-        
-        print("will delete \(title)")
-        
+                
         let fetchRequest: NSFetchRequest<StockCardLikes> = StockCardLikes.fetchRequest()
         if let result = try? context.fetch(fetchRequest) {
             for item in result {
@@ -88,7 +84,6 @@ class Favourites {
                 }
             }
         }
-        
         print("liked after delete: ",stockList)
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
