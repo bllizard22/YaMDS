@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        searchBar.isHidden = true
+        searchBar.isHidden = true
         let defaults = UserDefaults()
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
@@ -104,7 +104,7 @@ class ViewController: UIViewController {
         } else {
             loadCardsFromAPI()
             print("First launch!")
-//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadPricesFromAPI()
             
@@ -134,7 +134,7 @@ class ViewController: UIViewController {
         stockTableView.delegate = self
         
         searchBar.delegate = self        
-//        searchBar.isHidden = false
+        searchBar.isHidden = false
     }
     
     // MARK: - IBActions
