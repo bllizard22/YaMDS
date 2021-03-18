@@ -36,8 +36,10 @@ class ViewController: UIViewController {
     // IBOutlets
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
-    @IBOutlet weak var searchBar: UISearchBar!
-    var stockTableView: UITableView!
+    @IBOutlet weak var searchBar: CustomSearchBar!
+    @IBOutlet weak var stockTableView: StockTableView!
+    @IBOutlet weak var cancelSearchButton: UIButton!
+    
     var cardsIsLoaded = false
     var headerViewHeight = 0
     var rowHeight = 0
@@ -50,17 +52,21 @@ class ViewController: UIViewController {
         }
         return text.isEmpty
     }
-    var searchBarIsClicked = false
+    var searchBarIsClicked = false {
+        didSet {
+            let image = searchBarIsClicked ? UIImage(named: "Back") : UIImage(named: "Search_24")
+            cancelSearchButton.setImage(image, for: .normal)
+        }
+    }
     var isFiltering: Bool {
         return !searchBarIsEmpty
-//        return searchBarIsClicked && !searchBarIsEmpty
     }
     
     // MARK: - Load Actions
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.isHidden = true
+//        searchBar.isHidden = true
         let defaults = UserDefaults()
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
@@ -93,13 +99,12 @@ class ViewController: UIViewController {
                 parsePricesDataJSON()
                 saveCoreData()
 
-//                priceSocket.startWebSocket(tickerArray: ["AAPL", "TSLA", "YNDX"]) //"BINANCE:BTCUSDT"
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
         } else {
             loadCardsFromAPI()
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadPricesFromAPI()
             
@@ -115,8 +120,7 @@ class ViewController: UIViewController {
                 saveCoreData()
                 cardsIsLoaded = true
                 
-//                priceSocket.createConnection()
-                priceSocket.startWebSocket(tickerArray: stockTickerList) //"BINANCE:BTCUSDT"
+                priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
         }
     }
@@ -126,41 +130,11 @@ class ViewController: UIViewController {
         
         let headerHeight = searchBar.frame
         print(headerHeight)
-        let safeArea = UIApplication.shared.windows[0].safeAreaInsets.top
-        stockTableView = UITableView(frame: CGRect(x: 12, y: safeArea+150,
-                                                   width: view.bounds.width-12*2,
-                                                   height: view.bounds.height-(safeArea+150)))
-        stockTableView.separatorStyle = .none
-        stockTableView.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
         stockTableView.dataSource = self
-//        stockTableView.delegate = self
-        view.addSubview(stockTableView)
+        stockTableView.delegate = self
         
-        searchBar.delegate = self
-//        searchBar.searchTextField.font = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
-        
-        searchBar.isHidden = false
-        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.backgroundColor = .white
-            if let backgroundView = textField.subviews.first {
-                backgroundView.backgroundColor = .white
-                backgroundView.layer.cornerRadius = 20
-                backgroundView.clipsToBounds = true
-                backgroundView.layer.borderWidth = 1
-                backgroundView.layer.borderColor = UIColor.black.cgColor
-            }
-            textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
-            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
-            
-            if let leftView = textField.leftView as? UIImageView {
-                let searchImage = UIImage(named: "Search_36")
-//                searchImage?.draw(in: CGRect(x: 0, y: 0, width: 14, height: 14))
-                leftView.image = searchImage!.withRenderingMode(.alwaysTemplate)
-                leftView.tintColor = .black
-            }
-        }
-//        searchBa
-//        searchTF.delegate = self
+        searchBar.delegate = self        
+//        searchBar.isHidden = false
     }
     
     // MARK: - IBActions
@@ -186,6 +160,11 @@ class ViewController: UIViewController {
             searchBar(searchBar, textDidChange: searchBar.text ?? "")
             stockTableView.reloadData()
         }
+    }
+    
+    @IBAction func cancelSearchBarDidPressed(_ sender: UIButton) {
+        searchBarIsClicked = false
+        searchBar.resignFirstResponder()
     }
     
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
@@ -288,6 +267,7 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
+        stockTickerList.sort()
     }
     
     func parsePricesDataJSON () {
@@ -424,23 +404,13 @@ extension ViewController: UISearchBarDelegate {
         stockTableView.reloadData()
     }
     
-//    func searchTF(_ searchBar: UITextField, textDidChange searchText: String) {
-//        var list: Array<String>
-//        if favouriteIsSelected {
-//            list = favourites.liked
-//        } else {
-//            list = stockTickerList
-//        }
-//        filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
-//            let card = stockCards[ticker]?.name
-//            let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
-//            return result
-//        })
-//
-//        stockTableView.reloadData()
-//    }
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBarIsClicked = true
+        return true
+    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBarIsClicked = false
         searchBar.resignFirstResponder()
     }
 }
