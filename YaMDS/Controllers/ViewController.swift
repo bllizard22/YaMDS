@@ -314,33 +314,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
+        var cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
         let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
         
-        cell.companyLabel.text = stockCards[key]!.name
-        cell.tickerLabel.text = stockCards[key]!.ticker
-//        cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
-        let price = NSNumber(value: stockCards[key]!.currentPrice)
-        cell.priceLabel.text = cell.priceFormatter.string(from: price)
-        let (priceChange, isPositive) = StockData().calcPriceChange(card: stockCards[key]!)
-        cell.priceChangeLabel.text = priceChange
-        cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
-
-        let resource = ImageResource(downloadURL: stockCards[key]!.logo)
-        cell.logoImage.kf.setImage(with: resource) { (result) in
-            switch result {
-            case .success(_):
-                break
-            case .failure(_):
-                print("fail")
-            }
+        if stockCards[key] != nil {
+            cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
-        
+
+        // TODO: -
         cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
-        
+
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)

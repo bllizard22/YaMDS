@@ -94,8 +94,8 @@
             filePath = "YaMDS/Controllers/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "397"
-            endingLineNumber = "397"
+            startingLineNumber = "383"
+            endingLineNumber = "383"
             landmarkName = "searchBar(_:textDidChange:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -398,8 +398,8 @@
             filePath = "YaMDS/Controllers/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "408"
-            endingLineNumber = "408"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
             landmarkName = "searchBarShouldBeginEditing(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class StockTableView: UITableView {
 
@@ -22,5 +23,28 @@ class StockTableView: UITableView {
     func configureTableView() {
         self.separatorStyle = .none
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
+    }
+    
+    func loadCardIntoTableViewCell(card: StockTableCard, cell: StockTableViewCell) -> StockTableViewCell {
+        
+        cell.companyLabel.text = card.name
+        cell.tickerLabel.text = card.ticker
+        let price = NSNumber(value: card.currentPrice)
+        cell.priceLabel.text = cell.priceFormatter.string(from: price)
+        let (priceChange, isPositive) = StockData().calcPriceChange(card: card)
+        cell.priceChangeLabel.text = priceChange
+        cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
+
+        let resource = ImageResource(downloadURL: card.logo)
+        cell.logoImage.kf.setImage(with: resource) { (result) in
+            switch result {
+            case .success(_):
+                break
+            case .failure(_):
+                print("fail")
+            }
+        }
+        
+        return cell
     }
 }
