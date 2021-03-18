@@ -172,10 +172,10 @@ class ViewController: UIViewController {
         stockTickerList = StockList().stockList
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
-        favouriteButton.setTitleColor(.systemGray2, for: .normal)
+        favouriteButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
         
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
-        stocksButton.setTitleColor(.black, for: .normal)
+        stocksButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
         favouriteIsSelected = false
         
@@ -187,10 +187,10 @@ class ViewController: UIViewController {
         stockTickerList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
-        favouriteButton.setTitleColor(.black, for: .normal)
+        favouriteButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(20)
-        stocksButton.setTitleColor(.systemGray2, for: .normal)
+        stocksButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
 
         favouriteIsSelected = true
                 
@@ -323,7 +323,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         // TODO: -
-        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
+//        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
+        if (indexPath.row % 2 == 0) {
+            cell.backgroundColor = UIColor(named: "EvenCell")
+        } else {
+            cell.backgroundColor = UIColor(named: "BackgroundColor")
+        }
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
 
