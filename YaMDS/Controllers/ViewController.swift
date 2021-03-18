@@ -192,10 +192,10 @@ class ViewController: UIViewController {
         stockTickerList = StockList().stockList
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
-        favouriteButton.setTitleColor(.systemGray2, for: .normal)
+        favouriteButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
         
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
-        stocksButton.setTitleColor(.black, for: .normal)
+        stocksButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
         favouriteIsSelected = false
         
@@ -207,10 +207,10 @@ class ViewController: UIViewController {
         stockTickerList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
-        favouriteButton.setTitleColor(.black, for: .normal)
+        favouriteButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(20)
-        stocksButton.setTitleColor(.systemGray2, for: .normal)
+        stocksButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
 
         favouriteIsSelected = true
                 
@@ -342,33 +342,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
+        var cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
         let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
         
-        cell.companyLabel.text = stockCards[key]!.name
-        cell.tickerLabel.text = stockCards[key]!.ticker
-//        cell.priceLabel.text = "$" + String(stockCards[key]!.currentPrice)
-        let price = NSNumber(value: stockCards[key]!.currentPrice)
-        cell.priceLabel.text = cell.priceFormatter.string(from: price)
-        let (priceChange, isPositive) = StockData().calcPriceChange(card: stockCards[key]!)
-        cell.priceChangeLabel.text = priceChange
-        cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
-
-        let resource = ImageResource(downloadURL: stockCards[key]!.logo)
-        cell.logoImage.kf.setImage(with: resource) { (result) in
-            switch result {
-            case .success(_):
-                break
-            case .failure(_):
-                print("fail")
-            }
+        if stockCards[key] != nil {
+            cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
-        
-        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
+
+        // TODO: -
+//        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
+        if (indexPath.row % 2 == 0) {
+            cell.backgroundColor = UIColor(named: "EvenCell")
+        } else {
+            cell.backgroundColor = UIColor(named: "BackgroundColor")
+        }
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
-        
+
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
