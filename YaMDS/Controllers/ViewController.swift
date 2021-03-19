@@ -152,12 +152,17 @@ class ViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
-//        let key = stockCardsList[sender.tag]
         let key = isFiltering ? filteredStockTickerList[sender.tag] : stockTickerList[sender.tag]
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
             sender.setImage(UIImage(named: "StarGray"), for: .normal)
+            UIView.animate(withDuration: 1, delay: 0, options: [.curveEaseIn]) {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi/2)
+            }
+            UIView.animate(withDuration: 1, delay: 4, options: [.curveEaseOut]) {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: 0)
+            }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
@@ -209,11 +214,6 @@ class ViewController: UIViewController {
         if segue.identifier == "showDetailView" {
             if let indexPath = stockTableView.indexPathForSelectedRow {
                 let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-//                if isFiltering {
-//                    key = filteredStockTickerList[indexPath.row]
-//                } else {
-//                    key = stockTickerList[indexPath.row]
-//                }
                 
                 let detailViewController = segue.destination as! DetailViewController
                 detailViewController.detailCard = stockCards[key]
