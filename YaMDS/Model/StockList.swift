@@ -9,8 +9,12 @@ import Foundation
 
 struct StockList {
 //    let stockList = ["AAPL", "YNDX", "TSLA", "AMZN", "MSFT", "GOOGL",
-//                     "INTC", "JPM", "MMM", "KO", "FB", "NVDA",
-//                    "SQ", "NFLX", "ORCL", "BAC", "CSCO", "BA"]
-    let stockList = ["AAPL", "TSLA", "YNDX", "KO"].sorted()
+//                      "INTC", "JPM", "MCD", "KO", "FB", "NVDA",
+//                      "SQ", "NFLX", "ORCL", "BAC", "CSCO", "BA",
+//                      "JNJ", "XOM", "T", "V", "C", "HD",
+//                      "PG", "VZ", "ABBV", "MRK", "WMT", "GE"].sorted()
+    let stockList = ["JNJ", "XOM", "T", "V", "C", "HD",
+                     "PG", "VZ", "ABBV", "MRK", "WMT", "GE"].sorted()
+//    let stockList = ["AAPL", "TSLA", "YNDX", "KO"].sorted()
 
 }

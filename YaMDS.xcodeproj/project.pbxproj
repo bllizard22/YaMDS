@@ -19,6 +19,7 @@
 		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
 		8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF3E25FA995100A0271B /* MBOUMStockData.swift */; };
 		8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF4C2601CED600A0271B /* CoreDataModel.swift */; };
+		8570DF542604725500A0271B /* AlertMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF532604725500A0271B /* AlertMessageVC.swift */; };
 		85A163C325EF495F00600654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C225EF495F00600654 /* AppDelegate.swift */; };
 		85A163C525EF495F00600654 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C425EF495F00600654 /* SceneDelegate.swift */; };
 		85A163C725EF495F00600654 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C625EF495F00600654 /* ViewController.swift */; };
@@ -43,6 +44,7 @@
 		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
 		8570DF3E25FA995100A0271B /* MBOUMStockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBOUMStockData.swift; sourceTree = "<group>"; };
 		8570DF4C2601CED600A0271B /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		8570DF532604725500A0271B /* AlertMessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessageVC.swift; sourceTree = "<group>"; };
 		85A163BF25EF495F00600654 /* YaMDS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaMDS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A163C225EF495F00600654 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		85A163C425EF495F00600654 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				85A163E025F0A0F900600654 /* StockTableView.swift */,
 				85A163E325F0A1B500600654 /* StockTableViewCell.swift */,
 				01B54628260360E400ED3666 /* CustomSearchBar.swift */,
+				8570DF532604725500A0271B /* AlertMessageVC.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				01B54629260360E400ED3666 /* CustomSearchBar.swift in Sources */,
 				855A459325F29A68006DD798 /* StockCardData.swift in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
+				8570DF542604725500A0271B /* AlertMessageVC.swift in Sources */,
 				8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */,
 				01A268E52600F1980097E848 /* WebSockets.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,

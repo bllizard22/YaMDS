@@ -89,14 +89,13 @@ class ViewController: UIViewController {
             loadCardsFromCoreData()
             cardsIsLoaded = true
             
-            loadPricesFromAPI()
             self.loadStocksInView()
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
                 if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
                     dataStockInfo.removeFirst()
                 }
-                parsePricesDataJSON()
+//                parsePricesDataJSON()
                 saveCoreData()
 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
@@ -104,7 +103,7 @@ class ViewController: UIViewController {
         } else {
             loadCardsFromAPI()
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadPricesFromAPI()
             
@@ -114,8 +113,8 @@ class ViewController: UIViewController {
                 if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
                     dataStockInfo.removeFirst()
                 }
-                parseCardsDataJSON()
-                parsePricesDataJSON()
+//                parseCardsDataJSON()
+//                parsePricesDataJSON()
                 self.loadStocksInView()
                 saveCoreData()
                 cardsIsLoaded = true
@@ -135,6 +134,27 @@ class ViewController: UIViewController {
         
         searchBar.delegate = self        
         searchBar.isHidden = false
+    }
+    
+    func showAlert(request: String) {
+        let alert = UIAlertController(title: "API Error", message: "Out of API requests (1 min to reset limit). Try again?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
+            guard action.style == .default else { return }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+45) {
+                if request == "getStockInfo" {
+                    self.loadCardsFromAPI()
+                    self.loadPricesFromAPI()
+                }
+                if request == "getPrice" {
+                    self.loadPricesFromAPI()
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            guard action.style == .cancel else { return }
+            print("Cancel")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - IBActions
@@ -236,54 +256,62 @@ class ViewController: UIViewController {
         print("loaded prices")
     }
     
-    func parseCardsDataJSON () {
-        print(dataStockInfo.count)
-        print("data for JSON", dataStockInfo)
-//        var json: [String: Any]
-        for data in dataStockInfo {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                print(json)
-                var stringLogoURL = json["logo"] as? String
-                if stringLogoURL == "" {
-                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
-                }
-                let card = StockTableCard(name: json["name"] as! String,
-                                          logo: (URL.init(string: stringLogoURL!)!),
-                                          ticker: json["ticker"] as! String,
-                                          industry: json["finnhubIndustry"] as! String,
-                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
-                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
-                                          peValue: 0.0,
-                                          psValue: 0.0,
-                                          ebitda: 0.0,
-                                          summary: "---",
-                                          currentPrice: 0.0,
-                                          previousClosePrice: 0.0,
-                                          isFavourite: false)
-                stockCards[card.ticker] = card
-                stockTickerList.append(card.ticker)
-            } catch let error {
-                print(error)
-            }
-        }
-        stockTickerList.sort()
-    }
-    
-    func parsePricesDataJSON () {
-        print(dataStockInfo.count)
-        print("data for JSON", dataStockInfo)
-        for (key, data) in dataStockPrice {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                print(key, json)
-                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
-                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
-            } catch let error {
-                print(error)
-            }
-        }
-    }
+//    func parseCardsDataJSON () {
+//        print(dataStockInfo.count)
+//        print("data for JSON", dataStockInfo)
+////        var json: [String: Any]
+//        for data in dataStockInfo {
+//            do {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+//                print(json)
+//                if json["error"] != nil {
+//                    showAlert(request: "getStockInfo")
+//                    return
+//                }
+//                var stringLogoURL = json["logo"] as? String
+//                if stringLogoURL == "" {
+//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
+//                }
+//                let card = StockTableCard(name: json["name"] as! String,
+//                                          logo: (URL.init(string: stringLogoURL!)!),
+//                                          ticker: json["ticker"] as! String,
+//                                          industry: json["finnhubIndustry"] as! String,
+//                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
+//                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
+//                                          peValue: 0.0,
+//                                          psValue: 0.0,
+//                                          ebitda: 0.0,
+//                                          summary: "---",
+//                                          currentPrice: 0.0,
+//                                          previousClosePrice: 0.0,
+//                                          isFavourite: false)
+//                stockCards[card.ticker] = card
+//                stockTickerList.append(card.ticker)
+//            } catch let error {
+//                print(error)
+//            }
+//        }
+//        stockTickerList.sort()
+//    }
+//
+//    func parsePricesDataJSON () {
+//        print(dataStockInfo.count)
+//        print("data for JSON", dataStockInfo)
+//        for (key, data) in dataStockPrice {
+//            do {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+//                print(key, json)
+//                if json["error"] != nil {
+//                    showAlert(request: "getPrice")
+//                    return
+//                }
+//                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
+//                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
+//            } catch let error {
+//                print(error)
+//            }
+//        }
+//    }
     
     // MARK: - CoreData Load Cards
     

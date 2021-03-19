@@ -17,16 +17,20 @@ class StockData {
     
     var dadta = [Data()]
     
-    func getStockList(completion: @escaping ([Data]) -> ()) {
-        for company in StockList().stockList {
-            getStockInfo(stockSymbol: company) { (dataIn) -> () in
-                self.dadta.append(dataIn)
-                print(self.dadta.count)
-            }
-        }
-        dadta.removeFirst()
-        completion(dadta)
-    }
+    var dataStockInfo = Array<Data>()
+    var dataStockPrice = Array<(String, Data)>()
+    var dataStockMetric = Array<(String, Data)>()
+    
+//    func getStockList(completion: @escaping ([Data]) -> ()) {
+//        for company in StockList().stockList {
+//            getStockInfo(stockSymbol: company) { (dataIn) -> () in
+//                self.dadta.append(dataIn)
+//                print(self.dadta.count)
+//            }
+//        }
+//        dadta.removeFirst()
+//        completion(dadta)
+//    }
     
     func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
         
@@ -86,6 +90,63 @@ class StockData {
             }
         })
         dataTask.resume()
+    }
+    
+    func parseCardsDataJSON () {
+        print(dataStockInfo.count)
+        print("data for JSON", dataStockInfo)
+//        var json: [String: Any]
+        for data in dataStockInfo {
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                print(json)
+                if json["error"] != nil {
+                    showAlert(request: "getStockInfo")
+                    return
+                }
+                var stringLogoURL = json["logo"] as? String
+                if stringLogoURL == "" {
+                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
+                }
+                let card = StockTableCard(name: json["name"] as! String,
+                                          logo: (URL.init(string: stringLogoURL!)!),
+                                          ticker: json["ticker"] as! String,
+                                          industry: json["finnhubIndustry"] as! String,
+                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
+                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
+                                          peValue: 0.0,
+                                          psValue: 0.0,
+                                          ebitda: 0.0,
+                                          summary: "---",
+                                          currentPrice: 0.0,
+                                          previousClosePrice: 0.0,
+                                          isFavourite: false)
+                stockCards[card.ticker] = card
+                stockTickerList.append(card.ticker)
+            } catch let error {
+                print(error)
+            }
+        }
+        stockTickerList.sort()
+    }
+    
+    func parsePricesDataJSON () {
+        print(dataStockInfo.count)
+        print("data for JSON", dataStockInfo)
+        for (key, data) in dataStockPrice {
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                print(key, json)
+                if json["error"] != nil {
+                    showAlert(request: "getPrice")
+                    return
+                }
+                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
+                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
+            } catch let error {
+                print(error)
+            }
+        }
     }
     
     func calcPriceChange(card: StockTableCard) -> (String, Bool) {
