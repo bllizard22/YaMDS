@@ -174,26 +174,21 @@ class ViewController: UIViewController {
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
-//            UIView.animate(withDuration: 1, delay: 0, options: [.curveEaseIn]) {
-//                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
-//            }
-            UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]) {
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
-            }
-            UIView.animate(withDuration: 0.5, delay: 0.5, options: [.curveEaseOut]) {
-                sender.setImage(UIImage(named: "StarGray"), for: .normal)
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: 0)
+            UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
+                UIView.transition(with: sender.imageView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    sender.setImage(UIImage(named: "StarGray"), for: .normal)
+                }, completion: nil)
+                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
             }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
         } else {
-            UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]) {
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: -.pi)
-            }
-            UIView.animate(withDuration: 0.5, delay: 0.5, options: [.curveEaseOut]) {
-                sender.setImage(UIImage(named: "StarGold"), for: .normal)
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: 0)
+            UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
+                UIView.transition(with: sender.imageView!, duration: 0.5, options: [.transitionCrossDissolve], animations: {
+                    sender.setImage(UIImage(named: "StarGold"), for: .normal)
+                }, completion: nil)
+                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
             }
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
@@ -320,11 +315,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // TODO: -
-//        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
+        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
         if (indexPath.row % 2 == 0) {
-            cell.backgroundColor = UIColor(named: "EvenCell")
+            cell.contentView.backgroundColor = UIColor(named: "EvenCell")
         } else {
-            cell.backgroundColor = UIColor(named: "BackgroundColor")
+            cell.contentView.backgroundColor = UIColor(named: "BackgroundColor")
         }
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24

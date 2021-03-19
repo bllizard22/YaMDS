@@ -33,10 +33,11 @@ class CustomSearchBar: UISearchBar {
 //            textField.layer.borderWidth = 2
 //            textField.layer.borderColor = UIColor.systemGray4.cgColor
             textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
-            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
+            textField
+            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PrimaryFontColor")])
             
             if let backgroundView = textField.subviews.first {
-                backgroundView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.2)
+                backgroundView.backgroundColor = UIColor(named: "EvenCell")
                 backgroundView.layer.cornerRadius = 20
                 backgroundView.clipsToBounds = true
 //                backgroundView.layer.borderColor = UIColor.black.cgColor
