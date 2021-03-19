@@ -13,10 +13,8 @@ import Kingfisher
 class ViewController: UIViewController {
     
     // Stock Data
-    var dataStockInfo = Array<Data>()
-    var dataStockPrice = Array<(String, Data)>()
     var dataStockMetric = Array<(String, Data)>()
-    var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
+    var stockCards = Dictionary<String, StockTableCard>() // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
     var favouriteIsSelected =  false {
         didSet {
@@ -26,6 +24,7 @@ class ViewController: UIViewController {
     }
     var favourites = Favourites()
     var modelCD = ModelCD()
+    var stockData = StockData()
     
     // WebSockets
     @objc let priceSocket = PriceSocket()
@@ -84,40 +83,34 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
-            print(defaults.bool(forKey: "isAppAlreadyLaunchedOnce"))
+//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             loadCardsFromCoreData()
             cardsIsLoaded = true
-            
+//            loadPricesFromAPI()
             self.loadStocksInView()
             
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-                if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
-                    dataStockInfo.removeFirst()
-                }
-//                parsePricesDataJSON()
+            //DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+
                 saveCoreData()
 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
-            }
+            //}
         } else {
-            loadCardsFromAPI()
             print("First launch!")
-//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            loadCardsFromAPI()
             
-            loadPricesFromAPI()
-            
+            self.loadStocksInView()
             // TODO: - Add loading indicator/animation
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-                if dataStockInfo.count > 0, dataStockInfo[0].count == 0 {
-                    dataStockInfo.removeFirst()
-                }
-//                parseCardsDataJSON()
-//                parsePricesDataJSON()
-                self.loadStocksInView()
-                saveCoreData()
+                
+                loadPricesFromAPI()
+                favouriteIsSelected = false
+                print(stockCards.count)
+                
                 cardsIsLoaded = true
+                saveCoreData()
                 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
@@ -127,8 +120,7 @@ class ViewController: UIViewController {
     // Create TableView for Cards
     func loadStocksInView() {
         
-        let headerHeight = searchBar.frame
-        print(headerHeight)
+        print("stockCards count at \(#line) = ",stockCards.count)
         stockTableView.dataSource = self
         stockTableView.delegate = self
         
@@ -198,8 +190,6 @@ class ViewController: UIViewController {
         stocksButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
         favouriteIsSelected = false
-        
-//        stockTableView.reloadData()
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
@@ -213,8 +203,6 @@ class ViewController: UIViewController {
         stocksButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
 
         favouriteIsSelected = true
-                
-//        stockTableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -237,95 +225,37 @@ class ViewController: UIViewController {
     
     // API request for company profile data
     func loadCardsFromAPI() {
-        let stockData = StockData()
-        for company in StockList().stockList {
-            stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
-                self.dataStockInfo.append(dataIn)
+        stockData.loadCardsFromAPI { (stockCards) in
+            self.stockTickerList = Array(stockCards.keys).sorted()
+            self.stockCards = stockCards
+            DispatchQueue.main.async {
+                self.stockTableView.reloadData()
             }
         }
     }
     
     // API request for prices data of Cards
     func loadPricesFromAPI() {
-        let stockData = StockData()
-        for company in StockList().stockList {
-            stockData.getPrice(stockSymbol: company) { (company, dataIn) in
-                self.dataStockPrice.append((company, dataIn))
+        stockData.loadPricesFromAPI { (stockCards) in
+            self.stockTickerList = Array(stockCards.keys).sorted()
+            self.stockCards = stockCards
+            DispatchQueue.main.async {
+                self.stockTableView.reloadData()
             }
         }
-        print("loaded prices")
     }
-    
-//    func parseCardsDataJSON () {
-//        print(dataStockInfo.count)
-//        print("data for JSON", dataStockInfo)
-////        var json: [String: Any]
-//        for data in dataStockInfo {
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-//                print(json)
-//                if json["error"] != nil {
-//                    showAlert(request: "getStockInfo")
-//                    return
-//                }
-//                var stringLogoURL = json["logo"] as? String
-//                if stringLogoURL == "" {
-//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
-//                }
-//                let card = StockTableCard(name: json["name"] as! String,
-//                                          logo: (URL.init(string: stringLogoURL!)!),
-//                                          ticker: json["ticker"] as! String,
-//                                          industry: json["finnhubIndustry"] as! String,
-//                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
-//                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
-//                                          peValue: 0.0,
-//                                          psValue: 0.0,
-//                                          ebitda: 0.0,
-//                                          summary: "---",
-//                                          currentPrice: 0.0,
-//                                          previousClosePrice: 0.0,
-//                                          isFavourite: false)
-//                stockCards[card.ticker] = card
-//                stockTickerList.append(card.ticker)
-//            } catch let error {
-//                print(error)
-//            }
-//        }
-//        stockTickerList.sort()
-//    }
-//
-//    func parsePricesDataJSON () {
-//        print(dataStockInfo.count)
-//        print("data for JSON", dataStockInfo)
-//        for (key, data) in dataStockPrice {
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-//                print(key, json)
-//                if json["error"] != nil {
-//                    showAlert(request: "getPrice")
-//                    return
-//                }
-//                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
-//                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
-//            } catch let error {
-//                print(error)
-//            }
-//        }
-//    }
     
     // MARK: - CoreData Load Cards
     
     // Reload data from CoreData
-    private func loadCardsFromCoreData() {
+    func loadCardsFromCoreData() {
         stockCards = modelCD.loadCardsFromCoreData()
-//        print(stockCards.count)
-//        print(stockCards)
         stockTickerList = StockList().stockList
     }
     
     // Save all cards to CoreData as dictionary
-    private func saveCoreData() {
-//        print("Saving Cards to CoreData")
+    func saveCoreData() {
+        print("\n\n\nSaved!\n\n\n")
         modelCD.saveCoreData(cards: stockCards)
     }
 }
@@ -349,7 +279,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if stockCards[key] != nil {
             cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
-
+        
         // TODO: -
 //        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
         if (indexPath.row % 2 == 0) {

@@ -41,7 +41,7 @@ class StockTableView: UITableView {
             case .success(_):
                 break
             case .failure(_):
-                print("fail")
+                print("Failed to load company logo")
             }
         }
         

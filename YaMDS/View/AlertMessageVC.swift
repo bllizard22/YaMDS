@@ -20,21 +20,23 @@ class AlertMessageVC: UIAlertController {
             guard action.style == .default else { return }
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+60) {
                 if request == "getStockInfo" {
-                    let stockData = StockData()
-                    for company in StockList().stockList {
-                        stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
-                            self.dataStockInfo.append(dataIn)
-                        }
-                    }
+                    print("Shoud repeat getStockInfo")
+//                    let stockData = StockData()
+//                    for company in StockList().stockList {
+//                        stockData.getStockInfo(stockSymbol: company) { (dataIn) -> () in
+//                            self.dataStockInfo.append(dataIn)
+//                        }
+//                    }
                 }
                 if request == "getPrice" {
-                    let stockData = StockData()
-                    for company in StockList().stockList {
-                        stockData.getPrice(stockSymbol: company) { (company, dataIn) in
-                            self.dataStockPrice.append((company, dataIn))
-                        }
-                    }
-                    print("loaded prices")
+                    print("Shoud repeat getPrice")
+//                    let stockData = StockData()
+//                    for company in StockList().stockList {
+//                        stockData.getPrice(stockSymbol: company) { (company, dataIn) in
+//                            self.dataStockPrice.append((company, dataIn))
+//                        }
+//                    }
+//                    print("loaded prices")
                 }
             }
         }))

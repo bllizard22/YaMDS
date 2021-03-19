@@ -15,22 +15,35 @@ class StockData {
     ]
     let session = URLSession.shared
     
-    var dadta = [Data()]
+//    var dadta = [Data()]
     
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
     var dataStockMetric = Array<(String, Data)>()
     
-//    func getStockList(completion: @escaping ([Data]) -> ()) {
-//        for company in StockList().stockList {
-//            getStockInfo(stockSymbol: company) { (dataIn) -> () in
-//                self.dadta.append(dataIn)
-//                print(self.dadta.count)
-//            }
-//        }
-//        dadta.removeFirst()
-//        completion(dadta)
-//    }
+    var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
+    var stockTickerList = Array<String>()   // List of tickers for Cards
+    
+    func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>) -> ()) {
+        for company in StockList().stockList {
+            self.getStockInfo(stockSymbol: company) { (dataIn) -> () in
+                self.dataStockInfo.append(dataIn)
+                self.parseCardsDataJSON()
+                completion(self.stockCards)
+            }
+        }
+    }
+    
+    // API request for prices data of Cards
+    func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>) -> ()) {
+        for company in StockList().stockList {
+            self.getPrice(stockSymbol: company) { (ticker, dataIn) -> () in
+                self.dataStockPrice.append((ticker, dataIn))
+                self.parsePricesDataJSON()
+                completion(self.stockCards)
+            }
+        }
+    }
     
     func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
         
@@ -101,7 +114,8 @@ class StockData {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 print(json)
                 if json["error"] != nil {
-                    showAlert(request: "getStockInfo")
+//                    showAlert(request: "getStockInfo")
+                    print("\n\nInfo Alert!\n\n")
                     return
                 }
                 var stringLogoURL = json["logo"] as? String
@@ -138,8 +152,10 @@ class StockData {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 print(key, json)
                 if json["error"] != nil {
-                    showAlert(request: "getPrice")
+//                    showAlert(request: "getPrice")
+                    print("\n\nPrice Alert!\n\n")
                     return
+
                 }
                 stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
                 stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)

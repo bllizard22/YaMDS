@@ -36,7 +36,7 @@ class StockTableViewCell: UITableViewCell {
         priceChangeFormatter.maximumFractionDigits = 2
         
         let screenWidth = UIScreen.main.bounds.width
-        print(screenWidth)
+//        print(screenWidth)
         //if UIDevice().name == "iPhone 8" {
         if screenWidth <= 375 {
             primaryFont = UIFont(name: "Montserrat-Bold", size: 20) ?? UIFont.systemFont(ofSize: 20, weight: .bold)

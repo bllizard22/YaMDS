@@ -36,6 +36,7 @@ class ModelCD {
             for record in dataStockList {
                 let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
                 stockCards[record.ticker!] = decodedCard
+                print(#function, decodedCard.currentPrice)
             }
 //            print(stockCards.count)
 //            print(stockCards)
@@ -53,6 +54,8 @@ class ModelCD {
         
         print("Saving Cards to CoreData")
         for (key, value) in cards {
+            print(value.currentPrice)
+            
             // Create new task
             let taskObject = StockCard(entity: entity, insertInto: context)
             taskObject.ticker = key
@@ -63,7 +66,7 @@ class ModelCD {
             do {
                 try context.save()
                 print(taskObject.ticker!)
-                print(taskObject.card!)
+//                print(taskObject.card!)
             } catch let error as NSError  {
                 print(error.localizedDescription)
             }
