@@ -83,7 +83,7 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             loadCardsFromCoreData()
             cardsIsLoaded = true
 //            loadPricesFromAPI()
@@ -97,15 +97,15 @@ class ViewController: UIViewController {
             //}
         } else {
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
-            loadCardsFromAPI()
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            loadCardsFromAPI()
             
             self.loadStocksInView()
             // TODO: - Add loading indicator/animation
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-                
-                loadPricesFromAPI()
+                showAlert(request: "No connection")
+//                loadPricesFromAPI()
                 favouriteIsSelected = false
                 print(stockCards.count)
                 
@@ -129,19 +129,31 @@ class ViewController: UIViewController {
     }
     
     func showAlert(request: String) {
-        let alert = UIAlertController(title: "API Error", message: "Out of API requests (1 min to reset limit). Try again?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-            guard action.style == .default else { return }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+45) {
-                if request == "getStockInfo" {
-                    self.loadCardsFromAPI()
-                    self.loadPricesFromAPI()
+        let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
+        if request == "No connection" {
+            alert.title = request
+            alert.message = "Cannot connect to server.\nPlease check your WiFi/Celular and tap \"Reload\""
+            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
+                guard action.style == .default else { return }
+                        self.loadCardsFromAPI()
+                        self.loadPricesFromAPI()
+            }))
+        } else {
+            alert.title = "API Error"
+            alert.message = "Out of API requests (1 min to reset limit). Try again?"
+            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
+                guard action.style == .default else { return }
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+45) {
+                    if request == "getStockInfo" {
+                        self.loadCardsFromAPI()
+                        self.loadPricesFromAPI()
+                    }
+                    if request == "getPrice" {
+                        self.loadPricesFromAPI()
+                    }
                 }
-                if request == "getPrice" {
-                    self.loadPricesFromAPI()
-                }
-            }
-        }))
+            }))
+        }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
             guard action.style == .cancel else { return }
             print("Cancel")
@@ -156,13 +168,16 @@ class ViewController: UIViewController {
         
         let cardIsFav = stockCards[key]!.isFavourite
         if cardIsFav {
+            UIView.animate(withDuration: 2, delay: 0, options: [.curveEaseIn]) {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
+            }
             sender.setImage(UIImage(named: "StarGray"), for: .normal)
-            UIView.animate(withDuration: 1, delay: 0, options: [.curveEaseIn]) {
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi/2)
+            UIView.animate(withDuration: 2, delay: 4, options: [.curveEaseOut]) {
+                sender.imageView?.transform = CGAffineTransform(rotationAngle: .pi)
             }
-            UIView.animate(withDuration: 1, delay: 4, options: [.curveEaseOut]) {
-                sender.imageView?.transform = CGAffineTransform(rotationAngle: 0)
-            }
+//            UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseOut]) {
+//                sender.imageView?.transform = CGAffineTransform(rotationAngle: 0)
+//            }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print("\(key) did disliked")
@@ -225,9 +240,12 @@ class ViewController: UIViewController {
     
     // API request for company profile data
     func loadCardsFromAPI() {
-        stockData.loadCardsFromAPI { (stockCards) in
-            self.stockTickerList = Array(stockCards.keys).sorted()
-            self.stockCards = stockCards
+        stockData.loadCardsFromAPI { (stockCards, error) in
+            if let error = error {
+                self.showAlert(request: "any request")
+            }
+            self.stockTickerList = Array(stockCards!.keys).sorted()
+            self.stockCards = stockCards!
             DispatchQueue.main.async {
                 self.stockTableView.reloadData()
             }
