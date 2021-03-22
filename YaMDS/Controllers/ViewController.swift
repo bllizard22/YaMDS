@@ -23,7 +23,7 @@ class ViewController: UIViewController {
         }
     }
     var favourites = Favourites()
-    var modelCD = ModelCD()
+    var modelCoreData = ModelCD()
     var stockData = StockData()
     
     // WebSockets
@@ -83,18 +83,12 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             loadCardsFromCoreData()
             cardsIsLoaded = true
-//            loadPricesFromAPI()
             self.loadStocksInView()
             
-            //DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-
-                saveCoreData()
-
-                priceSocket.startWebSocket(tickerArray: stockTickerList)
-            //}
+            priceSocket.startWebSocket(tickerArray: stockTickerList)
         } else {
             print("First launch!")
             defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
@@ -106,10 +100,9 @@ class ViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
                 loadPricesFromAPI()
                 favouriteIsSelected = false
-                print(stockCards.count)
+//                print(stockCards.count)
                 
                 cardsIsLoaded = true
-                saveCoreData()
                 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
@@ -136,7 +129,7 @@ class ViewController: UIViewController {
                 guard action.style == .default else { return }
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
                     self.loadCardsFromAPI()
-//                        self.loadPricesFromAPI()
+                    self.loadPricesFromAPI()
                     
                 }
             }))
@@ -147,17 +140,12 @@ class ViewController: UIViewController {
                 guard action.style == .default else { return }
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+50) {
                         self.loadCardsFromAPI()
-//                        self.loadPricesFromAPI()
+                        self.loadPricesFromAPI()
                 }
             }))
         } else {
             alert.title = "Error"
             alert.message = "Unknown error occured.\nPlease restart the app."
-//            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-//                guard action.style == .default else { return }
-////                        self.loadCardsFromAPI()
-////                        self.loadPricesFromAPI()
-//            }))
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
             guard action.style == .cancel else { return }
@@ -178,7 +166,7 @@ class ViewController: UIViewController {
                 UIView.transition(with: sender.imageView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
                     sender.setImage(UIImage(named: "StarGray"), for: .normal)
                 }, completion: nil)
-                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
+                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
             }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
@@ -212,7 +200,7 @@ class ViewController: UIViewController {
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
         favouriteButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
-        
+
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
         stocksButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
@@ -275,6 +263,7 @@ class ViewController: UIViewController {
             self.stockCards = stockCards!
             DispatchQueue.main.async {
                 self.stockTableView.reloadData()
+                self.saveCoreData()
             }
         }
     }
@@ -283,14 +272,14 @@ class ViewController: UIViewController {
     
     // Reload data from CoreData
     func loadCardsFromCoreData() {
-        stockCards = modelCD.loadCardsFromCoreData()
+        stockCards = modelCoreData.loadCardsFromCoreData()
         stockTickerList = StockList().stockList
     }
     
     // Save all cards to CoreData as dictionary
     func saveCoreData() {
         print("\n\n\nSaved!\n\n\n")
-        modelCD.saveCoreData(cards: stockCards)
+        modelCoreData.saveCoreData(cards: stockCards)
     }
 }
 
@@ -327,10 +316,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
-            stockCards[key]!.isFavourite = true
+//            stockCards[key]!.isFavourite = true
         } else {
             cell.favouriteButton.setImage(UIImage(named: "StarGray"), for: .normal)
-            stockCards[key]!.isFavourite = false
+//            stockCards[key]!.isFavourite = false
         }
         cell.favouriteButton.tag = indexPath.row
         

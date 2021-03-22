@@ -33,8 +33,7 @@ class CustomSearchBar: UISearchBar {
 //            textField.layer.borderWidth = 2
 //            textField.layer.borderColor = UIColor.systemGray4.cgColor
             textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
-            textField
-            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PrimaryFontColor")])
+            textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PrimaryFontColor")!])
             
             if let backgroundView = textField.subviews.first {
                 backgroundView.backgroundColor = UIColor(named: "EvenCell")
@@ -46,11 +45,6 @@ class CustomSearchBar: UISearchBar {
             let button = textField.value(forKey: "clearButton") as! UIButton
             button.setImage(UIImage(named: "Close"), for: .normal)
             
-//            if let leftView = textField.leftView as? UIImageView {
-//                let searchImage = UIImage(named: "Search_24")
-//                leftView.image = searchImage!.withRenderingMode(.alwaysTemplate)
-//                leftView.tintColor = .black
-//            }
             textField.leftViewMode = UITextField.ViewMode.never
         }
     }
