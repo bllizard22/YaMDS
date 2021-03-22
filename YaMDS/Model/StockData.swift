@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum AlertMessage {
+    case connection, apiLimit, unknown
+}
+
 class StockData {
     
     let headers = [
@@ -24,12 +28,13 @@ class StockData {
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
     
-    func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, NSError?) -> ()) {
+    func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         for company in StockList().stockList {
             self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
-                if let error = error{
-                    print("Error \(error.code) on connection\n\n")
+                if let error = error {
+//                    print("Error \(error.code) on connection\n\n")
                     completion(nil, error)
+                    return
                 }
                 self.dataStockInfo.append(dataIn!)
                 self.parseCardsDataJSON()
@@ -39,17 +44,22 @@ class StockData {
     }
     
     // API request for prices data of Cards
-    func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>) -> ()) {
+    func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         for company in StockList().stockList {
-            self.getPrice(stockSymbol: company) { (ticker, dataIn) -> () in
-                self.dataStockPrice.append((ticker, dataIn))
+            self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
+                if let error = error {
+//                    print("Error \(error.code) on connection\n\n")
+                    completion(nil, error)
+                    return
+                }
+                self.dataStockPrice.append((ticker!, dataIn!))
                 self.parsePricesDataJSON()
-                completion(self.stockCards)
+                completion(self.stockCards, nil)
             }
         }
     }
     
-    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data?, NSError?) -> ()) {
+    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data?, AlertMessage?) -> ()) {
         
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(symbol)")! as URL,
@@ -58,10 +68,15 @@ class StockData {
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         
-            let dataTask = try session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
-                if let error = error as? NSError, error.code == NSURLErrorNotConnectedToInternet {
-//                    print("\n===\n", error.domain, error.code, "\n===\n")
-                    completion(nil, error)
+            let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
+                if let error = error as NSError? {
+                    if error.code == NSURLErrorNotConnectedToInternet {
+                        completion(nil, .connection)
+                    } else if error.code == 429 {
+                        completion(nil, .apiLimit)
+                    } else {
+                        completion(nil, .unknown)
+                    }
                 } else {
                     completion(data!, nil)
                 }
@@ -70,7 +85,7 @@ class StockData {
             dataTask.resume()
     }
     
-    func getPrice(stockSymbol symbol: String, completion: @escaping (String, Data) -> ()) {
+    func getPrice(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
         
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/quote?symbol=\(symbol)")! as URL,
@@ -81,10 +96,16 @@ class StockData {
         
         //        let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            if let error = error as? NSError, error.code == NSURLErrorNotConnectedToInternet {
-                print("\n===\n", error.domain, error.code, "\n===\n")
+            if let error = error as NSError? {
+                if error.code == NSURLErrorNotConnectedToInternet {
+                    completion(nil, nil, .connection)
+                } else if error.code == 429 {
+                    completion(nil, nil, .apiLimit)
+                } else {
+                    completion(nil, nil, .unknown)
+                }
             } else {
-                completion(symbol, data!)
+                completion(symbol, data!, nil)
             }
         })
         dataTask.resume()
