@@ -21,14 +21,14 @@ class MBOUMStockData {
     var stockTickerList = Array<String>()
     var companySummary = ""
 
-    func getCompanySummary(company: String) -> String {
+    func getCompanySummary(company: String, completion: @escaping (String) -> ()){
         readData(company: company)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             parseStocksDataToJSON { (summary) in
                 companySummary = summary
             }
+            completion(companySummary)
         }
-        return company
     }
     
     func readData(company: String) {
@@ -55,8 +55,9 @@ class MBOUMStockData {
 
     func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
 
+        print(#function, symbol)
         let request = NSMutableURLRequest(
-            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/profile/?symbol=AAPL")! as URL,
+            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/profile/?symbol=\(symbol)")! as URL,
             cachePolicy: .useProtocolCachePolicy,
             timeoutInterval: 10.0)
         request.httpMethod = "GET"

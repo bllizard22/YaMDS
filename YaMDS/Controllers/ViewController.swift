@@ -9,6 +9,7 @@ import UIKit
 import Foundation
 import CoreData
 import Kingfisher
+import SwiftyJSON
 
 class ViewController: UIViewController {
     
@@ -25,7 +26,7 @@ class ViewController: UIViewController {
     var favourites = Favourites()
     var modelCoreData = ModelCD()
     var stockData = StockData()
-    
+        
     // WebSockets
     @objc let priceSocket = PriceSocket()
     var priceObservation: NSKeyValueObservation?
@@ -40,15 +41,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var cancelSearchButton: UIButton!
     
     var cardsIsLoaded = false
+    var indexPathForLastSelectedRow: IndexPath?
     var headerViewHeight = 0
     var rowHeight = 0
     
     // SearchController
     var filteredStockTickerList = Array<String>()
     var searchBarIsEmpty: Bool {
-        guard let text = searchBar.text else {
-            return false
-        }
+        guard let text = searchBar.text else { return false }
         return text.isEmpty
     }
     var searchBarIsClicked = false {
@@ -57,9 +57,7 @@ class ViewController: UIViewController {
             cancelSearchButton.setImage(image, for: .normal)
         }
     }
-    var isFiltering: Bool {
-        return !searchBarIsEmpty
-    }
+    var isFiltering: Bool { return !searchBarIsEmpty }
     
     // MARK: - Load Actions
     override func viewDidLoad() {
@@ -168,7 +166,6 @@ class ViewController: UIViewController {
             }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
-            print("\(key) did disliked")
         } else {
             UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
                 UIView.transition(with: sender.imageView!, duration: 0.5, options: [.transitionCrossDissolve], animations: {
@@ -178,7 +175,6 @@ class ViewController: UIViewController {
             }
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
-            print("\(key) did liked")
         }
         if favouriteIsSelected {
             stockTickerList = favourites.liked
@@ -222,12 +218,15 @@ class ViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetailView" {
-            if let indexPath = stockTableView.indexPathForSelectedRow {
-                let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-                
-                let detailViewController = segue.destination as! DetailViewController
-                detailViewController.detailCard = stockCards[key]
+            guard let indexPath = indexPathForLastSelectedRow else {
+                print("IndexPath error")
+                return
             }
+            let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
+            
+            let detailViewController = segue.destination as! DetailViewController
+            print(#function, stockCards[key]!)
+            detailViewController.detailCard = stockCards[key]
         }
     }
     
@@ -274,23 +273,29 @@ class ViewController: UIViewController {
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
         }
-        let mboum = MBOUMStockData()
-        let summary = mboum.getCompanySummary(company: ticker)
+        var summary = ""
+//        let mboum = MBOUMStockData()
+//        mboum.getCompanySummary(company: ticker) { (getSummary) in
+//            summary = getSummary
+//        }
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             for (key, data) in dataStockMetric {
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                    print(key, json)
-                    let metric = json["metric"] as! Dictionary<String, Any>
-                    stockCards[key]?.peValue = Float(truncating: metric["peNormalizedAnnual"] as! NSNumber)
-                    stockCards[key]?.psValue = Float(truncating: metric["psTTM"] as! NSNumber)
-                    stockCards[key]?.ebitda = Float(truncating: metric["ebitdPerShareTTM"] as! NSNumber)
+                    let json = try JSON(data: data, options: .allowFragments)
+                    guard json["metric"].dictionary != nil else {
+                        print("Error")
+                        return
+                    }
+                    let metric = json["metric"]
+                    stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
+                    stockCards[key]?.psValue = metric["psTTM"].floatValue
+                    stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
+                    stockCards[key]?.summary = summary
                 } catch let error {
                     print(error)
                 }
             }
-            stockCards[ticker]?.summary = summary
             performSegue(withIdentifier: "showDetailView", sender: nil)
         }
     }
@@ -352,9 +357,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(#function, stockTableView.indexPathForSelectedRow?.row)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.selectionStyle = .none
         let ticker = stockTickerList[indexPath.row]
+        indexPathForLastSelectedRow = indexPath
         loadDetailViewData(ticker: ticker)
     }
 }

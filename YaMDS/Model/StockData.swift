@@ -157,7 +157,7 @@ class StockData {
                                           peValue: 0.0,
                                           psValue: 0.0,
                                           ebitda: 0.0,
-                                          summary: "---",
+                                          summary: "",
                                           currentPrice: 0.0,
                                           previousClosePrice: 0.0,
                                           isFavourite: false)

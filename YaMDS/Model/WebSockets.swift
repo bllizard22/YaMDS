@@ -57,7 +57,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
             let ticker = data["s"]
             currentTicker = ticker.stringValue
             currentPrice = price.doubleValue
-            print("Trade with \(ticker) at $\(price)")
+//            print("Trade with \(ticker) at $\(price)")
         }
     }
     

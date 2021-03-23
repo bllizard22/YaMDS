@@ -64,7 +64,7 @@ class Favourites {
         do {
             try context.save()
             stockList.append(taskObject)
-            print("liked after add: ",stockList)
+//            print("liked after add: ",stockList)
         } catch let error as NSError  {
             print(error.localizedDescription)
         }
@@ -84,7 +84,7 @@ class Favourites {
                 }
             }
         }
-        print("liked after delete: ",stockList)
+//        print("liked after delete: ",stockList)
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.saveContext()

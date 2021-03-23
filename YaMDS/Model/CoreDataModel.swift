@@ -30,7 +30,7 @@ class ModelCD {
             for record in dataStockList {
                 let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
                 stockCards[record.ticker!] = decodedCard
-                print(#function, decodedCard.currentPrice)
+//                print(#function, decodedCard.currentPrice)
             }
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -41,7 +41,7 @@ class ModelCD {
     // Save all cards to CoreData as dictionary
     func saveCoreData(cards: Dictionary<String, StockTableCard>) {
         let cardsCD = loadCardsFromCoreData()
-        print("loaded cards count", cardsCD.count)
+//        print("loaded cards count", cardsCD.count)
         let mergedCards = cardsCD.merging(cards) { (_, new) in new }
         
         clearCoreData()
@@ -52,7 +52,7 @@ class ModelCD {
         
         print("Saving Cards to CoreData")
         for (key, value) in mergedCards {
-            print(value.currentPrice)
+//            print(value.currentPrice)
             
             // Create new task
             let taskObject = StockCard(entity: entity, insertInto: context)
@@ -63,7 +63,7 @@ class ModelCD {
             // Save new task in memory at 0 position
             do {
                 try context.save()
-                print(taskObject.ticker!)
+//                print(taskObject.ticker!)
 //                print(taskObject.card!)
             } catch let error as NSError  {
                 print(error.localizedDescription)
