@@ -17,6 +17,8 @@
 		854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */; };
 		854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE8325F94357006B3122 /* DetailViewController.swift */; };
 		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
+		8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A08D2609AC530026D429 /* AlertMessage.swift */; };
+		8560A0912609AF240026D429 /* ListButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A0902609AF240026D429 /* ListButton.swift */; };
 		8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF3E25FA995100A0271B /* MBOUMStockData.swift */; };
 		8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF4C2601CED600A0271B /* CoreDataModel.swift */; };
 		85A163C325EF495F00600654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163C225EF495F00600654 /* AppDelegate.swift */; };
@@ -41,6 +43,8 @@
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
 		854FAE8325F94357006B3122 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
+		8560A08D2609AC530026D429 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
+		8560A0902609AF240026D429 /* ListButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListButton.swift; sourceTree = "<group>"; };
 		8570DF3E25FA995100A0271B /* MBOUMStockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBOUMStockData.swift; sourceTree = "<group>"; };
 		8570DF4C2601CED600A0271B /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		85A163BF25EF495F00600654 /* YaMDS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YaMDS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +113,7 @@
 				85A163E025F0A0F900600654 /* StockTableView.swift */,
 				85A163E325F0A1B500600654 /* StockTableViewCell.swift */,
 				01B54628260360E400ED3666 /* CustomSearchBar.swift */,
+				8560A0902609AF240026D429 /* ListButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 				8570DF3E25FA995100A0271B /* MBOUMStockData.swift */,
 				01A268E42600F1970097E848 /* WebSockets.swift */,
 				8570DF4C2601CED600A0271B /* CoreDataModel.swift */,
+				8560A08D2609AC530026D429 /* AlertMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -240,9 +246,11 @@
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
 				8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */,
 				01A268E52600F1980097E848 /* WebSockets.swift in Sources */,
+				8560A0912609AF240026D429 /* ListButton.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
 				8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
+				8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */,
 				85A163EC25F0A2EB00600654 /* StockData.swift in Sources */,
 				854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */,
 				85A163C325EF495F00600654 /* AppDelegate.swift in Sources */,

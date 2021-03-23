@@ -24,22 +24,14 @@ class ModelCD {
         let context = getContext()
         
         let fetchRequest: NSFetchRequest<StockCard> = StockCard.fetchRequest()
-        // Sorting of tasks list
-//        let sortDescriptor = NSSortDescriptor(key: "ticker", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
         
-        // Obtain data from context
         do {
             let dataStockList = try context.fetch(fetchRequest)
-//            print(dataStockList)
-//            print(type(of: dataStockList))
             for record in dataStockList {
                 let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
                 stockCards[record.ticker!] = decodedCard
                 print(#function, decodedCard.currentPrice)
             }
-//            print(stockCards.count)
-//            print(stockCards)
         } catch let error as NSError {
             print(error.localizedDescription)
         }
@@ -48,12 +40,16 @@ class ModelCD {
     
     // Save all cards to CoreData as dictionary
     func saveCoreData(cards: Dictionary<String, StockTableCard>) {
+        let cardsCD = loadCardsFromCoreData()
+        print("loaded cards count", cardsCD.count)
+        let mergedCards = cardsCD.merging(cards) { (_, new) in new }
+        
         let context = getContext()
         
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else { return }
         
         print("Saving Cards to CoreData")
-        for (key, value) in cards {
+        for (key, value) in mergedCards {
             print(value.currentPrice)
             
             // Create new task

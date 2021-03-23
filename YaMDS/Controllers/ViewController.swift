@@ -70,14 +70,13 @@ class ViewController: UIViewController {
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
             guard let updatedPrice = change.newValue else { return }
-            print("New price \(updatedPrice)")
+//            print("New price \(updatedPrice)")
             self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
             self.stockTableView.reloadData()
-//            self.priceLabel.text = "\(self.tickerKVO!) \(String(updatedPrice))"
         })
         tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
             guard let updatedTicker = change.newValue as? String else { return }
-            print("New ticker \(updatedTicker)")
+//            print("New ticker \(updatedTicker)")
             self.tickerKVO = updatedTicker
         })
         
@@ -111,14 +110,15 @@ class ViewController: UIViewController {
 
     // Create TableView for Cards
     func loadStocksInView() {
-        
-        print("stockCards count at \(#line) = ",stockCards.count)
         stockTableView.dataSource = self
         stockTableView.delegate = self
+//        print("stockCards count at \(#line) = ",stockCards.count)
         
         searchBar.delegate = self        
         searchBar.isHidden = false
     }
+    
+    // MARK: - AlertController
     
     func showAlert(request: AlertMessage) {
         let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
@@ -220,6 +220,8 @@ class ViewController: UIViewController {
         favouriteIsSelected = true
     }
     
+    // MARK: - Segues
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetailView" {
             if let indexPath = stockTableView.indexPathForSelectedRow {
@@ -246,6 +248,7 @@ class ViewController: UIViewController {
             self.stockCards = stockCards!
             DispatchQueue.main.async {
                 self.stockTableView.reloadData()
+                self.saveCoreData()
             }
         }
     }
@@ -265,6 +268,32 @@ class ViewController: UIViewController {
                 self.stockTableView.reloadData()
                 self.saveCoreData()
             }
+        }
+    }
+    
+    // Load company summary and financials from API
+    func loadDetailViewData(ticker: String) {
+        StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
+            self.dataStockMetric.append((company, dataIn))
+        }
+        let mboum = MBOUMStockData()
+        let summary = mboum.getCompanySummary(company: ticker)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
+            for (key, data) in dataStockMetric {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                    print(key, json)
+                    let metric = json["metric"] as! Dictionary<String, Any>
+                    stockCards[key]?.peValue = Float(truncating: metric["peNormalizedAnnual"] as! NSNumber)
+                    stockCards[key]?.psValue = Float(truncating: metric["psTTM"] as! NSNumber)
+                    stockCards[key]?.ebitda = Float(truncating: metric["ebitdPerShareTTM"] as! NSNumber)
+                } catch let error {
+                    print(error)
+                }
+            }
+            stockCards[ticker]?.summary = summary
+            performSegue(withIdentifier: "showDetailView", sender: nil)
         }
     }
     
@@ -299,6 +328,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                                                  for: indexPath as IndexPath) as! StockTableViewCell
         let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
         
+        print(stockCards.count)
+        
         if stockCards[key] != nil {
             cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
@@ -316,10 +347,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         //TODO: - Replace with single func
         if favourites.contains(ticker: key) {
             cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
-//            stockCards[key]!.isFavourite = true
         } else {
             cell.favouriteButton.setImage(UIImage(named: "StarGray"), for: .normal)
-//            stockCards[key]!.isFavourite = false
         }
         cell.favouriteButton.tag = indexPath.row
         
@@ -333,31 +362,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell?.selectionStyle = .none
         let ticker = stockTickerList[indexPath.row]
         loadDetailViewData(ticker: ticker)
-    }
-    
-    func loadDetailViewData(ticker: String) {
-        StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
-            self.dataStockMetric.append((company, dataIn))
-        }
-        let mboum = MBOUMStockData()
-        let summary = mboum.getCompanySummary(company: ticker)
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
-            for (key, data) in dataStockMetric {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                    print(key, json)
-                    let metric = json["metric"] as! Dictionary<String, Any>
-                    stockCards[key]?.peValue = Float(truncating: metric["peNormalizedAnnual"] as! NSNumber)
-                    stockCards[key]?.psValue = Float(truncating: metric["psTTM"] as! NSNumber)
-                    stockCards[key]?.ebitda = Float(truncating: metric["ebitdPerShareTTM"] as! NSNumber)
-                } catch let error {
-                    print(error)
-                }
-            }
-            stockCards[ticker]?.summary = summary
-            performSegue(withIdentifier: "showDetailView", sender: nil)
-        }
     }
 }
 
@@ -386,30 +390,6 @@ extension ViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
-
-// MARK: - Animate Button
-
-//extension ViewController {
-//    func showAnimation(_ completionBlock: @escaping () -> Void) {
-////        self.isUserInteractionEnabled = false
-//        UIView.animate(withDuration: 0.1,
-//                       delay: 0,
-//                       options: .curveLinear,
-//                       animations: { [weak self] in
-//                        self?.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.95)
-//                       }) {  (done) in
-//            UIView.animate(withDuration: 0.1,
-//                           delay: 0,
-//                           options: .curveLinear,
-//                           animations: { [weak self] in
-//                            self?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-//                           }) { [weak self] (_) in
-////                self?.isUserInteractionEnabled = true
-//                completionBlock()
-//            }
-//       }
-//    }
-//}
 
 // MARK: - Hide SearchBar onScroll
 

@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum AlertMessage {
-    case connection, apiLimit, unknown
-}
-
 class StockData {
     
     let headers = [
@@ -18,9 +14,7 @@ class StockData {
 //        "X-Finnhub-Token": "sandbox_c0vhf5748v6pqdk9hmqg"
     ]
     let session = URLSession.shared
-    
-//    var dadta = [Data()]
-    
+        
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
     var dataStockMetric = Array<(String, Data)>()
@@ -28,33 +22,42 @@ class StockData {
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
     
+    var isAlert = false
+    
     func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
+        var isAlert = false
         for company in StockList().stockList {
-            self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
-                if let error = error {
-//                    print("Error \(error.code) on connection\n\n")
-                    completion(nil, error)
-                    return
+            if !isAlert {
+                self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
+                    if let error = error {
+//                        print("Error \(error.code) on connection\n\n")
+                        isAlert = true
+                        completion(nil, error)
+                        return
+                    }
+                    self.dataStockInfo.append(dataIn!)
+                    self.parseCardsDataJSON()
+                    completion(self.stockCards, nil)
                 }
-                self.dataStockInfo.append(dataIn!)
-                self.parseCardsDataJSON()
-                completion(self.stockCards, nil)
             }
         }
     }
     
     // API request for prices data of Cards
     func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
+//        var isAlert = false
         for company in StockList().stockList {
-            self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
-                if let error = error {
-//                    print("Error \(error.code) on connection\n\n")
-                    completion(nil, error)
-                    return
+            if !isAlert {
+                self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
+                    if let error = error {
+                        //                    print("Error \(error.code) on connection\n\n")
+                        completion(nil, error)
+                        return
+                    }
+                    self.dataStockPrice.append((ticker!, dataIn!))
+                    self.parsePricesDataJSON()
+                    completion(self.stockCards, nil)
                 }
-                self.dataStockPrice.append((ticker!, dataIn!))
-                self.parsePricesDataJSON()
-                completion(self.stockCards, nil)
             }
         }
     }
@@ -140,8 +143,8 @@ class StockData {
                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 print(json)
                 if json["error"] != nil {
-//                    showAlert(request: "getStockInfo")
                     print("\n\nInfo Alert!\n\n")
+//                    throw NSError
                     return
                 }
                 var stringLogoURL = json["logo"] as? String

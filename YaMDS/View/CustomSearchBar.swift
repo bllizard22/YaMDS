@@ -30,8 +30,6 @@ class CustomSearchBar: UISearchBar {
         if let textField = self.value(forKey: "searchField") as? UITextField {
             textField.layer.cornerRadius = 20
             textField.clipsToBounds = true
-//            textField.layer.borderWidth = 2
-//            textField.layer.borderColor = UIColor.systemGray4.cgColor
             textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
             textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PrimaryFontColor")!])
             
