@@ -21,7 +21,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
         switch event {
             case .connected(let headers):
                 isConnected = true
-                print("websocket is connected: \(headers)")
+                print("websocket is connected: \(headers["Alt-Svc"])")
             case .disconnected(let reason, let code):
                 isConnected = false
                 print("websocket is disconnected: \(reason) with code: \(code)")
@@ -58,7 +58,6 @@ class PriceSocket: NSObject, WebSocketDelegate {
             currentTicker = ticker.stringValue
             currentPrice = price.doubleValue
             print("Trade with \(ticker) at $\(price)")
-//            completion(ticker, price)
         }
     }
     
@@ -77,7 +76,6 @@ class PriceSocket: NSObject, WebSocketDelegate {
         webSocket.delegate = self
         webSocket.connect()
 
-//        NotificationCenter.default.addObserver(SocketViewController.self, selector: #selector(SocketViewController().updatePriceLabel), name: .none, object: nil)
     }
     
     func subscribeOnAllStocks(tickerArray: Array<String>) {

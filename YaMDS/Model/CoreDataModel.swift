@@ -44,6 +44,8 @@ class ModelCD {
         print("loaded cards count", cardsCD.count)
         let mergedCards = cardsCD.merging(cards) { (_, new) in new }
         
+        clearCoreData()
+        
         let context = getContext()
         
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else { return }
@@ -68,4 +70,21 @@ class ModelCD {
             }
         }
     }
+    
+    private func clearCoreData() {
+        let context = getContext()
+        let fetchRequest: NSFetchRequest<StockCard> = StockCard.fetchRequest()
+        if let result = try? context.fetch(fetchRequest) {
+            for object in result {
+                context.delete(object)
+            }
+        }
+        
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print(error)
+        }
+    }
+    
 }

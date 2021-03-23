@@ -70,19 +70,17 @@ class ViewController: UIViewController {
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
             guard let updatedPrice = change.newValue else { return }
-//            print("New price \(updatedPrice)")
             self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
             self.stockTableView.reloadData()
         })
         tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
             guard let updatedTicker = change.newValue as? String else { return }
-//            print("New ticker \(updatedTicker)")
             self.tickerKVO = updatedTicker
         })
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             loadCardsFromCoreData()
             cardsIsLoaded = true
             self.loadStocksInView()
@@ -90,7 +88,7 @@ class ViewController: UIViewController {
             priceSocket.startWebSocket(tickerArray: stockTickerList)
         } else {
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             loadCardsFromAPI()
             
             self.loadStocksInView()
@@ -307,7 +305,7 @@ class ViewController: UIViewController {
     
     // Save all cards to CoreData as dictionary
     func saveCoreData() {
-        print("\n\n\nSaved!\n\n\n")
+//        print("\n\n\nSaved!\n\n\n")
         modelCoreData.saveCoreData(cards: stockCards)
     }
 }
@@ -327,9 +325,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
         let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-        
-        print(stockCards.count)
-        
+                
         if stockCards[key] != nil {
             cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
@@ -354,9 +350,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-    
-//    func swapLikeOnCard()
-    
+        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.selectionStyle = .none

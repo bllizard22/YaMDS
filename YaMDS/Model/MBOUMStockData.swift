@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class MBOUMStockData {
     
@@ -37,14 +38,14 @@ class MBOUMStockData {
     }
 
     func parseStocksDataToJSON (completion: @escaping (String) -> ()) {
-        print(dataStockInfo.count)
-        print("data for JSON", dataStockInfo)
+//        print(dataStockInfo.count)
+//        print("data for JSON", dataStockInfo)
         for data in dataStockInfo {
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                let json = try JSON(data: data, options: .allowFragments)
                 
-                print(json["longBusinessSummary"]!)
-                let summary = json["longBusinessSummary"] as! String
+                print(json["longBusinessSummary"].stringValue)
+                let summary = json["longBusinessSummary"].stringValue
                 completion(summary)
             } catch let error {
                 print(error)

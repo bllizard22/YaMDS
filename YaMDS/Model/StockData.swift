@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class StockData {
     
@@ -135,28 +136,24 @@ class StockData {
     }
     
     func parseCardsDataJSON () {
-        print(dataStockInfo.count)
-        print("data for JSON", dataStockInfo)
-//        var json: [String: Any]
         for data in dataStockInfo {
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                print(json)
-                if json["error"] != nil {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                let json = try JSON(data: data, options: .allowFragments)
+                if json["error"].string != nil {
                     print("\n\nInfo Alert!\n\n")
-//                    throw NSError
                     return
                 }
-                var stringLogoURL = json["logo"] as? String
+                var stringLogoURL = json["logo"].string
                 if stringLogoURL == "" {
                     stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
                 }
-                let card = StockTableCard(name: json["name"] as! String,
+                let card = StockTableCard(name: json["name"].stringValue,
                                           logo: (URL.init(string: stringLogoURL!)!),
-                                          ticker: json["ticker"] as! String,
-                                          industry: json["finnhubIndustry"] as! String,
-                                          marketCap: Float(truncating: json["marketCapitalization"] as! NSNumber),
-                                          sharesOutstanding: Float(truncating: json["shareOutstanding"] as! NSNumber),
+                                          ticker: json["ticker"].stringValue,
+                                          industry: json["finnhubIndustry"].stringValue,
+                                          marketCap: json["marketCapitalization"].floatValue,
+                                          sharesOutstanding: json["shareOutstanding"].floatValue,
                                           peValue: 0.0,
                                           psValue: 0.0,
                                           ebitda: 0.0,
@@ -174,20 +171,21 @@ class StockData {
     }
     
     func parsePricesDataJSON () {
-        print(dataStockInfo.count)
-        print("data for JSON", dataStockInfo)
+//        print(dataStockInfo.count)
+//        print("data for JSON", dataStockInfo)
         for (key, data) in dataStockPrice {
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
-                print(key, json)
-                if json["error"] != nil {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+                let json = try JSON(data: data, options: .allowFragments)
+//                print(key, json)
+                if json["error"].string != nil {
 //                    showAlert(request: "getPrice")
                     print("\n\nPrice Alert!\n\n")
                     return
 
                 }
-                stockCards[key]?.currentPrice = Float(truncating: json["c"] as! NSNumber)
-                stockCards[key]?.previousClosePrice = Float(truncating: json["pc"] as! NSNumber)
+                stockCards[key]?.currentPrice = json["c"].floatValue
+                stockCards[key]?.previousClosePrice = json["pc"].floatValue
             } catch let error {
                 print(error)
             }
