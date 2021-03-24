@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 class StockTableView: UITableView {
-
+    
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         configureTableView()
@@ -21,6 +21,17 @@ class StockTableView: UITableView {
     }
 
     func configureTableView() {
+        for constraint in self.constraints {
+            if constraint.identifier == "leadingTableConstraint" {
+               constraint.constant = 20
+            }
+            if constraint.identifier == "trailingTableConstraint" {
+               constraint.constant = 20
+            }
+        }
+//        leadingTableConstraint.constant = 20
+//        trailingTableConstraint.constant = 20
+        self.layoutIfNeeded()
         self.separatorStyle = .none
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }

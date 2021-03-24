@@ -36,8 +36,6 @@ class StockTableViewCell: UITableViewCell {
         priceChangeFormatter.maximumFractionDigits = 2
         
         let screenWidth = UIScreen.main.bounds.width
-//        print(screenWidth)
-        //if UIDevice().name == "iPhone 8" {
         if screenWidth <= 375 {
             primaryFont = UIFont(name: "Montserrat-Bold", size: 20) ?? UIFont.systemFont(ofSize: 20, weight: .bold)
             secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
@@ -53,9 +51,7 @@ class StockTableViewCell: UITableViewCell {
         priceLabel.font = primaryFont
         priceChangeLabel.font = secondaryFont
         
-        logoImage.layer.cornerRadius = 18
-//        tickerLabel.font = tickerLabel.font.withSize(14)
-        
+        logoImage.layer.cornerRadius = 18        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

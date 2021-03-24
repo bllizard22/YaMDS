@@ -273,7 +273,7 @@ class ViewController: UIViewController {
         StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
             self.dataStockMetric.append((company, dataIn))
         }
-        var summary = ""
+//        var summary = ""
 //        let mboum = MBOUMStockData()
 //        mboum.getCompanySummary(company: ticker) { (getSummary) in
 //            summary = getSummary
@@ -291,7 +291,7 @@ class ViewController: UIViewController {
                     stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
                     stockCards[key]?.psValue = metric["psTTM"].floatValue
                     stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
-                    stockCards[key]?.summary = summary
+//                    stockCards[key]?.summary = summary
                 } catch let error {
                     print(error)
                 }
@@ -357,7 +357,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(#function, stockTableView.indexPathForSelectedRow?.row)
+//        print(#function, stockTableView.indexPathForSelectedRow?.row)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.selectionStyle = .none
         let ticker = stockTickerList[indexPath.row]
