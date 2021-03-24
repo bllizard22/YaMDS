@@ -21,6 +21,12 @@ class StockTableView: UITableView {
     }
 
     func configureTableView() {
+        self.layoutIfNeeded()
+        self.separatorStyle = .none
+        self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
+    }
+    
+    func autolayoutWidth() {
         for constraint in self.constraints {
             if constraint.identifier == "leadingTableConstraint" {
                constraint.constant = 20
@@ -29,11 +35,6 @@ class StockTableView: UITableView {
                constraint.constant = 20
             }
         }
-//        leadingTableConstraint.constant = 20
-//        trailingTableConstraint.constant = 20
-        self.layoutIfNeeded()
-        self.separatorStyle = .none
-        self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }
     
     func loadCardIntoTableViewCell(card: StockTableCard, cell: StockTableViewCell) -> StockTableViewCell {

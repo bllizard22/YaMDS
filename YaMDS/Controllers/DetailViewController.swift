@@ -65,6 +65,7 @@ class DetailViewController: UIViewController {
         let ebitda = detailCard!.ebitda * detailCard!.sharesOutstanding
         ebitdaLabel.text = currencyFormatter.string(from: NSNumber(value: ebitda))! + "M"
         
+        print(detailCard!.isFavourite)
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
         
         summaryLabel.text = detailCard!.summary

@@ -21,7 +21,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
         switch event {
             case .connected(let headers):
                 isConnected = true
-                print("websocket is connected: \(headers["Alt-Svc"])")
+                print("websocket is connected: \(headers["Alt-Svc"] ?? "--")")
             case .disconnected(let reason, let code):
                 isConnected = false
                 print("websocket is disconnected: \(reason) with code: \(code)")

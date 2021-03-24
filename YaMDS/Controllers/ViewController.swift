@@ -108,10 +108,11 @@ class ViewController: UIViewController {
     func loadStocksInView() {
         stockTableView.dataSource = self
         stockTableView.delegate = self
-//        print("stockCards count at \(#line) = ",stockCards.count)
         
         searchBar.delegate = self        
         searchBar.isHidden = false
+        
+//        stockTableView.autolayoutWidth()
     }
     
     // MARK: - AlertController
@@ -120,25 +121,27 @@ class ViewController: UIViewController {
         let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
         if request == .connection {
             alert.title = "No connection"
-            alert.message = "Cannot connect to server.\nPlease check your WiFi/Cellular and tap \"Reload\""
+            alert.message = "Cannot connect to server.\nPlease check your Internet\nand tap \"Reload\""
             alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
                 guard action.style == .default else { return }
+                self.loadCardsFromAPI()
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
-                    self.loadCardsFromAPI()
+//                    self.loadCardsFromAPI()
                     self.loadPricesFromAPI()
-                    
                 }
             }))
         } else if request == .apiLimit {
             alert.title = "API Error"
-            alert.message = "Out of API requests (1 min to reset limit). Try again?"
-            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-                guard action.style == .default else { return }
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+50) {
-                        self.loadCardsFromAPI()
-                        self.loadPricesFromAPI()
-                }
-            }))
+            alert.message = "Too many API requests\n(~2 min to reset limit).\nPlease try later."
+//            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
+//                guard action.style == .default else { return }
+//                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+100) {
+//                    if self.stockCards.count < StockList().stockList.count {
+//                        self.loadCardsFromAPI()
+//                    }
+//                    self.loadPricesFromAPI()
+//                }
+//            }))
         } else {
             alert.title = "Error"
             alert.message = "Unknown error occured.\nPlease restart the app."
@@ -270,32 +273,33 @@ class ViewController: UIViewController {
     
     // Load company summary and financials from API
     func loadDetailViewData(ticker: String) {
-        StockData().getMetric(stockSymbol: ticker) { (company, dataIn) in
-            self.dataStockMetric.append((company, dataIn))
+        stockData.loadMetricFromAPI(ticker: ticker) { (card, error) in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.showAlert(request: error)
+                }
+                return
+            }
+            self.stockCards[ticker] = card
         }
-//        var summary = ""
-//        let mboum = MBOUMStockData()
-//        mboum.getCompanySummary(company: ticker) { (getSummary) in
-//            summary = getSummary
-//        }
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
-            for (key, data) in dataStockMetric {
-                do {
-                    let json = try JSON(data: data, options: .allowFragments)
-                    guard json["metric"].dictionary != nil else {
-                        print("Error")
-                        return
-                    }
-                    let metric = json["metric"]
-                    stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
-                    stockCards[key]?.psValue = metric["psTTM"].floatValue
-                    stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
-//                    stockCards[key]?.summary = summary
-                } catch let error {
-                    print(error)
-                }
-            }
+//            for (key, data) in dataStockMetric {
+//                do {
+//                    let json = try JSON(data: data, options: .allowFragments)
+//                    guard json["metric"].dictionary != nil else {
+//                        print("Error")
+//                        return
+//                    }
+//                    let metric = json["metric"]
+//                    stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
+//                    stockCards[key]?.psValue = metric["psTTM"].floatValue
+//                    stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
+////                    stockCards[key]?.summary = summary
+//                } catch let error {
+//                    print(error)
+//                }
+//            }
             performSegue(withIdentifier: "showDetailView", sender: nil)
         }
     }
@@ -335,13 +339,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
         
-        // TODO: -
-        cell.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : .white
-        if (indexPath.row % 2 == 0) {
-            cell.contentView.backgroundColor = UIColor(named: "EvenCell")
-        } else {
-            cell.contentView.backgroundColor = UIColor(named: "BackgroundColor")
-        }
+        cell.contentView.backgroundColor = (indexPath.row % 2 == 0) ? UIColor(named: "EvenCell") : UIColor(named: "BackgroundColor")
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
 

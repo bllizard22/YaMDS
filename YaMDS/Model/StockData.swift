@@ -18,7 +18,7 @@ class StockData {
         
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
-    var dataStockMetric = Array<(String, Data)>()
+    var dataMetricCard = Data()
     
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
@@ -26,13 +26,12 @@ class StockData {
     var isAlert = false
     
     func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
-        var isAlert = false
+        self.isAlert = false
         for company in StockList().stockList {
-            if !isAlert {
+            if !self.isAlert {
                 self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
                     if let error = error {
-//                        print("Error \(error.code) on connection\n\n")
-                        isAlert = true
+                        self.isAlert = true
                         completion(nil, error)
                         return
                     }
@@ -44,14 +43,12 @@ class StockData {
         }
     }
     
-    // API request for prices data of Cards
     func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
-//        var isAlert = false
         for company in StockList().stockList {
-            if !isAlert {
+            if !self.isAlert {
                 self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
                     if let error = error {
-                        //                    print("Error \(error.code) on connection\n\n")
+                        self.isAlert = true
                         completion(nil, error)
                         return
                     }
@@ -59,6 +56,20 @@ class StockData {
                     self.parsePricesDataJSON()
                     completion(self.stockCards, nil)
                 }
+            }
+        }
+    }
+    
+    func loadMetricFromAPI(ticker company: String, completion: @escaping (StockTableCard?, AlertMessage?) -> ()) {
+        if !isAlert {
+            self.getMetric(stockSymbol: company) { (ticker, dataIn, error) -> () in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                self.dataMetricCard.append(dataIn!)
+                self.parseMetricDataJSON(ticker: company)
+                completion(self.stockCards[company], nil)
             }
         }
     }
@@ -72,21 +83,20 @@ class StockData {
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         
-            let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
-                if let error = error as NSError? {
-                    if error.code == NSURLErrorNotConnectedToInternet {
-                        completion(nil, .connection)
-                    } else if error.code == 429 {
-                        completion(nil, .apiLimit)
-                    } else {
-                        completion(nil, .unknown)
-                    }
+        let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
+            if let error = error as NSError? {
+                if error.code == NSURLErrorNotConnectedToInternet {
+                    completion(nil, .connection)
                 } else {
-                    completion(data!, nil)
+                    completion(nil, .unknown)
                 }
+                return
             }
-            )
-            dataTask.resume()
+            completion(data!, nil)
+            
+        }
+        )
+        dataTask.resume()
     }
     
     func getPrice(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
@@ -99,24 +109,28 @@ class StockData {
         request.allHTTPHeaderFields = headers
         
         //        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, rawResponse, error) -> Void in
             if let error = error as NSError? {
                 if error.code == NSURLErrorNotConnectedToInternet {
                     completion(nil, nil, .connection)
-                } else if error.code == 429 {
-                    completion(nil, nil, .apiLimit)
                 } else {
                     completion(nil, nil, .unknown)
                 }
-            } else {
-                completion(symbol, data!, nil)
+                return
             }
+            let response = rawResponse as! HTTPURLResponse
+            print(response)
+            guard response.statusCode == 200 else {
+                let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
+                completion(nil, nil, errorType)
+                return
+            }
+            completion(symbol, data!, nil)
         })
         dataTask.resume()
     }
     
-    func getMetric(stockSymbol symbol: String, completion: @escaping (String, Data) -> ()) {
-        
+    func getMetric(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
         let request = NSMutableURLRequest(
             //            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/?symbol=AAPL,FB")! as URL,
             url: NSURL(string: "https://finnhub.io/api/v1/stock/metric?symbol=\(symbol)&metric=all")! as URL,
@@ -127,9 +141,9 @@ class StockData {
         
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             if (error != nil) {
-                print(error!)
+                completion(nil, nil, .unknown)
             } else {
-                completion(symbol, data!)
+                completion(symbol, data!, nil)
             }
         })
         dataTask.resume()
@@ -138,16 +152,16 @@ class StockData {
     func parseCardsDataJSON () {
         for data in dataStockInfo {
             do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 let json = try JSON(data: data, options: .allowFragments)
                 if json["error"].string != nil {
                     print("\n\nInfo Alert!\n\n")
+                    print(json)
                     return
                 }
                 var stringLogoURL = json["logo"].string
-                if stringLogoURL == "" {
-                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
-                }
+//                if stringLogoURL == "" {
+//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
+//                }
                 let card = StockTableCard(name: json["name"].stringValue,
                                           logo: (URL.init(string: stringLogoURL!)!),
                                           ticker: json["ticker"].stringValue,
@@ -171,24 +185,34 @@ class StockData {
     }
     
     func parsePricesDataJSON () {
-//        print(dataStockInfo.count)
-//        print("data for JSON", dataStockInfo)
         for (key, data) in dataStockPrice {
             do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
                 let json = try JSON(data: data, options: .allowFragments)
-//                print(key, json)
                 if json["error"].string != nil {
-//                    showAlert(request: "getPrice")
                     print("\n\nPrice Alert!\n\n")
                     return
-
                 }
                 stockCards[key]?.currentPrice = json["c"].floatValue
                 stockCards[key]?.previousClosePrice = json["pc"].floatValue
             } catch let error {
                 print(error)
             }
+        }
+    }
+    
+    func parseMetricDataJSON (ticker key: String) {
+        do {
+            let json = try JSON(data: dataMetricCard, options: .allowFragments)
+            guard json["metric"].dictionary != nil else {
+                print("Error")
+                return
+            }
+            let metric = json["metric"]
+            stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
+            stockCards[key]?.psValue = metric["psTTM"].floatValue
+            stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
+        } catch let error {
+            print(error)
         }
     }
     
