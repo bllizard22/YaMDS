@@ -14,7 +14,6 @@ import SwiftyJSON
 class ViewController: UIViewController {
     
     // Stock Data
-    var dataStockMetric = Array<(String, Data)>()
     var stockCards = Dictionary<String, StockTableCard>() // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
     var favouriteIsSelected =  false {
@@ -23,9 +22,11 @@ class ViewController: UIViewController {
             searchBar(searchBar, textDidChange: searchBar.text ?? "")
         }
     }
+    
+    // Data Models
     var favourites = Favourites()
     var modelCoreData = ModelCD()
-    var stockData = StockData()
+    var stockAPIData = StockAPIData()
         
     // WebSockets
     @objc let priceSocket = PriceSocket()
@@ -37,19 +38,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBOutlet weak var searchBar: CustomSearchBar!
-    @IBOutlet weak var stockTableView: StockTableView!
     @IBOutlet weak var cancelSearchButton: UIButton!
+    @IBOutlet weak var stockTableView: StockTableView!
     
     var cardsIsLoaded = false
     var indexPathForLastSelectedRow: IndexPath?
-    var headerViewHeight = 0
-    var rowHeight = 0
     
     // SearchController
     var filteredStockTickerList = Array<String>()
-    var searchBarIsEmpty: Bool {
+    var isFiltering: Bool {
         guard let text = searchBar.text else { return false }
-        return text.isEmpty
+        return !text.isEmpty
     }
     var searchBarIsClicked = false {
         didSet {
@@ -57,7 +56,6 @@ class ViewController: UIViewController {
             cancelSearchButton.setImage(image, for: .normal)
         }
     }
-    var isFiltering: Bool { return !searchBarIsEmpty }
     
     // MARK: - Load Actions
     override func viewDidLoad() {
@@ -79,24 +77,25 @@ class ViewController: UIViewController {
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
             defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+            
             loadCardsFromCoreData()
             cardsIsLoaded = true
             self.loadStocksInView()
-            
             priceSocket.startWebSocket(tickerArray: stockTickerList)
+            
         } else {
             print("First launch!")
 //            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
-            loadCardsFromAPI()
             
+            loadCardsFromAPI()
             self.loadStocksInView()
-            // TODO: - Add loading indicator/animation
+        // TODO: - Add loading indicator/animation
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+                stockTableView.autolayoutWidth()
                 loadPricesFromAPI()
-                favouriteIsSelected = false
-//                print(stockCards.count)
                 
+//                favouriteIsSelected = false
                 cardsIsLoaded = true
                 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
@@ -104,15 +103,11 @@ class ViewController: UIViewController {
         }
     }
 
-    // Create TableView for Cards
     func loadStocksInView() {
         stockTableView.dataSource = self
         stockTableView.delegate = self
-        
         searchBar.delegate = self        
         searchBar.isHidden = false
-        
-//        stockTableView.autolayoutWidth()
     }
     
     // MARK: - AlertController
@@ -158,9 +153,8 @@ class ViewController: UIViewController {
     
     @IBAction func likeButtonDidPressed(_ sender: UIButton) {
         let key = isFiltering ? filteredStockTickerList[sender.tag] : stockTickerList[sender.tag]
-        
-        let cardIsFav = stockCards[key]!.isFavourite
-        if cardIsFav {
+
+        if favourites.contains(ticker: key) {
             UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
                 UIView.transition(with: sender.imageView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
                     sender.setImage(UIImage(named: "StarGray"), for: .normal)
@@ -197,7 +191,6 @@ class ViewController: UIViewController {
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
         favouriteButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
-
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(32)
         stocksButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
         
@@ -210,7 +203,6 @@ class ViewController: UIViewController {
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
         favouriteButton.setTitleColor(UIColor(named: "PrimaryFontColor"), for: .normal)
-        
         stocksButton.titleLabel?.font = stocksButton.titleLabel?.font.withSize(20)
         stocksButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
 
@@ -237,7 +229,7 @@ class ViewController: UIViewController {
     
     // API request for company profile data
     func loadCardsFromAPI() {
-        stockData.loadCardsFromAPI { (stockCards, error) in
+        stockAPIData.loadCardsFromAPI { (stockCards, error) in
             if let error = error {
                 DispatchQueue.main.async {
                     self.showAlert(request: error)
@@ -248,14 +240,14 @@ class ViewController: UIViewController {
             self.stockCards = stockCards!
             DispatchQueue.main.async {
                 self.stockTableView.reloadData()
-                self.saveCoreData()
+                self.saveCardsToCoreData()
             }
         }
     }
     
     // API request for prices data of Cards
     func loadPricesFromAPI() {
-        stockData.loadPricesFromAPI { (stockCards, error) in
+        stockAPIData.loadPricesFromAPI { (stockCards, error) in
             if let error = error {
                 DispatchQueue.main.async {
                     self.showAlert(request: error)
@@ -266,14 +258,14 @@ class ViewController: UIViewController {
             self.stockCards = stockCards!
             DispatchQueue.main.async {
                 self.stockTableView.reloadData()
-                self.saveCoreData()
+                self.saveCardsToCoreData()
             }
         }
     }
     
     // Load company summary and financials from API
     func loadDetailViewData(ticker: String) {
-        stockData.loadMetricFromAPI(ticker: ticker) { (card, error) in
+        stockAPIData.loadMetricFromAPI(ticker: ticker) { (card, error) in
             if let error = error {
                 DispatchQueue.main.async {
                     self.showAlert(request: error)
@@ -282,24 +274,7 @@ class ViewController: UIViewController {
             }
             self.stockCards[ticker] = card
         }
-        
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
-//            for (key, data) in dataStockMetric {
-//                do {
-//                    let json = try JSON(data: data, options: .allowFragments)
-//                    guard json["metric"].dictionary != nil else {
-//                        print("Error")
-//                        return
-//                    }
-//                    let metric = json["metric"]
-//                    stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
-//                    stockCards[key]?.psValue = metric["psTTM"].floatValue
-//                    stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
-////                    stockCards[key]?.summary = summary
-//                } catch let error {
-//                    print(error)
-//                }
-//            }
             performSegue(withIdentifier: "showDetailView", sender: nil)
         }
     }
@@ -313,8 +288,7 @@ class ViewController: UIViewController {
     }
     
     // Save all cards to CoreData as dictionary
-    func saveCoreData() {
-//        print("\n\n\nSaved!\n\n\n")
+    func saveCardsToCoreData() {
         modelCoreData.saveCoreData(cards: stockCards)
     }
 }
@@ -343,12 +317,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         stockTableView.rowHeight = cell.rawHeight
         cell.layer.cornerRadius = 24
 
-        //TODO: - Replace with single func
-        if favourites.contains(ticker: key) {
-            cell.favouriteButton.setImage(UIImage(named: "StarGold"), for: .normal)
-        } else {
-            cell.favouriteButton.setImage(UIImage(named: "StarGray"), for: .normal)
-        }
+        let image = favourites.contains(ticker: key) ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
+        cell.favouriteButton.setImage(image, for: .normal)
+
         cell.favouriteButton.tag = indexPath.row
         
         return cell

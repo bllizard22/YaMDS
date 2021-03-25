@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-class StockData {
+class StockAPIData {
     
     let headers = [
         "X-Finnhub-Token": "c0vhf5748v6pqdk9hmq0"
@@ -23,12 +23,13 @@ class StockData {
     var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     var stockTickerList = Array<String>()   // List of tickers for Cards
     
+    var remainingRequests = 60
     var isAlert = false
     
     func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         self.isAlert = false
         for company in StockList().stockList {
-            if !self.isAlert {
+            if !self.isAlert, remainingRequests > 0 {
                 self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
                     if let error = error {
                         self.isAlert = true
@@ -45,7 +46,7 @@ class StockData {
     
     func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         for company in StockList().stockList {
-            if !self.isAlert {
+            if !self.isAlert, remainingRequests > 0 {
                 self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
                     if let error = error {
                         self.isAlert = true
@@ -83,13 +84,22 @@ class StockData {
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         
-        let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, response, error) -> Void in
+        let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, rawResponse, error) -> Void in
             if let error = error as NSError? {
                 if error.code == NSURLErrorNotConnectedToInternet {
                     completion(nil, .connection)
                 } else {
                     completion(nil, .unknown)
                 }
+                return
+            }
+            let response = rawResponse as! HTTPURLResponse
+//            print(response)
+            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
+            print(self.remainingRequests)
+            guard response.statusCode == 200 else {
+                let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
+                completion(nil, errorType)
                 return
             }
             completion(data!, nil)
@@ -119,7 +129,8 @@ class StockData {
                 return
             }
             let response = rawResponse as! HTTPURLResponse
-            print(response)
+            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
+            print(self.remainingRequests)
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
                 completion(nil, nil, errorType)
@@ -158,12 +169,12 @@ class StockData {
                     print(json)
                     return
                 }
-                var stringLogoURL = json["logo"].string
+//                var stringLogoURL = json["logo"].string
 //                if stringLogoURL == "" {
 //                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
 //                }
                 let card = StockTableCard(name: json["name"].stringValue,
-                                          logo: (URL.init(string: stringLogoURL!)!),
+                                          logo: json["logo"].url!,
                                           ticker: json["ticker"].stringValue,
                                           industry: json["finnhubIndustry"].stringValue,
                                           marketCap: json["marketCapitalization"].floatValue,

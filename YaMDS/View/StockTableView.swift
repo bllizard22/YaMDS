@@ -21,7 +21,6 @@ class StockTableView: UITableView {
     }
 
     func configureTableView() {
-        self.layoutIfNeeded()
         self.separatorStyle = .none
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }
@@ -35,6 +34,7 @@ class StockTableView: UITableView {
                constraint.constant = 20
             }
         }
+        self.layoutIfNeeded()
     }
     
     func loadCardIntoTableViewCell(card: StockTableCard, cell: StockTableViewCell) -> StockTableViewCell {
@@ -43,7 +43,7 @@ class StockTableView: UITableView {
         cell.tickerLabel.text = card.ticker
         let price = NSNumber(value: card.currentPrice)
         cell.priceLabel.text = cell.priceFormatter.string(from: price)
-        let (priceChange, isPositive) = StockData().calcPriceChange(card: card)
+        let (priceChange, isPositive) = StockAPIData().calcPriceChange(card: card)
         cell.priceChangeLabel.text = priceChange
         cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
 

@@ -16,7 +16,7 @@
 		854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 854FAE7725F4C351006B3122 /* Kingfisher */; };
 		854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */; };
 		854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE8325F94357006B3122 /* DetailViewController.swift */; };
-		855A459325F29A68006DD798 /* StockCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockCardData.swift */; };
+		855A459325F29A68006DD798 /* StockTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockTableCard.swift */; };
 		8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A08D2609AC530026D429 /* AlertMessage.swift */; };
 		8560A0912609AF240026D429 /* ListButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A0902609AF240026D429 /* ListButton.swift */; };
 		8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF3E25FA995100A0271B /* MBOUMStockData.swift */; };
@@ -31,7 +31,7 @@
 		85A163DC25F09CA700600654 /* StockCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85A163DB25F09CA700600654 /* StockCell.xib */; };
 		85A163E125F0A0F900600654 /* StockTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163E025F0A0F900600654 /* StockTableView.swift */; };
 		85A163E425F0A1B500600654 /* StockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163E325F0A1B500600654 /* StockTableViewCell.swift */; };
-		85A163EC25F0A2EB00600654 /* StockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163EB25F0A2EB00600654 /* StockData.swift */; };
+		85A163EC25F0A2EB00600654 /* StockAPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A163EB25F0A2EB00600654 /* StockAPIData.swift */; };
 		85B58D5F25F0AC9900206828 /* StockList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B58D5E25F0AC9900206828 /* StockList.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,7 +42,7 @@
 		01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
 		854FAE8325F94357006B3122 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		855A459225F29A68006DD798 /* StockCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockCardData.swift; sourceTree = "<group>"; };
+		855A459225F29A68006DD798 /* StockTableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableCard.swift; sourceTree = "<group>"; };
 		8560A08D2609AC530026D429 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		8560A0902609AF240026D429 /* ListButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListButton.swift; sourceTree = "<group>"; };
 		8570DF3E25FA995100A0271B /* MBOUMStockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBOUMStockData.swift; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 		85A163DB25F09CA700600654 /* StockCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StockCell.xib; sourceTree = "<group>"; };
 		85A163E025F0A0F900600654 /* StockTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableView.swift; sourceTree = "<group>"; };
 		85A163E325F0A1B500600654 /* StockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableViewCell.swift; sourceTree = "<group>"; };
-		85A163EB25F0A2EB00600654 /* StockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockData.swift; sourceTree = "<group>"; };
+		85A163EB25F0A2EB00600654 /* StockAPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAPIData.swift; sourceTree = "<group>"; };
 		85B58D5E25F0AC9900206828 /* StockList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,12 +130,12 @@
 		85A163E725F0A1E300600654 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				85A163EB25F0A2EB00600654 /* StockData.swift */,
-				85B58D5E25F0AC9900206828 /* StockList.swift */,
-				855A459225F29A68006DD798 /* StockCardData.swift */,
-				854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */,
+				85A163EB25F0A2EB00600654 /* StockAPIData.swift */,
 				8570DF3E25FA995100A0271B /* MBOUMStockData.swift */,
 				01A268E42600F1970097E848 /* WebSockets.swift */,
+				85B58D5E25F0AC9900206828 /* StockList.swift */,
+				855A459225F29A68006DD798 /* StockTableCard.swift */,
+				854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */,
 				8570DF4C2601CED600A0271B /* CoreDataModel.swift */,
 				8560A08D2609AC530026D429 /* AlertMessage.swift */,
 			);
@@ -242,7 +242,7 @@
 				854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */,
 				85A163CD25EF495F00600654 /* YaMDS.xcdatamodeld in Sources */,
 				01B54629260360E400ED3666 /* CustomSearchBar.swift in Sources */,
-				855A459325F29A68006DD798 /* StockCardData.swift in Sources */,
+				855A459325F29A68006DD798 /* StockTableCard.swift in Sources */,
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
 				8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */,
 				01A268E52600F1980097E848 /* WebSockets.swift in Sources */,
@@ -251,7 +251,7 @@
 				8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
 				8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */,
-				85A163EC25F0A2EB00600654 /* StockData.swift in Sources */,
+				85A163EC25F0A2EB00600654 /* StockAPIData.swift in Sources */,
 				854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */,
 				85A163C325EF495F00600654 /* AppDelegate.swift in Sources */,
 				85A163E425F0A1B500600654 /* StockTableViewCell.swift in Sources */,
