@@ -47,15 +47,30 @@ class StockTableView: UITableView {
         cell.priceChangeLabel.text = priceChange
         cell.priceChangeLabel.textColor = isPositive ? UIColor(named: "PriceGreen") : UIColor(named: "PriceRed")
 
-        let resource = ImageResource(downloadURL: card.logo)
-        cell.logoImage.kf.setImage(with: resource) { (result) in
-            switch result {
-            case .success(_):
-                break
-            case .failure(_):
-                print("Failed to load company logo")
+        if let logo = card.logo, logo.absoluteString != ""{
+            let resource = ImageResource(downloadURL: logo)
+            cell.logoImage.kf.setImage(with: resource) { (result) in
+                switch result {
+                case .success(_):
+                    break
+                case .failure(_):
+                    print("Failed to load company logo")
+                }
+            }
+        } else {
+            let logoURL = URL(string: "https://logo.uplead.com/" + card.weburl)!
+            print(logoURL)
+            let resource = ImageResource(downloadURL: logoURL)
+            cell.logoImage.kf.setImage(with: resource) { (result) in
+                switch result {
+                case .success(_):
+                    break
+                case .failure(_):
+                    print("Failed to load company logo")
+                }
             }
         }
+//        }
         
         return cell
     }

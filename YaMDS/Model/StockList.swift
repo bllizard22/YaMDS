@@ -19,6 +19,6 @@ struct StockList {
     
     let stockList = ["AAPL", "TSLA", "YNDX", "KO"].sorted()
     
-//    let stockList = ["AAPL", "TSLA"].sorted()
+//    let stockList = ["AAPL", "TSLA", "MCD"].sorted()
 
 }

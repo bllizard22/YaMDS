@@ -64,9 +64,14 @@ class ViewController: UIViewController {
         searchBar.isHidden = true
         let defaults = UserDefaults()
         
-        priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { (vc, change) in
+        priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
             guard let updatedPrice = change.newValue else { return }
             self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
+//            let list = isFiltering ? filteredStockTickerList : stockTickerList
+//            guard let cellRow = list.firstIndex(of: tickerKVO!) else { return }
+//            let cellIndex = IndexPath(row: cellRow, section: 0)
+//            print(cellIndex)
+//            self.stockTableView.reloadRows(at: [cellIndex], with: .none)
             self.stockTableView.reloadData()
         })
         tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
@@ -76,7 +81,7 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromCoreData()
             cardsIsLoaded = true
@@ -85,7 +90,7 @@ class ViewController: UIViewController {
             
         } else {
             print("First launch!")
-//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromAPI()
             self.loadStocksInView()
@@ -163,6 +168,7 @@ class ViewController: UIViewController {
             }
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
+            print(key, stockCards[key]!.isFavourite)
         } else {
             UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
                 UIView.transition(with: sender.imageView!, duration: 0.5, options: [.transitionCrossDissolve], animations: {
@@ -172,6 +178,7 @@ class ViewController: UIViewController {
             }
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
+            print(key, stockCards[key]!.isFavourite)
         }
         if favouriteIsSelected {
             stockTickerList = favourites.liked
@@ -207,22 +214,6 @@ class ViewController: UIViewController {
         stocksButton.setTitleColor(UIColor(named: "SecondaryFontColor"), for: .normal)
 
         favouriteIsSelected = true
-    }
-    
-    // MARK: - Segues
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetailView" {
-            guard let indexPath = indexPathForLastSelectedRow else {
-                print("IndexPath error")
-                return
-            }
-            let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-            
-            let detailViewController = segue.destination as! DetailViewController
-            print(#function, stockCards[key]!)
-            detailViewController.detailCard = stockCards[key]
-        }
     }
     
     // MARK: - API load funcs
@@ -272,10 +263,25 @@ class ViewController: UIViewController {
                 }
                 return
             }
-            self.stockCards[ticker] = card
+            self.stockCards[ticker]?.summary = card!.summary
         }
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             performSegue(withIdentifier: "showDetailView", sender: nil)
+        }
+    }
+    
+    // MARK: - Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetailView" {
+            guard let indexPath = indexPathForLastSelectedRow else {
+                print("IndexPath error")
+                return
+            }
+            let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
+            
+            let detailViewController = segue.destination as! DetailViewController
+            detailViewController.detailCard = stockCards[key]
         }
     }
     
@@ -329,9 +335,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 //        print(#function, stockTableView.indexPathForSelectedRow?.row)
         let cell = tableView.cellForRow(at: indexPath)
         cell?.selectionStyle = .none
-        let ticker = stockTickerList[indexPath.row]
         indexPathForLastSelectedRow = indexPath
-        loadDetailViewData(ticker: ticker)
+//        let ticker = stockTickerList[indexPath.row]
+//        loadDetailViewData(ticker: ticker)
+        performSegue(withIdentifier: "showDetailView", sender: nil)
     }
 }
 

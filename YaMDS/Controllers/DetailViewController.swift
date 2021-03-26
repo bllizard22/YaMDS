@@ -10,6 +10,7 @@ import UIKit
 class DetailViewController: UIViewController {
 
     var detailCard: StockTableCard?
+    var stockAPIData = StockAPIData()
     
     let stringFormatter = NumberFormatter()
     let currencyFormatter = NumberFormatter()
@@ -37,6 +38,61 @@ class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+//        loadDetailView()
+        guard let ticker = detailCard?.ticker else { return }
+        loadDetailViewData(ticker: ticker)
+    }
+    
+    @IBAction func backButtonDidPressed(_ sender: UIButton) {
+        if let presenter = presentingViewController as? ViewController {
+            presenter.stockTableView.reloadData()
+            dismiss(animated: true, completion: nil)
+        }
+    }
+
+    @IBAction func likeButtonDidPressed(_ sender: UIButton) {
+        
+        if let presenter = presentingViewController as? ViewController {
+            guard let key = detailCard?.ticker else { return }
+            
+            guard let isFavourite = detailCard?.isFavourite else { return }
+            if isFavourite {
+                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseIn]) {
+                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                        self.starImage.image = UIImage(named: "StarGray")
+                    }, completion: nil)
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
+                }
+                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
+                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                    }, completion: nil)
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
+                }
+                detailCard?.isFavourite = false
+                presenter.favourites.deleteTicker(withTicker: key)
+            } else {
+                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut]) {
+                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                        self.starImage.image = UIImage(named: "StarGold")
+                    }, completion: nil)
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.2, y: 1.2))!
+                }
+                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
+                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                    }, completion: nil)
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
+                }
+                detailCard?.isFavourite = true
+                presenter.favourites.saveTicker(withTicker: key)
+            }
+            print(presenter.stockCards[key]!)
+            presenter.stockCards[key] = detailCard
+            print(presenter.stockCards[key]!)
+        }
+        
+    }
+    
+    func loadDetailView() {
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: "en_US")
         currencyFormatter.minimumIntegerDigits = 1
@@ -71,53 +127,48 @@ class DetailViewController: UIViewController {
         summaryLabel.text = detailCard!.summary
     }
     
-    @IBAction func backButtonDidPressed(_ sender: UIButton) {
-        if let presenter = presentingViewController as? ViewController {
-            presenter.stockTableView.reloadData()
-            dismiss(animated: true, completion: nil)
+    func loadDetailViewData(ticker: String) {
+        stockAPIData.loadMetricFromAPI(ticker: ticker) { (card, error) in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.showAlert(request: error)
+                }
+                return
+            }
+//            self.detailCard?.summary = card!.summary
+        }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+            self.loadDetailView()
         }
     }
-
-    @IBAction func likeButtonDidPressed(_ sender: UIButton) {
-        
-        if let presenter = presentingViewController as? ViewController {
-            guard let key = detailCard?.ticker else { return }
-            
-            guard let isFavourite = detailCard?.isFavourite else { return }
-            if isFavourite {
-                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseIn]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                        self.starImage.image = UIImage(named: "StarGray")
-                    }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
+    
+    func showAlert(request: AlertMessage) {
+        let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
+        if request == .connection {
+            alert.title = "No connection"
+            alert.message = "Cannot connect to server.\nPlease check your Internet\nand tap \"Reload\""
+            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
+                guard action.style == .default else { return }
+                self.loadDetailViewData(ticker: self.detailCard!.ticker)
+            }))
+        } else if request == .apiLimit {
+            alert.title = "API Error"
+            alert.message = "Too many API requests\n(~2 min to reset limit).\nPlease try later."
+            alert.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (action) in
+                guard action.style == .default else { return }
+                if let presenter = self.presentingViewController as? ViewController {
+                    presenter.stockTableView.reloadData()
+                    self.dismiss(animated: true, completion: nil)
                 }
-                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-//                        self.starImage.image = UIImage(named: "StarGray")
-                    }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
-                }
-                detailCard?.isFavourite = false
-                presenter.favourites.deleteTicker(withTicker: key)
-            } else {
-                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                        self.starImage.image = UIImage(named: "StarGold")
-                    }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.2, y: 1.2))!
-                }
-                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                    }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
-                }
-                detailCard?.isFavourite = true
-                presenter.favourites.saveTicker(withTicker: key)
-            }
-            print(presenter.stockCards[key]!)
-            presenter.stockCards[key] = detailCard
-            print(presenter.stockCards[key]!)
+            }))
+        } else {
+            alert.title = "Error"
+            alert.message = "Unknown error occured.\nPlease restart the app."
         }
-        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            guard action.style == .cancel else { return }
+            print("Cancel")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }

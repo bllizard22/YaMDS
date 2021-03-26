@@ -96,7 +96,7 @@ class StockAPIData {
             let response = rawResponse as! HTTPURLResponse
 //            print(response)
             self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
-            print(self.remainingRequests)
+            print("Remaining requests: \(self.remainingRequests)")
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
                 completion(nil, errorType)
@@ -169,13 +169,22 @@ class StockAPIData {
                     print(json)
                     return
                 }
-//                var stringLogoURL = json["logo"].string
-//                if stringLogoURL == "" {
-//                    stringLogoURL = "https://finnhub.io/api/logo?symbol=AAPL"
-//                }
+                
+                var weburl = String()
+                if let rawWeburl = json["weburl"].string {
+                    let weburlComponents = rawWeburl.dropLast(1).components(separatedBy: "://").last!
+                    var domains = weburlComponents.components(separatedBy: "/")[0].components(separatedBy: ".")
+                    if let secondDomain = domains.popLast(), let firstDomain = domains.popLast() {
+                        weburl = firstDomain + "." + secondDomain
+                    }
+                } else {
+                    weburl = ""
+                }
+                
                 let card = StockTableCard(name: json["name"].stringValue,
-                                          logo: json["logo"].url!,
+                                          logo: json["logo"].url,
                                           ticker: json["ticker"].stringValue,
+                                          weburl: weburl,
                                           industry: json["finnhubIndustry"].stringValue,
                                           marketCap: json["marketCapitalization"].floatValue,
                                           sharesOutstanding: json["shareOutstanding"].floatValue,

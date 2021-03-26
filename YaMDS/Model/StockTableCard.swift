@@ -10,8 +10,9 @@ import Foundation
 struct StockTableCard: Codable {
     // Data from Company Profile 2 request
     let name: String
-    let logo: URL
+    let logo: URL?
     let ticker: String
+    let weburl: String
     
     // Data for DetailVC
     let industry: String
