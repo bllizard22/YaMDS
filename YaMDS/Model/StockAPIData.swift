@@ -61,16 +61,16 @@ class StockAPIData {
         }
     }
     
-    func loadMetricFromAPI(ticker company: String, completion: @escaping (StockTableCard?, AlertMessage?) -> ()) {
+    func loadMetricFromAPI(card: StockTableCard, completion: @escaping (StockTableCard?, AlertMessage?) -> ()) {
         if !isAlert {
-            self.getMetric(stockSymbol: company) { (ticker, dataIn, error) -> () in
+            self.getMetric(stockSymbol: card.ticker) { (ticker, dataIn, error) -> () in
                 if let error = error {
                     completion(nil, error)
                     return
                 }
                 self.dataMetricCard.append(dataIn!)
-                self.parseMetricDataJSON(ticker: company)
-                completion(self.stockCards[company], nil)
+                self.parseMetricDataJSON(ticker: card.ticker)
+                completion(card, nil)
             }
         }
     }
@@ -150,12 +150,25 @@ class StockAPIData {
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            if (error != nil) {
-                completion(nil, nil, .unknown)
-            } else {
-                completion(symbol, data!, nil)
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, rawResponse, error) -> Void in
+            if let error = error as NSError? {
+                if error.code == NSURLErrorNotConnectedToInternet {
+                    completion(nil, nil, .connection)
+                } else {
+                    completion(nil, nil, .unknown)
+                }
+                return
             }
+            let response = rawResponse as! HTTPURLResponse
+//            print(response)
+            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
+            print("Remaining requests: \(self.remainingRequests)")
+            guard response.statusCode == 200 else {
+                let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
+                completion(nil, nil, errorType)
+                return
+            }
+                completion(symbol, data!, nil)
         })
         dataTask.resume()
     }

@@ -67,11 +67,6 @@ class ViewController: UIViewController {
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
             guard let updatedPrice = change.newValue else { return }
             self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
-//            let list = isFiltering ? filteredStockTickerList : stockTickerList
-//            guard let cellRow = list.firstIndex(of: tickerKVO!) else { return }
-//            let cellIndex = IndexPath(row: cellRow, section: 0)
-//            print(cellIndex)
-//            self.stockTableView.reloadRows(at: [cellIndex], with: .none)
             self.stockTableView.reloadData()
         })
         tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
@@ -81,7 +76,7 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
+            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromCoreData()
             cardsIsLoaded = true
@@ -90,7 +85,7 @@ class ViewController: UIViewController {
             
         } else {
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromAPI()
             self.loadStocksInView()
@@ -118,39 +113,7 @@ class ViewController: UIViewController {
     // MARK: - AlertController
     
     func showAlert(request: AlertMessage) {
-        let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
-        if request == .connection {
-            alert.title = "No connection"
-            alert.message = "Cannot connect to server.\nPlease check your Internet\nand tap \"Reload\""
-            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-                guard action.style == .default else { return }
-                self.loadCardsFromAPI()
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
-//                    self.loadCardsFromAPI()
-                    self.loadPricesFromAPI()
-                }
-            }))
-        } else if request == .apiLimit {
-            alert.title = "API Error"
-            alert.message = "Too many API requests\n(~2 min to reset limit).\nPlease try later."
-//            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-//                guard action.style == .default else { return }
-//                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+100) {
-//                    if self.stockCards.count < StockList().stockList.count {
-//                        self.loadCardsFromAPI()
-//                    }
-//                    self.loadPricesFromAPI()
-//                }
-//            }))
-        } else {
-            alert.title = "Error"
-            alert.message = "Unknown error occured.\nPlease restart the app."
-        }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-            guard action.style == .cancel else { return }
-            print("Cancel")
-            self.stocksButton.isEnabled = false
-        }))
+        let alert = AlertViewController().configureAlertVC(request: request)
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -256,18 +219,18 @@ class ViewController: UIViewController {
     
     // Load company summary and financials from API
     func loadDetailViewData(ticker: String) {
-        stockAPIData.loadMetricFromAPI(ticker: ticker) { (card, error) in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.showAlert(request: error)
-                }
-                return
-            }
-            self.stockCards[ticker]?.summary = card!.summary
-        }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
+//        stockAPIData.loadMetricFromAPI(ticker: ticker) { (card, error) in
+//            if let error = error {
+//                DispatchQueue.main.async {
+//                    self.showAlert(request: error)
+//                }
+//                return
+//            }
+//            self.stockCards[ticker]?.summary = card!.summary
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             performSegue(withIdentifier: "showDetailView", sender: nil)
-        }
+//        }
     }
     
     // MARK: - Segues

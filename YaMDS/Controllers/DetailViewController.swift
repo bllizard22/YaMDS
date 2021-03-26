@@ -38,7 +38,6 @@ class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        loadDetailView()
         guard let ticker = detailCard?.ticker else { return }
         loadDetailViewData(ticker: ticker)
     }
@@ -92,7 +91,24 @@ class DetailViewController: UIViewController {
         
     }
     
-    func loadDetailView() {
+    func loadDetailViewBlank() {
+        
+        guard detailCard != nil else { return }
+        tickerLabel.text = detailCard!.ticker
+        companyNameLabel.text = detailCard!.name
+        industryLabel.text = detailCard!.industry
+        marketCapLabel.text = "0M"
+        sharesLabel.text = "0M"
+        peValueLabel.text = "0.00"
+        psValueLabel.text = "0.00"
+        ebitdaLabel.text = "0M"
+        
+        print(detailCard!.isFavourite)
+        starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
+        
+    }
+    
+    func loadDetailViewFromCard() {
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: "en_US")
         currencyFormatter.minimumIntegerDigits = 1
@@ -128,47 +144,27 @@ class DetailViewController: UIViewController {
     }
     
     func loadDetailViewData(ticker: String) {
-        stockAPIData.loadMetricFromAPI(ticker: ticker) { (card, error) in
-            if let error = error {
+        loadDetailViewBlank()
+        stockAPIData.loadMetricFromAPI(card: detailCard!) { (card, error) in
+            if let error = error, card == nil {
                 DispatchQueue.main.async {
                     self.showAlert(request: error)
                 }
                 return
             }
-//            self.detailCard?.summary = card!.summary
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+6, execute: {
+                self.detailCard = card
+                self.loadDetailViewFromCard()
+            })
         }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
-            self.loadDetailView()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+6) {
+            self.loadDetailViewFromCard()
         }
     }
     
     func showAlert(request: AlertMessage) {
-        let alert = UIAlertController(title: "Error", message: "Please, try reload app", preferredStyle: .alert)
-        if request == .connection {
-            alert.title = "No connection"
-            alert.message = "Cannot connect to server.\nPlease check your Internet\nand tap \"Reload\""
-            alert.addAction(UIAlertAction(title: "Reload", style: .default, handler: { (action) in
-                guard action.style == .default else { return }
-                self.loadDetailViewData(ticker: self.detailCard!.ticker)
-            }))
-        } else if request == .apiLimit {
-            alert.title = "API Error"
-            alert.message = "Too many API requests\n(~2 min to reset limit).\nPlease try later."
-            alert.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (action) in
-                guard action.style == .default else { return }
-                if let presenter = self.presentingViewController as? ViewController {
-                    presenter.stockTableView.reloadData()
-                    self.dismiss(animated: true, completion: nil)
-                }
-            }))
-        } else {
-            alert.title = "Error"
-            alert.message = "Unknown error occured.\nPlease restart the app."
-        }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-            guard action.style == .cancel else { return }
-            print("Cancel")
-        }))
+        let alert = AlertViewController().configureAlertVC(request: request)
         self.present(alert, animated: true, completion: nil)
     }
 }

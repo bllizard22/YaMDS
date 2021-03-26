@@ -8,5 +8,5 @@
 import Foundation
 
 enum AlertMessage {
-    case connection, apiLimit, unknown
+    case connection, apiLimit, apiLimitDetailVC, unknown
 }

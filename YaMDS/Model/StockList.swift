@@ -13,11 +13,11 @@ struct StockList {
 //                      "SQ", "NFLX", "ORCL", "BAC", "CSCO", "BA",
 //                      "JNJ", "XOM", "T", "V", "C", "HD",
 //                      "PG", "VZ", "ABBV", "MRK", "WMT", "GE"].sorted()
+//
+    let stockList = ["JNJ", "XOM", "T", "V", "C", "HD",
+                     "PG", "VZ", "ABBV", "MRK", "WMT", "GE"].sorted()
     
-//    let stockList = ["JNJ", "XOM", "T", "V", "C", "HD",
-//                     "PG", "VZ", "ABBV", "MRK", "WMT", "GE"].sorted()
-    
-    let stockList = ["AAPL", "TSLA", "YNDX", "KO"].sorted()
+//    let stockList = ["AAPL", "TSLA", "YNDX", "KO"].sorted()
     
 //    let stockList = ["AAPL", "TSLA", "MCD"].sorted()
 
