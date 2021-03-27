@@ -316,6 +316,7 @@
                         <outlet property="companyNameLabel" destination="XtQ-w2-QqG" id="DKv-S0-BYK"/>
                         <outlet property="ebitdaLabel" destination="BfA-vn-UV4" id="SkM-Sw-e2W"/>
                         <outlet property="industryLabel" destination="XTg-oA-Tda" id="hwv-If-GXN"/>
+                        <outlet property="likeButton" destination="lux-nv-EoK" id="Db2-wV-Tpy"/>
                         <outlet property="marketCapLabel" destination="33I-Jd-v8v" id="bPd-e4-RRC"/>
                         <outlet property="peValueLabel" destination="Jm4-Dx-2so" id="lyH-m7-27q"/>
                         <outlet property="psValueLabel" destination="hOq-ig-Jp4" id="nFH-Gq-y1V"/>

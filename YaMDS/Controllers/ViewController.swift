@@ -93,7 +93,6 @@ class ViewController: UIViewController {
         // TODO: - Add loading indicator/animation
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-                stockTableView.autolayoutWidth()
                 loadPricesFromAPI()
                 
 //                favouriteIsSelected = false
@@ -111,6 +110,8 @@ class ViewController: UIViewController {
     func loadStocksInView() {
         stockTableView.dataSource = self
         stockTableView.delegate = self
+        stockTableView.autolayoutWidth(forView: view)
+        
         searchBar.delegate = self        
         searchBar.isHidden = false
     }

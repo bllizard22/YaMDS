@@ -25,14 +25,14 @@ class StockTableView: UITableView {
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }
     
-    func autolayoutWidth() {
-        for constraint in self.constraints {
-            if constraint.identifier == "leadingTableConstraint" {
-               constraint.constant = 20
-            }
-            if constraint.identifier == "trailingTableConstraint" {
-               constraint.constant = 20
-            }
+    func autolayoutWidth(forView view: UIView) {
+        let screenWidth = UIScreen.main.bounds.width
+        if screenWidth <= 375 {
+            self.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+            self.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        } else {
+            self.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+            self.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         }
         self.layoutIfNeeded()
     }

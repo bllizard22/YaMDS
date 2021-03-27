@@ -19,9 +19,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var tickerLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
     @IBOutlet weak var industryLabel: UILabel!
-    
     @IBOutlet weak var marketCapLabel: UILabel!
-    
     @IBOutlet weak var sharesLabel: UILabel!
     @IBOutlet weak var peValueLabel: UILabel!
     @IBOutlet weak var psValueLabel: UILabel!
@@ -30,6 +28,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var summaryLabel: UILabel!
     
     @IBOutlet weak var starImage: UIImageView!
+    @IBOutlet weak var likeButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +92,6 @@ class DetailViewController: UIViewController {
     }
     
     func loadDetailViewBlank() {
-        
         guard detailCard != nil else { return }
         tickerLabel.text = detailCard!.ticker
         companyNameLabel.text = detailCard!.name
@@ -105,6 +103,8 @@ class DetailViewController: UIViewController {
         ebitdaLabel.text = "0M"
         
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
+        
+        likeButton.isEnabled = false
     }
     
     func loadDetailViewFromCard() {
@@ -138,6 +138,8 @@ class DetailViewController: UIViewController {
         
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
         summaryLabel.text = detailCard!.summary
+        
+        likeButton.isEnabled = true
     }
     
     func loadDetailViewData(ticker: String) {
