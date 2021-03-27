@@ -30,6 +30,9 @@ class AlertViewController: UIAlertController {
                 }
 
             }))
+        } else if request == .connectionDetailVC {
+            alert.title = "No connection"
+            alert.message = "Cannot connect to server.\nPlease check your Internet\nand try again later."
         } else if request == .apiLimit {
             alert.title = "API Error"
             alert.message = "Too many API requests\n(~1 min to reset limit).\nPlease try later."

@@ -152,7 +152,7 @@ class StockAPIData {
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, rawResponse, error) -> Void in
             if let error = error as NSError? {
                 if error.code == NSURLErrorNotConnectedToInternet {
-                    completion(nil, nil, .connection)
+                    completion(nil, nil, .connectionDetailVC)
                 } else {
                     completion(nil, nil, .unknown)
                 }
