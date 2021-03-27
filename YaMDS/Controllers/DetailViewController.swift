@@ -44,6 +44,9 @@ class DetailViewController: UIViewController {
     
     @IBAction func backButtonDidPressed(_ sender: UIButton) {
         if let presenter = presentingViewController as? ViewController {
+            let key = detailCard?.ticker
+            presenter.stockCards[key!] = detailCard
+            presenter.saveCardsToCoreData()
             presenter.stockTableView.reloadData()
             dismiss(animated: true, completion: nil)
         }
@@ -84,9 +87,7 @@ class DetailViewController: UIViewController {
                 detailCard?.isFavourite = true
                 presenter.favourites.saveTicker(withTicker: key)
             }
-            print(presenter.stockCards[key]!)
             presenter.stockCards[key] = detailCard
-            print(presenter.stockCards[key]!)
         }
         
     }
@@ -103,9 +104,7 @@ class DetailViewController: UIViewController {
         psValueLabel.text = "0.00"
         ebitdaLabel.text = "0M"
         
-        print(detailCard!.isFavourite)
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
-        
     }
     
     func loadDetailViewFromCard() {
@@ -137,29 +136,27 @@ class DetailViewController: UIViewController {
         let ebitda = detailCard!.ebitda * detailCard!.sharesOutstanding
         ebitdaLabel.text = currencyFormatter.string(from: NSNumber(value: ebitda))! + "M"
         
-        print(detailCard!.isFavourite)
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
-        
         summaryLabel.text = detailCard!.summary
     }
     
     func loadDetailViewData(ticker: String) {
-        loadDetailViewBlank()
-        stockAPIData.loadMetricFromAPI(card: detailCard!) { (card, error) in
-            if let error = error, card == nil {
-                DispatchQueue.main.async {
-                    self.showAlert(request: error)
+        if detailCard?.psValue != 0.0 || detailCard?.peValue != 0.0 {
+            loadDetailViewFromCard()
+        } else {
+            loadDetailViewBlank()
+            stockAPIData.loadMetricFromAPI(card: detailCard!) { (card, error) in
+                if let error = error, card == nil {
+                    DispatchQueue.main.async {
+                        self.showAlert(request: error)
+                    }
+                    return
                 }
-                return
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2, execute: {
+                    self.detailCard = card
+                    self.loadDetailViewFromCard()
+                })
             }
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+6, execute: {
-                self.detailCard = card
-                self.loadDetailViewFromCard()
-            })
-        }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+6) {
-            self.loadDetailViewFromCard()
         }
     }
     

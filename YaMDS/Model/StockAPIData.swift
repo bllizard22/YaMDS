@@ -69,8 +69,8 @@ class StockAPIData {
                     return
                 }
                 self.dataMetricCard.append(dataIn!)
-                self.parseMetricDataJSON(ticker: card.ticker)
-                completion(card, nil)
+                let newCard = self.parseMetricDataJSON(forCard: card)
+                completion(newCard, nil)
             }
         }
     }
@@ -143,7 +143,6 @@ class StockAPIData {
     
     func getMetric(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
         let request = NSMutableURLRequest(
-            //            url: NSURL(string: "https://mboum.com/api/v1/qu/quote/?symbol=AAPL,FB")! as URL,
             url: NSURL(string: "https://finnhub.io/api/v1/stock/metric?symbol=\(symbol)&metric=all")! as URL,
             cachePolicy: .useProtocolCachePolicy,
             timeoutInterval: 10.0)
@@ -233,19 +232,22 @@ class StockAPIData {
         }
     }
     
-    func parseMetricDataJSON (ticker key: String) {
+    func parseMetricDataJSON (forCard card: StockTableCard) -> StockTableCard? {
         do {
             let json = try JSON(data: dataMetricCard, options: .allowFragments)
             guard json["metric"].dictionary != nil else {
                 print("Error")
-                return
+                return nil
             }
+            var newCard = card
             let metric = json["metric"]
-            stockCards[key]?.peValue = metric["peNormalizedAnnual"].floatValue
-            stockCards[key]?.psValue = metric["psTTM"].floatValue
-            stockCards[key]?.ebitda = metric["ebitdPerShareTTM"].floatValue
+            newCard.peValue = metric["peNormalizedAnnual"].floatValue
+            newCard.psValue = metric["psTTM"].floatValue
+            newCard.ebitda = metric["ebitdPerShareTTM"].floatValue
+            return newCard
         } catch let error {
             print(error)
+            return nil
         }
     }
     

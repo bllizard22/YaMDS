@@ -18,7 +18,6 @@
 		854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE8325F94357006B3122 /* DetailViewController.swift */; };
 		855A459325F29A68006DD798 /* StockTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockTableCard.swift */; };
 		8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A08D2609AC530026D429 /* AlertMessage.swift */; };
-		8560A0912609AF240026D429 /* ListButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A0902609AF240026D429 /* ListButton.swift */; };
 		8560A09C260E4A070026D429 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A09B260E4A070026D429 /* AlertViewController.swift */; };
 		8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF3E25FA995100A0271B /* MBOUMStockData.swift */; };
 		8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8570DF4C2601CED600A0271B /* CoreDataModel.swift */; };
@@ -45,7 +44,6 @@
 		854FAE8325F94357006B3122 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		855A459225F29A68006DD798 /* StockTableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableCard.swift; sourceTree = "<group>"; };
 		8560A08D2609AC530026D429 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
-		8560A0902609AF240026D429 /* ListButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListButton.swift; sourceTree = "<group>"; };
 		8560A09B260E4A070026D429 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		8570DF3E25FA995100A0271B /* MBOUMStockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBOUMStockData.swift; sourceTree = "<group>"; };
 		8570DF4C2601CED600A0271B /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
@@ -115,7 +113,6 @@
 				85A163E325F0A1B500600654 /* StockTableViewCell.swift */,
 				85A163E025F0A0F900600654 /* StockTableView.swift */,
 				01B54628260360E400ED3666 /* CustomSearchBar.swift */,
-				8560A0902609AF240026D429 /* ListButton.swift */,
 				8560A09B260E4A070026D429 /* AlertViewController.swift */,
 			);
 			path = View;
@@ -249,7 +246,6 @@
 				85A163C725EF495F00600654 /* ViewController.swift in Sources */,
 				8570DF4D2601CED600A0271B /* CoreDataModel.swift in Sources */,
 				01A268E52600F1980097E848 /* WebSockets.swift in Sources */,
-				8560A0912609AF240026D429 /* ListButton.swift in Sources */,
 				85B58D5F25F0AC9900206828 /* StockList.swift in Sources */,
 				8570DF3F25FA995100A0271B /* MBOUMStockData.swift in Sources */,
 				85A163E125F0A0F900600654 /* StockTableView.swift in Sources */,
