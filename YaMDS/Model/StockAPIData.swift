@@ -75,7 +75,7 @@ class StockAPIData {
         }
     }
     
-    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data?, AlertMessage?) -> ()) {
+    private func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data?, AlertMessage?) -> ()) {
         
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(symbol)")! as URL,
@@ -109,7 +109,7 @@ class StockAPIData {
         dataTask.resume()
     }
     
-    func getPrice(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
+    private func getPrice(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
         
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/quote?symbol=\(symbol)")! as URL,
@@ -141,7 +141,7 @@ class StockAPIData {
         dataTask.resume()
     }
     
-    func getMetric(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
+    private func getMetric(stockSymbol symbol: String, completion: @escaping (String?, Data?, AlertMessage?) -> ()) {
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://finnhub.io/api/v1/stock/metric?symbol=\(symbol)&metric=all")! as URL,
             cachePolicy: .useProtocolCachePolicy,
@@ -160,7 +160,9 @@ class StockAPIData {
             }
             let response = rawResponse as! HTTPURLResponse
 //            print(response)
-            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
+            if let remainingHeaderField = response.value(forHTTPHeaderField: "x-ratelimit-remaining"), let remainingValue = Int(remainingHeaderField) {
+                self.remainingRequests = remainingValue
+            }
             print("Remaining requests: \(self.remainingRequests)")
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
@@ -172,7 +174,7 @@ class StockAPIData {
         dataTask.resume()
     }
     
-    func parseCardsDataJSON () {
+    private func parseCardsDataJSON () {
         for data in dataStockInfo {
             do {
                 let json = try JSON(data: data, options: .allowFragments)
@@ -216,7 +218,7 @@ class StockAPIData {
         stockTickerList.sort()
     }
     
-    func parsePricesDataJSON () {
+    private func parsePricesDataJSON () {
         for (key, data) in dataStockPrice {
             do {
                 let json = try JSON(data: data, options: .allowFragments)
@@ -232,7 +234,7 @@ class StockAPIData {
         }
     }
     
-    func parseMetricDataJSON (forCard card: StockTableCard) -> StockTableCard? {
+    private func parseMetricDataJSON (forCard card: StockTableCard) -> StockTableCard? {
         do {
             let json = try JSON(data: dataMetricCard, options: .allowFragments)
             guard json["metric"].dictionary != nil else {

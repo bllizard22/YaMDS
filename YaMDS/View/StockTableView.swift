@@ -20,7 +20,7 @@ class StockTableView: UITableView {
         configureTableView()
     }
 
-    func configureTableView() {
+    private func configureTableView() {
         self.separatorStyle = .none
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }

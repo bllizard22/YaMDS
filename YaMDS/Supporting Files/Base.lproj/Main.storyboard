@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -98,10 +98,15 @@
                                     <action selector="cancelSearchBarDidPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MdV-gV-26n"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="msz-Rm-KLG">
+                                <rect key="frame" x="306" y="113.66666666666669" width="37" height="37"/>
+                                <color key="tintColor" name="PrimaryFontColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="BackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="msz-Rm-KLG" firstAttribute="trailing" secondItem="X0F-vf-ZVB" secondAttribute="trailing" constant="-16" id="4nd-7e-Kcu"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-16" identifier="trailingTableConstraint" id="7qS-96-zQE"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="top" secondItem="yxN-qF-T2L" secondAttribute="bottom" constant="20" id="9OJ-Pv-AZh"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="JgO-ID-lCZ"/>
@@ -111,12 +116,14 @@
                             <constraint firstItem="OIC-dc-JAi" firstAttribute="trailing" secondItem="X0F-vf-ZVB" secondAttribute="leading" constant="12" id="Ttw-Ef-3H5"/>
                             <constraint firstItem="OIC-dc-JAi" firstAttribute="centerY" secondItem="X0F-vf-ZVB" secondAttribute="centerY" id="UrW-hf-kuN"/>
                             <constraint firstItem="X0F-vf-ZVB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="VJ5-ut-CMt"/>
+                            <constraint firstItem="msz-Rm-KLG" firstAttribute="centerY" secondItem="yxN-qF-T2L" secondAttribute="centerY" id="XU7-jy-TM5"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="top" secondItem="X0F-vf-ZVB" secondAttribute="bottom" constant="12" id="XVA-e2-jTL"/>
                             <constraint firstItem="OIC-dc-JAi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="wI5-fP-lNY"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xtA-Lx-zfg"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="msz-Rm-KLG" id="O8n-sK-faj"/>
                         <outlet property="cancelSearchButton" destination="OIC-dc-JAi" id="r8g-jA-yWd"/>
                         <outlet property="favouriteButton" destination="MuA-1i-pBF" id="cw9-RI-YJh"/>
                         <outlet property="searchBar" destination="X0F-vf-ZVB" id="ovC-iA-Wwf"/>
@@ -287,6 +294,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView opaque="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="PDw-WS-0jT">
+                                <rect key="frame" x="320" y="78" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="aVu-hF-Z9M"/>
+                                    <constraint firstAttribute="height" constant="40" id="vgc-wD-r6U"/>
+                                </constraints>
+                                <color key="color" name="PrimaryFontColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2Ka-SA-LVc"/>
                         <color key="backgroundColor" name="BackgroundColor"/>
@@ -304,8 +319,10 @@
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="24" id="deq-87-89X"/>
                             <constraint firstItem="2Ka-SA-LVc" firstAttribute="trailing" secondItem="lux-nv-EoK" secondAttribute="trailing" constant="24" id="fM2-Ci-flv"/>
                             <constraint firstItem="rRi-rI-QhI" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="24" id="hVh-mb-RtP"/>
+                            <constraint firstItem="PDw-WS-0jT" firstAttribute="centerX" secondItem="Dou-NB-kWB" secondAttribute="centerX" id="mMS-Rc-K4U"/>
                             <constraint firstItem="XtQ-w2-QqG" firstAttribute="centerX" secondItem="3kT-d8-WgH" secondAttribute="centerX" id="nF6-E1-cm5"/>
                             <constraint firstItem="lux-nv-EoK" firstAttribute="top" secondItem="2Ka-SA-LVc" secondAttribute="top" constant="24" id="ncD-dY-xu6"/>
+                            <constraint firstItem="PDw-WS-0jT" firstAttribute="centerY" secondItem="Dou-NB-kWB" secondAttribute="centerY" id="pAu-Lz-lbW"/>
                             <constraint firstItem="Dou-NB-kWB" firstAttribute="centerY" secondItem="lux-nv-EoK" secondAttribute="centerY" id="uyI-h8-cZg"/>
                             <constraint firstItem="L7H-PA-T9a" firstAttribute="leading" secondItem="2Ka-SA-LVc" secondAttribute="leading" constant="40" id="yId-Wl-Gy8"/>
                             <constraint firstItem="Io1-bi-lxu" firstAttribute="centerY" secondItem="rRi-rI-QhI" secondAttribute="centerY" id="zmD-OG-L84"/>
@@ -313,6 +330,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Tz9-VW-BC7"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="PDw-WS-0jT" id="lKb-WJ-oec"/>
                         <outlet property="companyNameLabel" destination="XtQ-w2-QqG" id="DKv-S0-BYK"/>
                         <outlet property="ebitdaLabel" destination="BfA-vn-UV4" id="SkM-Sw-e2W"/>
                         <outlet property="industryLabel" destination="XTg-oA-Tda" id="hwv-If-GXN"/>
@@ -328,7 +346,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="78t-bV-dBL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1922.4000000000001" y="129.08545727136433"/>
+            <point key="canvasLocation" x="1922.4000000000001" y="128.57142857142858"/>
         </scene>
     </scenes>
     <resources>

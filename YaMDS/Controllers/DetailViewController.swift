@@ -10,11 +10,24 @@ import UIKit
 class DetailViewController: UIViewController {
 
     var detailCard: StockTableCard?
-    var stockAPIData = StockAPIData()
+    private var stockAPIData = StockAPIData()
     
-    let stringFormatter = NumberFormatter()
-    let currencyFormatter = NumberFormatter()
-    let sharesFormatter = NumberFormatter()
+    private let stringFormatter = NumberFormatter()
+    private let currencyFormatter = NumberFormatter()
+    private let sharesFormatter = NumberFormatter()
+    
+    private var isDataLoaded = false {
+        didSet {
+            view.isUserInteractionEnabled = isDataLoaded
+            activityIndicator.isHidden = isDataLoaded
+            if isDataLoaded {
+                activityIndicator.stopAnimating()
+            } else {
+                activityIndicator.startAnimating()
+                activityIndicator.backgroundColor = UIColor(named: "BackgroundColor")
+            }
+        }
+    }
     
     @IBOutlet weak var tickerLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
@@ -24,11 +37,11 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var peValueLabel: UILabel!
     @IBOutlet weak var psValueLabel: UILabel!
     @IBOutlet weak var ebitdaLabel: UILabel!
-    
     @IBOutlet weak var summaryLabel: UILabel!
     
     @IBOutlet weak var starImage: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +104,7 @@ class DetailViewController: UIViewController {
         
     }
     
-    func loadDetailViewBlank() {
+    private func loadDetailViewBlank() {
         guard detailCard != nil else { return }
         tickerLabel.text = detailCard!.ticker
         companyNameLabel.text = detailCard!.name
@@ -101,13 +114,12 @@ class DetailViewController: UIViewController {
         peValueLabel.text = "0.00"
         psValueLabel.text = "0.00"
         ebitdaLabel.text = "0M"
-        
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
         
-        likeButton.isEnabled = false
+        isDataLoaded = false
     }
     
-    func loadDetailViewFromCard() {
+    private func loadDetailViewFromCard() {
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: "en_US")
         currencyFormatter.minimumIntegerDigits = 1
@@ -139,7 +151,7 @@ class DetailViewController: UIViewController {
         starImage.image = detailCard!.isFavourite ? UIImage(named: "StarGold") : UIImage(named: "StarGray")
         summaryLabel.text = detailCard!.summary
         
-        likeButton.isEnabled = true
+        isDataLoaded = true
     }
     
     func loadDetailViewData(ticker: String) {
@@ -151,6 +163,7 @@ class DetailViewController: UIViewController {
                 if let error = error, card == nil {
                     DispatchQueue.main.async {
                         self.showAlert(request: error)
+                        self.view.isUserInteractionEnabled = true
                     }
                     return
                 }
@@ -162,7 +175,7 @@ class DetailViewController: UIViewController {
         }
     }
     
-    func showAlert(request: AlertMessage) {
+    private func showAlert(request: AlertMessage) {
         let alert = AlertViewController().configureAlertVC(request: request)
         self.present(alert, animated: true, completion: nil)
     }

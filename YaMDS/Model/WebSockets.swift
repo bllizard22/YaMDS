@@ -78,13 +78,13 @@ class PriceSocket: NSObject, WebSocketDelegate {
 
     }
     
-    func subscribeOnAllStocks(tickerArray: Array<String>) {
+    private func subscribeOnAllStocks(tickerArray: Array<String>) {
         for ticker in tickerArray {
             subscribe(symbol: ticker)
         }
     }
     
-    func subscribe(symbol: String) {
+    private func subscribe(symbol: String) {
         let json = ["type": "subscribe", "symbol": symbol]
         let data = try! JSONEncoder().encode(json)
         print("Subscribed at \(symbol)")

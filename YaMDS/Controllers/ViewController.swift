@@ -40,8 +40,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchBar: CustomSearchBar!
     @IBOutlet weak var cancelSearchButton: UIButton!
     @IBOutlet weak var stockTableView: StockTableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var cardsIsLoaded = false
+//    var cardsIsLoaded = false
     var indexPathForLastSelectedRow: IndexPath?
     
     // SearchController
@@ -56,13 +57,29 @@ class ViewController: UIViewController {
             cancelSearchButton.setImage(image, for: .normal)
         }
     }
+    var isDataLoaded = false {
+        didSet {
+            view.isUserInteractionEnabled = isDataLoaded
+            activityIndicator.isHidden = isDataLoaded
+            searchBar.isHidden = !isDataLoaded
+            if isDataLoaded {
+                activityIndicator.stopAnimating()
+            } else {
+                activityIndicator.startAnimating()
+            }
+        }
+    }
     
     // MARK: - View Load Actions
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.isHidden = true
+//        searchBar.isHidden = true
+//        view.isUserInteractionEnabled = false
+//        activityIndicator.startAnimating()
+//        activityIndicator.isHidden = false
+        isDataLoaded = false
         let defaults = UserDefaults()
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
@@ -80,7 +97,10 @@ class ViewController: UIViewController {
 //            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromCoreData()
-            cardsIsLoaded = true
+//            view.isUserInteractionEnabled = true
+//            activityIndicator.stopAnimating()
+//            activityIndicator.isHidden = true
+            isDataLoaded = true
             self.loadStocksInView()
             priceSocket.startWebSocket(tickerArray: stockTickerList)
             
@@ -94,9 +114,10 @@ class ViewController: UIViewController {
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
                 loadPricesFromAPI()
-                
-//                favouriteIsSelected = false
-                cardsIsLoaded = true
+//                view.isUserInteractionEnabled = true
+//                activityIndicator.stopAnimating()
+//                activityIndicator.isHidden = true
+                isDataLoaded = true
                 
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
@@ -112,8 +133,7 @@ class ViewController: UIViewController {
         stockTableView.delegate = self
         stockTableView.autolayoutWidth(forView: view)
         
-        searchBar.delegate = self        
-        searchBar.isHidden = false
+        searchBar.delegate = self
     }
     
     // MARK: - AlertController
@@ -162,7 +182,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func stocksButtonDidPressed(_ sender: UIButton) {
-        if !cardsIsLoaded { return }
         stockTickerList = StockList().stockList
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(20)
@@ -174,7 +193,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func favouriteButtonDidPressed(_ sender: UIButton) {
-        if !cardsIsLoaded { return }
         stockTickerList = favourites.liked
         
         favouriteButton.titleLabel?.font = favouriteButton.titleLabel?.font.withSize(32)
@@ -316,35 +334,3 @@ extension ViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
-
-// MARK: - Hide SearchBar onScroll
-
-//extension ViewController {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        // Value when headerview will hide
-//        let searchBarHeight = searchBar.frame.height
-//        if scrollView.contentOffset.y > 50 {
-//            view.layoutIfNeeded()
-//            //headerViewHeightConstraint.constant = -100
-////            headerViewHeight = -100
-//            if self.view.frame.origin.y == 0 {
-//                self.view.frame.origin.y -= searchBarHeight
-//            }
-//            UIView.animate(withDuration: 1.0, delay: 0, options: [.allowUserInteraction], animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//            searchBar.isHidden = true
-//
-//        } else {
-//            // Return header
-//            view.layoutIfNeeded()
-//            // Initial header view height
-////            headerViewHeight = 0
-//            self.view.frame.origin.y = 0
-//            UIView.animate(withDuration: 1.0, delay: 0, options: [.allowUserInteraction], animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//            searchBar.isHidden = false
-//        }
-//    }
-//}

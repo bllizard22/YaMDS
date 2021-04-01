@@ -37,7 +37,7 @@ class MBOUMStockData {
             }
     }
 
-    func parseStocksDataToJSON (completion: @escaping (String) -> ()) {
+    private func parseStocksDataToJSON (completion: @escaping (String) -> ()) {
 //        print(dataStockInfo.count)
 //        print("data for JSON", dataStockInfo)
         for data in dataStockInfo {
@@ -53,7 +53,7 @@ class MBOUMStockData {
         }
     }
 
-    func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
+    private func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
 
         print(#function, symbol)
         let request = NSMutableURLRequest(
