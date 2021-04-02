@@ -56,10 +56,11 @@ class DetailViewController: UIViewController {
     
     @IBAction func backButtonDidPressed(_ sender: UIButton) {
         if let presenter = presentingViewController as? ViewController {
-            let key = detailCard?.ticker
-            presenter.stockCards[key!] = detailCard
-            presenter.saveCardsToCoreData()
-            presenter.stockTableView.reloadData()
+            if let key = detailCard?.ticker {
+                presenter.stockCards[key] = detailCard
+                presenter.saveCardsToCoreData()
+                presenter.stockTableView.reloadData()
+            }
             dismiss(animated: true, completion: nil)
         }
     }
@@ -167,10 +168,10 @@ class DetailViewController: UIViewController {
                     }
                     return
                 }
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2, execute: {
+                DispatchQueue.main.async {
                     self.detailCard = card
                     self.loadDetailViewFromCard()
-                })
+                }
             }
         }
     }

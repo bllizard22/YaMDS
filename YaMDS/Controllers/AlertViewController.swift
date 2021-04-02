@@ -59,7 +59,7 @@ class AlertViewController: UIAlertController {
             }))
         } else {
             alert.title = "Error"
-            alert.message = "Unknown error occured.\nPlease restart the app."
+            alert.message = "Unknown error occured.\nPlease try again or restart the app."
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
             guard action.style == .cancel else { return }

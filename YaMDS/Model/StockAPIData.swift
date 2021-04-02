@@ -25,7 +25,7 @@ class StockAPIData {
     
     var remainingRequests = 60
     var isAlert = false
-    
+        
     func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         self.isAlert = false
         for company in StockList().stockList {
@@ -85,6 +85,7 @@ class StockAPIData {
         request.allHTTPHeaderFields = headers
         
         let dataTask = session.dataTask(with: request as URLRequest,completionHandler: { (data, rawResponse, error) -> Void in
+            
             if let error = error as NSError? {
                 if error.code == NSURLErrorNotConnectedToInternet {
                     completion(nil, .connection)
@@ -94,9 +95,11 @@ class StockAPIData {
                 return
             }
             let response = rawResponse as! HTTPURLResponse
-//            print(response)
-            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
-            print("Remaining requests: \(self.remainingRequests)")
+            //            print(response)
+            if let remainingHeaderField = response.value(forHTTPHeaderField: "x-ratelimit-remaining"), let remainingValue = Int(remainingHeaderField) {
+                self.remainingRequests = remainingValue
+            }
+            print("Remaining requests: \(self.remainingRequests) (in \(#function))")
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
                 completion(nil, errorType)
@@ -120,6 +123,7 @@ class StockAPIData {
         
         //        let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, rawResponse, error) -> Void in
+            
             if let error = error as NSError? {
                 if error.code == NSURLErrorNotConnectedToInternet {
                     completion(nil, nil, .connection)
@@ -129,14 +133,17 @@ class StockAPIData {
                 return
             }
             let response = rawResponse as! HTTPURLResponse
-            self.remainingRequests = Int(response.value(forHTTPHeaderField: "x-ratelimit-remaining")!)!
-            print(self.remainingRequests)
+            if let remainingHeaderField = response.value(forHTTPHeaderField: "x-ratelimit-remaining"), let remainingValue = Int(remainingHeaderField) {
+                self.remainingRequests = remainingValue
+            }
+            print("Remaining requests: \(self.remainingRequests) (in \(#function))")
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
                 completion(nil, nil, errorType)
                 return
             }
             completion(symbol, data!, nil)
+            
         })
         dataTask.resume()
     }
@@ -163,7 +170,7 @@ class StockAPIData {
             if let remainingHeaderField = response.value(forHTTPHeaderField: "x-ratelimit-remaining"), let remainingValue = Int(remainingHeaderField) {
                 self.remainingRequests = remainingValue
             }
-            print("Remaining requests: \(self.remainingRequests)")
+            print("Remaining requests: \(self.remainingRequests) (in \(#function))")
             guard response.statusCode == 200 else {
                 let errorType: AlertMessage = response.statusCode == 429 ? .apiLimit : .unknown
                 completion(nil, nil, errorType)

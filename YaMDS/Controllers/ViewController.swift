@@ -75,10 +75,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        searchBar.isHidden = true
-//        view.isUserInteractionEnabled = false
-//        activityIndicator.startAnimating()
-//        activityIndicator.isHidden = false
         isDataLoaded = false
         let defaults = UserDefaults()
         
@@ -94,34 +90,26 @@ class ViewController: UIViewController {
         
         if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
             print("Launched not first time")
-//            defaults.set(false, forKey: "isAppAlreadyLaunchedOnce")
             
             loadCardsFromCoreData()
-//            view.isUserInteractionEnabled = true
-//            activityIndicator.stopAnimating()
-//            activityIndicator.isHidden = true
-            isDataLoaded = true
             self.loadStocksInView()
+            isDataLoaded = true
             priceSocket.startWebSocket(tickerArray: stockTickerList)
             
         } else {
             print("First launch!")
             defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
             
-            loadCardsFromAPI()
             self.loadStocksInView()
-        // TODO: - Add loading indicator/animation
+            loadCardsFromAPI()
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
                 loadPricesFromAPI()
-//                view.isUserInteractionEnabled = true
-//                activityIndicator.stopAnimating()
-//                activityIndicator.isHidden = true
                 isDataLoaded = true
-                
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
         }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -285,7 +273,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: "stockCell",
                                                  for: indexPath as IndexPath) as! StockTableViewCell
         let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-                
+            
         if stockCards[key] != nil {
             cell = stockTableView.loadCardIntoTableViewCell(card: stockCards[key]!, cell: cell)
         }
@@ -317,8 +305,8 @@ extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let list = favouriteIsSelected ? favourites.liked : stockTickerList
         filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
-            let card = stockCards[ticker]?.name
-            let result = ticker.lowercased().contains(searchText.lowercased()) || card!.lowercased().contains(searchText.lowercased())
+            guard let card = stockCards[ticker]?.name else { return ticker.lowercased().contains(searchText.lowercased())}
+            let result = ticker.lowercased().contains(searchText.lowercased()) || card.lowercased().contains(searchText.lowercased())
             return result
         })
         stockTableView.reloadData()
