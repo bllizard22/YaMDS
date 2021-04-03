@@ -72,30 +72,26 @@ class DetailViewController: UIViewController {
             
             guard let isFavourite = detailCard?.isFavourite else { return }
             if isFavourite {
-                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseIn]) {
+                UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseIn]) {
                     UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
                         self.starImage.image = UIImage(named: "StarGray")
                     }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
-                }
-                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                    }, completion: nil)
                     self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
+                }
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: [.curveEaseOut]) {
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.0, y: 1.0))!
                 }
                 detailCard?.isFavourite = false
                 presenter.favourites.deleteTicker(withTicker: key)
             } else {
-                UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut]) {
+                UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseIn]) {
                     UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
                         self.starImage.image = UIImage(named: "StarGold")
                     }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.2, y: 1.2))!
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.25, y: 1.25))!
                 }
-                UIView.animate(withDuration: 0.25, delay: 0.3, options: [.curveEaseOut]) {
-                    UIView.transition(with: sender.imageView!, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                    }, completion: nil)
-                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: [.curveEaseOut]) {
+                    self.starImage.transform = (sender.imageView?.transform.scaledBy(x: 1.0, y: 1.0))!
                 }
                 detailCard?.isFavourite = true
                 presenter.favourites.saveTicker(withTicker: key)

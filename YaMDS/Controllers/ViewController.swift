@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchBar: CustomSearchBar!
     @IBOutlet weak var cancelSearchButton: UIButton!
     @IBOutlet weak var stockTableView: StockTableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var activityIndicator: CustomActivityIndicator!
     
 //    var cardsIsLoaded = false
     var indexPathForLastSelectedRow: IndexPath?
@@ -76,6 +76,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         isDataLoaded = false
+        
         let defaults = UserDefaults()
         
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
@@ -137,22 +138,14 @@ class ViewController: UIViewController {
         let key = isFiltering ? filteredStockTickerList[sender.tag] : stockTickerList[sender.tag]
 
         if favourites.contains(ticker: key) {
-            UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
-                UIView.transition(with: sender.imageView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                    sender.setImage(UIImage(named: "StarGray"), for: .normal)
-                }, completion: nil)
-                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
-            }
+            guard let button = sender as? StarButton else { return }
+            button.animateDislikeTap()
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
             print(key, stockCards[key]!.isFavourite)
         } else {
-            UIView.animate(withDuration: 0.35, delay: 0.2, options: [.curveEaseInOut]) {
-                UIView.transition(with: sender.imageView!, duration: 0.5, options: [.transitionCrossDissolve], animations: {
-                    sender.setImage(UIImage(named: "StarGold"), for: .normal)
-                }, completion: nil)
-                sender.imageView?.transform = (sender.imageView?.transform.scaledBy(x: 0.8, y: 0.8))!
-            }
+            guard let button = sender as? StarButton else { return }
+            button.animateLikeTap()
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
             print(key, stockCards[key]!.isFavourite)
