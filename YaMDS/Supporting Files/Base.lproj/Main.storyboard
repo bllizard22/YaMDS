@@ -87,7 +87,7 @@
                                 </constraints>
                             </stackView>
                             <activityIndicatorView opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="msz-Rm-KLG" customClass="CustomActivityIndicator" customModule="YaMDS" customModuleProvider="target">
-                                <rect key="frame" x="169" y="392.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="169" y="456.66666666666669" width="37" height="37"/>
                                 <color key="backgroundColor" name="PrimaryFontColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="48e-pJ-VYn"/>
@@ -113,7 +113,8 @@
                         <constraints>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-16" identifier="trailingTableConstraint" id="7qS-96-zQE"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="top" secondItem="yxN-qF-T2L" secondAttribute="bottom" constant="20" id="9OJ-Pv-AZh"/>
-                            <constraint firstItem="msz-Rm-KLG" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="AG6-Ls-nbD"/>
+                            <constraint firstItem="msz-Rm-KLG" firstAttribute="centerX" secondItem="yRr-7M-rDD" secondAttribute="centerX" id="Apv-3M-Y1C"/>
+                            <constraint firstItem="msz-Rm-KLG" firstAttribute="centerY" secondItem="yRr-7M-rDD" secondAttribute="centerY" id="Gg9-4h-GYO"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="JgO-ID-lCZ"/>
                             <constraint firstItem="yRr-7M-rDD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" identifier="leadingTableConstraint" id="MJV-gw-iTF"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="OrR-Pm-Iqe"/>
@@ -122,7 +123,6 @@
                             <constraint firstItem="OIC-dc-JAi" firstAttribute="centerY" secondItem="X0F-vf-ZVB" secondAttribute="centerY" id="UrW-hf-kuN"/>
                             <constraint firstItem="X0F-vf-ZVB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="VJ5-ut-CMt"/>
                             <constraint firstItem="yxN-qF-T2L" firstAttribute="top" secondItem="X0F-vf-ZVB" secondAttribute="bottom" constant="12" id="XVA-e2-jTL"/>
-                            <constraint firstItem="msz-Rm-KLG" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="pQr-9n-QNt"/>
                             <constraint firstItem="OIC-dc-JAi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="wI5-fP-lNY"/>
                         </constraints>
                     </view>
@@ -307,11 +307,6 @@
                                 </constraints>
                                 <color key="color" name="PrimaryFontColor"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40q-pq-Ezu">
-                                <rect key="frame" x="228" y="623" width="48" height="54"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="StarGold"/>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2Ka-SA-LVc"/>
                         <color key="backgroundColor" name="BackgroundColor"/>

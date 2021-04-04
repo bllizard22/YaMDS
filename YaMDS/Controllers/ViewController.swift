@@ -112,10 +112,6 @@ class ViewController: UIViewController {
         }
         
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("Exiting")
-    }
 
     func loadStocksInView() {
         stockTableView.dataSource = self
@@ -142,13 +138,11 @@ class ViewController: UIViewController {
             button.animateDislikeTap()
             favourites.deleteTicker(withTicker: key)
             stockCards[key]!.isFavourite = false
-            print(key, stockCards[key]!.isFavourite)
         } else {
             guard let button = sender as? StarButton else { return }
             button.animateLikeTap()
             favourites.saveTicker(withTicker: key)
             stockCards[key]!.isFavourite = true
-            print(key, stockCards[key]!.isFavourite)
         }
         if favouriteIsSelected {
             stockTickerList = favourites.liked
