@@ -12,16 +12,31 @@ The App dislays stock market data about company including current price, basic f
 # Features
 
 ### Basic
-- `Search` through tickers or company names
+- `Search` through tickers and company names
+
+<img src="Screenshots/search_1.PNG" alt="search_1" width="250"/>  <img src="Screenshots/search_2.PNG" alt="search_2" width="250"/>
+
 - List of `Favourite` companies
+
+<img src="Screenshots/favourites.PNG" alt="favourites" width="250"/>
 
 ### Additional
 - `Detail View` with several financials for chosen company
-- Stock price `live updates` via WebSockets
-- `Caching` company cards in memory with CoreData
+
+<img src="Screenshots/detail.PNG" alt="detail" width="250"/>
 
 - `Light/Dark appearance` inheriting from device theme
+
+<img src="Screenshots/stocks.PNG" alt="light" width="250"/>  <img src="Screenshots/stocks_dark.PNG" alt="dark" width="250"/>
+
 - `Alert notification` on errors (including connection loss and API requests limit)
+
+<img src="Screenshots/alert.PNG" alt="alert" width="250"/>
+
+- Stock price `live updates` via WebSockets
+
+- `Caching` company cards in memory with CoreData
+
 - Simple `animation` for favourite buttons
 
 # API
