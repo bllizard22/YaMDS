@@ -27,6 +27,9 @@ class ViewController: UIViewController {
     var favourites = Favourites()
     var modelCoreData = ModelCD()
     var stockAPIData = StockAPIData()
+    
+    // DispatchGroup
+    let dispatchGroup = DispatchGroup()
         
     // WebSockets
     @objc let priceSocket = PriceSocket()
@@ -42,7 +45,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var stockTableView: StockTableView!
     @IBOutlet weak var activityIndicator: CustomActivityIndicator!
     
-//    var cardsIsLoaded = false
     var indexPathForLastSelectedRow: IndexPath?
     
     // SearchController
@@ -99,16 +101,24 @@ class ViewController: UIViewController {
             
         } else {
             print("First launch!")
-            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
-            
+//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+                        
             self.loadStocksInView()
+            
+            dispatchGroup.enter()
             loadCardsFromAPI()
             
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+            dispatchGroup.notify(queue: .main) { [self] in
+                print("Loaded with \(stockAPIData.stockCards.count)")
                 loadPricesFromAPI()
                 isDataLoaded = true
                 priceSocket.startWebSocket(tickerArray: stockTickerList)
             }
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
+//                loadPricesFromAPI()
+//                isDataLoaded = true
+//                priceSocket.startWebSocket(tickerArray: stockTickerList)
+//            }
         }
         
     }
@@ -185,15 +195,20 @@ class ViewController: UIViewController {
         stockAPIData.loadCardsFromAPI { (stockCards, error) in
             if let error = error {
                 DispatchQueue.main.async {
+                    self.dispatchGroup.leave()
                     self.showAlert(request: error)
                 }
                 return
             }
             self.stockTickerList = Array(stockCards!.keys).sorted()
             self.stockCards = stockCards!
-            DispatchQueue.main.async {
-                self.stockTableView.reloadData()
-                self.saveCardsToCoreData()
+            
+            DispatchQueue.main.async { [self] in
+                if stockAPIData.stockCards.count == StockList().stockList.count {
+                    dispatchGroup.leave()
+                }
+                stockTableView.reloadData()
+                saveCardsToCoreData()
             }
         }
     }

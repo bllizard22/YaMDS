@@ -23,7 +23,7 @@ class AlertViewController: UIAlertController {
                 guard action.style == .default else { return }
                 let rootVC = UIApplication.shared.windows.first!.rootViewController as! ViewController
                 print(rootVC.stockCards.count)
-                rootVC.loadCardsFromAPI()
+//                rootVC.loadCardsFromAPI()
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
                     rootVC.loadPricesFromAPI()
                     rootVC.priceSocket.startWebSocket(tickerArray: StockList().stockList)
@@ -40,9 +40,9 @@ class AlertViewController: UIAlertController {
                 guard action.style == .default else { return }
                 let rootVC = UIApplication.shared.windows.first!.rootViewController as! ViewController
                 print( #line, #function, rootVC.stockCards.count )
-                rootVC.loadCardsFromAPI()
+//                rootVC.loadCardsFromAPI()
                 if rootVC.stockCards.count < StockList().stockList.count {
-                    rootVC.loadCardsFromAPI()
+//                    rootVC.loadCardsFromAPI()
                     rootVC.priceSocket.startWebSocket(tickerArray: StockList().stockList)
                 }
                 rootVC.loadPricesFromAPI()
