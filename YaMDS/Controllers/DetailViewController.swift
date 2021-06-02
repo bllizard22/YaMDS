@@ -29,6 +29,8 @@ class DetailViewController: UIViewController {
         }
     }
     
+    // MARK: - IBOutlets
+    
     @IBOutlet weak var tickerLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
     @IBOutlet weak var industryLabel: UILabel!
@@ -53,6 +55,8 @@ class DetailViewController: UIViewController {
         guard let ticker = detailCard?.ticker else { return }
         loadDetailViewData(ticker: ticker)
     }
+    
+    // MARK: - IBActions
     
     @IBAction func backButtonDidPressed(_ sender: UIButton) {
         if let presenter = presentingViewController as? ViewController {
@@ -100,6 +104,8 @@ class DetailViewController: UIViewController {
         }
         
     }
+    
+    // MARK: - Load Views in VC
     
     private func loadDetailViewBlank() {
         guard detailCard != nil else { return }
@@ -171,6 +177,8 @@ class DetailViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - Push AlertVC with error
     
     private func showAlert(request: AlertMessage) {
         let alert = AlertViewController().configureAlertVC(request: request)

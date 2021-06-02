@@ -40,7 +40,7 @@ extension StockTableCard: Hashable {
     }
 }
 
-// MARK: -API Requests (Finnhub)
+// MARK: - Finnhub API Response Sample
 
 /*
  Company Profile 2 - https://finnhub.io/api/v1/stock/profile2?symbol=AAPL

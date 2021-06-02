@@ -37,8 +37,6 @@ class CustomSearchBar: UISearchBar {
                 backgroundView.backgroundColor = UIColor(named: "EvenCell")
                 backgroundView.layer.cornerRadius = 20
                 backgroundView.clipsToBounds = true
-//                backgroundView.layer.borderColor = UIColor.black.cgColor
-//                backgroundView.layer.borderWidth = 1
             }
             let button = textField.value(forKey: "clearButton") as! UIButton
             button.setImage(UIImage(named: "Close"), for: .normal)

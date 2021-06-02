@@ -59,7 +59,7 @@ class StockTableView: UITableView {
             }
         } else {
             let logoURL = URL(string: "https://logo.uplead.com/" + card.weburl)!
-            print(logoURL)
+//            print(logoURL)
             let resource = ImageResource(downloadURL: logoURL)
             cell.logoImage.kf.setImage(with: resource) { (result) in
                 switch result {
@@ -70,7 +70,6 @@ class StockTableView: UITableView {
                 }
             }
         }
-//        }
         
         return cell
     }

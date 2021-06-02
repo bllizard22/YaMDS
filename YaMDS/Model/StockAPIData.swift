@@ -12,7 +12,6 @@ class StockAPIData {
     
     let headers = [
         "X-Finnhub-Token": "c0vhf5748v6pqdk9hmq0"
-//        "X-Finnhub-Token": "sandbox_c0vhf5748v6pqdk9hmqg"
     ]
     let session = URLSession.shared
         
@@ -25,11 +24,88 @@ class StockAPIData {
     
     var remainingRequests = 60
     var isAlert = false
+    
+    // MARK: - Price change for label
+    func calcPriceChange(card: StockTableCard) -> (String, Bool) {
+        let current = card.currentPrice
+        let previous = card.previousClosePrice
+        let changeRatio = current/previous - 1
         
-    func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
+        let formatRatio = NumberFormatter()
+        formatRatio.numberStyle = .percent
+        formatRatio.minimumIntegerDigits = 1
+        formatRatio.minimumFractionDigits = 2
+        formatRatio.maximumFractionDigits = 2
+        
+        let formatValue = NumberFormatter()
+        formatValue.numberStyle = .currency
+        formatValue.locale = Locale(identifier: "en_US")
+        formatValue.minimumIntegerDigits = 1
+        formatValue.minimumFractionDigits = 2
+        formatValue.maximumFractionDigits = 2
+        
+        // TODO: - Refactor +/- formatting
+        let changeString = "\(formatValue.string(from: NSNumber(value: current-previous))!) (\(formatRatio.string(from: NSNumber(value: changeRatio))!))"
+        
+        return (changeString, changeRatio >= 0)
+    }
+    
+    // MARK: - Flag for first launch
+    private func setFlagOfFirstLaunch() {
+        let defaults = UserDefaults()
+        print("First launch flag set!")
+        defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+    }
+      
+    // MARK: - Batch load from API
+    
+    func loadAllCards(forGroup externalDispatchGroup: DispatchGroup, rootVC: ViewController) {
+        
+        let innerDispatchGroup = DispatchGroup()
+        innerDispatchGroup.enter()
+        loadCardsFromAPI { (stockCards, error) in
+            if let error = error {
+                DispatchQueue.main.async {
+//                    innerDispatchGroup.leave()
+                    rootVC.showAlert(request: error)
+                }
+                return
+            }
+            self.stockTickerList = Array(stockCards!.keys).sorted()
+            self.stockCards = stockCards!
+            
+            if self.stockCards.count == StockList().stockList.count {
+                print("\n\nLeave! \(self.stockCards.count)\n\n")
+                innerDispatchGroup.leave()
+            }
+        }
+        
+        innerDispatchGroup.notify(queue: .global(qos: .userInitiated)) {
+            externalDispatchGroup.enter()
+            self.loadPricesFromAPI { (stockCards, error) in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        rootVC.showAlert(request: error)
+                    }
+                    return
+                }
+                self.stockTickerList = Array(stockCards!.keys).sorted()
+                self.stockCards = stockCards!
+                let isAllPricesLoaded = self.stockCards.filter{ $0.value.previousClosePrice == 0 }.count == 0
+                if isAllPricesLoaded {
+                    self.setFlagOfFirstLaunch()
+                    DispatchQueue.main.async {
+                        rootVC.finishTableViewLoad()     
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadCardsFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         self.isAlert = false
         for company in StockList().stockList {
-            if !self.isAlert, remainingRequests > 0 {
+            if !self.isAlert, remainingRequests > 0, stockCards[company] == nil {
                 self.getStockInfo(stockSymbol: company) { (dataIn, error) -> () in
                     if let error = error {
                         self.isAlert = true
@@ -46,7 +122,7 @@ class StockAPIData {
     
     func loadPricesFromAPI(completion: @escaping (Dictionary<String, StockTableCard>?, AlertMessage?) -> ()) {
         for company in StockList().stockList {
-            if !self.isAlert, remainingRequests > 0 {
+            if !self.isAlert, remainingRequests > 0, stockCards[company]?.previousClosePrice == 0 {
                 self.getPrice(stockSymbol: company) { (ticker, dataIn, error) -> () in
                     if let error = error {
                         self.isAlert = true
@@ -74,6 +150,8 @@ class StockAPIData {
             }
         }
     }
+    
+    // MARK: - Send one specific HTTP-request
     
     private func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data?, AlertMessage?) -> ()) {
         
@@ -181,6 +259,8 @@ class StockAPIData {
         dataTask.resume()
     }
     
+    // MARK: - JSON Data parsing
+    
     private func parseCardsDataJSON () {
         for data in dataStockInfo {
             do {
@@ -258,30 +338,6 @@ class StockAPIData {
             print(error)
             return nil
         }
-    }
-    
-    func calcPriceChange(card: StockTableCard) -> (String, Bool) {
-        let current = card.currentPrice
-        let previous = card.previousClosePrice
-        let changeRatio = current/previous - 1
-        
-        let formatRatio = NumberFormatter()
-        formatRatio.numberStyle = .percent
-        formatRatio.minimumIntegerDigits = 1
-        formatRatio.minimumFractionDigits = 2
-        formatRatio.maximumFractionDigits = 2
-        
-        let formatValue = NumberFormatter()
-        formatValue.numberStyle = .currency
-        formatValue.locale = Locale(identifier: "en_US")
-        formatValue.minimumIntegerDigits = 1
-        formatValue.minimumFractionDigits = 2
-        formatValue.maximumFractionDigits = 2
-        
-        // TODO: - Refactor +/- formatting
-        let changeString = "\(formatValue.string(from: NSNumber(value: current-previous))!) (\(formatRatio.string(from: NSNumber(value: changeRatio))!))"
-        
-        return (changeString, changeRatio >= 0)
     }
     
 }

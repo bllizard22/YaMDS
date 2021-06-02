@@ -79,8 +79,6 @@ class ViewController: UIViewController {
         
         isDataLoaded = false
         
-        let defaults = UserDefaults()
-        
         priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
             guard let updatedPrice = change.newValue else { return }
             self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
@@ -91,44 +89,44 @@ class ViewController: UIViewController {
             self.tickerKVO = updatedTicker
         })
         
-        if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
-            print("Launched not first time")
-            
-            loadCardsFromCoreData()
-            self.loadStocksInView()
-            isDataLoaded = true
-            priceSocket.startWebSocket(tickerArray: stockTickerList)
-            
-        } else {
-            print("First launch!")
-//            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
-                        
-            self.loadStocksInView()
-            
-            dispatchGroup.enter()
-            loadCardsFromAPI()
-            
-            dispatchGroup.notify(queue: .main) { [self] in
-                print("Loaded with \(stockAPIData.stockCards.count)")
-                loadPricesFromAPI()
-                isDataLoaded = true
-                priceSocket.startWebSocket(tickerArray: stockTickerList)
-            }
-//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
-//                loadPricesFromAPI()
-//                isDataLoaded = true
-//                priceSocket.startWebSocket(tickerArray: stockTickerList)
-//            }
-        }
+        loadStocksInView()
         
     }
 
     func loadStocksInView() {
+        let defaults = UserDefaults()
+        if defaults.bool(forKey: "isAppAlreadyLaunchedOnce") {
+            print("Launched not first time")
+            
+            loadCardsFromCoreData()
+            setDelegates()
+            isDataLoaded = true
+            priceSocket.startWebSocket(tickerArray: stockTickerList)
+            
+        } else {
+            stockAPIData.loadAllCards(forGroup: dispatchGroup, rootVC: self)
+        }
+    }
+    
+    func finishTableViewLoad() {
+        stockCards = stockAPIData.stockCards
+        stockTickerList = Array(stockCards.keys).sorted()
+        
+        setDelegates()
+        stockTableView.reloadData()
+        
+        saveCardsToCoreData()
+        print("Loaded model with \(stockAPIData.stockCards.count)")
+        print("Loaded VC with \(stockCards.count)")
+        priceSocket.startWebSocket(tickerArray: stockTickerList)
+        isDataLoaded = true
+    }
+    
+    func setDelegates() {
+        searchBar.delegate = self
         stockTableView.dataSource = self
         stockTableView.delegate = self
         stockTableView.autolayoutWidth(forView: view)
-        
-        searchBar.delegate = self
     }
     
     // MARK: - AlertController
@@ -191,45 +189,46 @@ class ViewController: UIViewController {
     // MARK: - API load funcs
     
     // API request for company profile data
-    func loadCardsFromAPI() {
-        stockAPIData.loadCardsFromAPI { (stockCards, error) in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.dispatchGroup.leave()
-                    self.showAlert(request: error)
-                }
-                return
-            }
-            self.stockTickerList = Array(stockCards!.keys).sorted()
-            self.stockCards = stockCards!
-            
-            DispatchQueue.main.async { [self] in
-                if stockAPIData.stockCards.count == StockList().stockList.count {
-                    dispatchGroup.leave()
-                }
-                stockTableView.reloadData()
-                saveCardsToCoreData()
-            }
-        }
-    }
-    
-    // API request for prices data of Cards
-    func loadPricesFromAPI() {
-        stockAPIData.loadPricesFromAPI { (stockCards, error) in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.showAlert(request: error)
-                }
-                return
-            }
-            self.stockTickerList = Array(stockCards!.keys).sorted()
-            self.stockCards = stockCards!
-            DispatchQueue.main.async {
-                self.stockTableView.reloadData()
-                self.saveCardsToCoreData()
-            }
-        }
-    }
+//    func loadNewCards() {
+//        stockAPIData.loadCardsFromAPI { (stockCards, error) in
+//            if let error = error {
+//                DispatchQueue.main.async {
+//                    self.dispatchGroup.leave()
+//                    self.showAlert(request: error)
+//                }
+//                return
+//            }
+//            self.stockTickerList = Array(stockCards!.keys).sorted()
+//            self.stockCards = stockCards!
+//
+//            DispatchQueue.main.async { [self] in
+//                if stockAPIData.stockCards.count == StockList().stockList.count {
+//                    print("\n\nLeave! \(stockAPIData.stockCards.count)\n\n")
+//                    dispatchGroup.leave()
+//                    stockTableView.reloadData()
+//                    saveCardsToCoreData()
+//                }
+//            }
+//        }
+//    }
+//
+//    // API request for prices data of Cards
+//    func loadPrices() {
+//        stockAPIData.loadPricesFromAPI { (stockCards, error) in
+//            if let error = error {
+//                DispatchQueue.main.async {
+//                    self.showAlert(request: error)
+//                }
+//                return
+//            }
+//            self.stockTickerList = Array(stockCards!.keys).sorted()
+//            self.stockCards = stockCards!
+//            DispatchQueue.main.async {
+//                self.stockTableView.reloadData()
+//                self.saveCardsToCoreData()
+//            }
+//        }
+//    }
     
     // MARK: - Segue to DetailView
     
