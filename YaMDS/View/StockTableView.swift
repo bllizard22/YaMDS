@@ -24,10 +24,12 @@ class StockTableView: UITableView {
         self.separatorStyle = .none
         self.register(UINib(nibName: "StockCell", bundle: nil), forCellReuseIdentifier: "stockCell")
     }
-    
+
+	/// OPINION: очень странно что вьюшка сама определяет свои отступы относительно родительской.
     func autolayoutWidth(forView view: UIView) {
         let screenWidth = UIScreen.main.bounds.width
         if screenWidth <= 375 {
+			/// OPINION: я конечно не дизайнер, не уверен насколько это хорошее решение делать отступы в зависимости от ширины.
             self.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
             self.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         } else {
@@ -36,7 +38,8 @@ class StockTableView: UITableView {
         }
         self.layoutIfNeeded()
     }
-    
+
+	/// OPINION: не лучшее место для метода, конфигурирующего ячейку
     func loadCardIntoTableViewCell(card: StockTableCard, cell: StockTableViewCell) -> StockTableViewCell {
         
         cell.companyLabel.text = card.name

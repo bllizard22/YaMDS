@@ -37,8 +37,10 @@ class StockTableViewCell: UITableViewCell {
         
         let screenWidth = UIScreen.main.bounds.width
         if screenWidth <= 375 {
+			/// OPINION: по мне не корректно писать через ??. потому что шрифты это обязательная часть твоего приложения. В сбере вообще запрешен  force unwrap, но мое мнение что он нужен, лучше краш и ты сразу поправишь наличие шрифта, ну или реализовать так, чтобы проверялось что есть шрифт и если нет выдает чтото.
             primaryFont = UIFont(name: "Montserrat-Bold", size: 20) ?? UIFont.systemFont(ofSize: 20, weight: .bold)
             secondaryFont = UIFont(name: "Montserrat-SemiBold", size: 14) ?? UIFont.systemFont(ofSize: 14, weight: .semibold)
+			/// OPINION: у тебя высота ячейки зависит от размера шрифта. Вообще плохое харжкодить размеры чего-то в зависиомтси от размера экрана, поэтому лучше делать на констрейнтах леуаут и тогда они сами растянут ячейку до нужной высоты.
             rawHeight = 96
         } else {
             primaryFont = UIFont(name: "Montserrat-Bold", size: 22) ?? UIFont.systemFont(ofSize: 22, weight: .bold)

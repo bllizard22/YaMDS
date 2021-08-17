@@ -14,7 +14,8 @@ class StockAPIData {
         "X-Finnhub-Token": "c0vhf5748v6pqdk9hmq0"
     ]
     let session = URLSession.shared
-        
+
+	/// OPINION: точно необходимо столько свойств?
     var dataStockInfo = Array<Data>()
     var dataStockPrice = Array<(String, Data)>()
     var dataMetricCard = Data()

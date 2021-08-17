@@ -9,12 +9,14 @@ import Foundation
 import UIKit
 import CoreData
 
+/// OPINION: на подумать, не будет ли проблем с  CoreData, мб почитать поподробнее про нее и способы работы с ней.
 class ModelCD {
     
     private var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
     
     // Get context for app
     private func getContext() -> NSManagedObjectContext {
+		/// OPINION: вынести сюда контейнер.
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
@@ -28,6 +30,7 @@ class ModelCD {
         do {
             let dataStockList = try context.fetch(fetchRequest)
             for record in dataStockList {
+				/// OPINION: почему здесь force unwrap
                 let decodedCard = try! JSONDecoder().decode(StockTableCard.self, from: record.card!)
                 stockCards[record.ticker!] = decodedCard
             }
@@ -45,7 +48,8 @@ class ModelCD {
         clearCoreData()
         
         let context = getContext()
-        
+
+		/// OPINION: почему здесь не force unwrap)
         guard let entity = NSEntityDescription.entity(forEntityName: "StockCard", in: context) else { return }
         
 //        print("Saving Cards to CoreData")

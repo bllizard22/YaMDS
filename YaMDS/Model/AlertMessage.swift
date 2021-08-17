@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// OPINION: очень странно, я бы послушал почему такой енам.
 enum AlertMessage {
     case connection, apiLimit, connectionDetailVC, apiLimitDetailVC, unknown
 }

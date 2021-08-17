@@ -9,20 +9,24 @@ import Foundation
 import SwiftyJSON
 
 class MBOUMStockData {
-    
+
+	/// OPINION: возможно лучше статически это хранить
     let headers = [
         "X-Mboum-Secret": "demo"
     ]
     let session = URLSession.shared
-    
+
+	/// OPINION: лишние свойства
     var dadta = [Data()]
     var dataStockInfo = Array<Data>()
     var stockCards = Dictionary<String, StockTableCard>()
     var stockTickerList = Array<String>()
+	/// OPINION: точно надо хранить?
     var companySummary = ""
 
     func getCompanySummary(company: String, completion: @escaping (String) -> ()){
         readData(company: company)
+		/// OPINION: почему делей 1 секунда
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) { [self] in
             parseStocksDataToJSON { (summary) in
                 companySummary = summary
@@ -32,11 +36,13 @@ class MBOUMStockData {
     }
     
     func readData(company: String) {
+		/// OPINION: code style отступов
             getStockInfo(stockSymbol: company) { (dataIn) -> () in
                 self.dataStockInfo.append(dataIn)
             }
     }
 
+	/// OPINION: почему escaping + обработку ошибок для клиента
     private func parseStocksDataToJSON (completion: @escaping (String) -> ()) {
 //        print(dataStockInfo.count)
 //        print("data for JSON", dataStockInfo)
@@ -56,6 +62,7 @@ class MBOUMStockData {
     private func getStockInfo(stockSymbol symbol: String, completion: @escaping (Data) -> ()) {
 
         print(#function, symbol)
+		/// OPINION: почему не сразу URLRequest. + Гарантия что force unwrap не упадет
         let request = NSMutableURLRequest(
             url: NSURL(string: "https://mboum.com/api/v1/qu/quote/profile/?symbol=\(symbol)")! as URL,
             cachePolicy: .useProtocolCachePolicy,
@@ -68,6 +75,7 @@ class MBOUMStockData {
             if (error != nil) {
                 print(error!)
             } else {
+				/// OPINION: что будет если параллельно писать и читать в массив?
                 self.dataStockInfo.append(data!)
             }
         })

@@ -9,14 +9,25 @@ import Foundation
 import Starscream
 import SwiftyJSON
 
+protocol PriceSocketDelegate {
+	func currentPriceDidChange(value: Int)
+}
+
+/// FIXME:
+/// - почему наследник NSObject?
 class PriceSocket: NSObject, WebSocketDelegate {
-    
+
+	/// Задача на тестирование. Доделай штуку с делегатом, убрав KVO и оттестируй э класс PriceSocket. (все что можешь, но как минимум методы didReceive и вызов методов делегаты при изменении currentPrice + мб startWebSocket)
+	weak var delegate: PriceSocketDelegate?
+
     var isConnected = false
+	/// OPINION: почему не создаешь в ините?
     var webSocket: WebSocket!
-    
+
+	/// OPINION: почему force unwrap
     @objc dynamic var currentTicker: String!
-    @objc dynamic var currentPrice = 0.0
-    
+	@objc dynamic var currentPrice = 0.0
+
     func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
             case .connected(let headers):
@@ -49,6 +60,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
     
     private func parseSocketData(string: String) {
         let dataEncoded = Data(string.utf8)
+		/// OPINION: почему так а не через decodable
         let json = try! JSON(data: dataEncoded, options: .allowFragments)
         if json["type"] == "trade", json["data"].count > 0{
             let last = json["data"].count-1
@@ -63,6 +75,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
     
     func startWebSocket(tickerArray: Array<String>) {
         createConnection()
+		/// OPINION: что за магическая задержка 2 секунды
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in
             subscribeOnAllStocks(tickerArray: tickerArray)
         }
@@ -86,6 +99,7 @@ class PriceSocket: NSObject, WebSocketDelegate {
     
     private func subscribe(symbol: String) {
         let json = ["type": "subscribe", "symbol": symbol]
+		/// OPINION: почему force unwrap, а что если упадет запрос, возможно тогда надо обрабатывать ошибку и сообщать пользователю
         let data = try! JSONEncoder().encode(json)
         print("Subscribed at \(symbol)")
         webSocket.write(data: data)

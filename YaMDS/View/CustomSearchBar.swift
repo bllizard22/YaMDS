@@ -9,6 +9,7 @@ import UIKit
 
 class CustomSearchBar: UISearchBar {
 
+	// FIXME: зачем эта переменная.
     var searchBar: UISearchBar!
     let placeholderPhrase = "Find company or ticker"
     
@@ -30,6 +31,7 @@ class CustomSearchBar: UISearchBar {
         if let textField = self.value(forKey: "searchField") as? UITextField {
             textField.layer.cornerRadius = 20
             textField.clipsToBounds = true
+			// FIXME: лучше вынеси в extension UIFont
             textField.font = UIFont(name: "Montserrat-SemiBold", size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .semibold)
             textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PrimaryFontColor")!])
             

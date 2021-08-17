@@ -11,6 +11,7 @@ import CoreData
 import Kingfisher
 import SwiftyJSON
 
+/// FIXME: ну этот класс точно будем дробить, обсудим лично как
 class ViewController: UIViewController {
     
     // Stock Data
@@ -27,12 +28,18 @@ class ViewController: UIViewController {
     var favourites = Favourites()
     var modelCoreData = ModelCD()
     var stockAPIData = StockAPIData()
-    
+
+	/// FIXME: пока не понял хачем, видимо от старого кода осталось
     // DispatchGroup
     let dispatchGroup = DispatchGroup()
-        
+
+	/// Не уверен что здесь KVO лучшее решение, возможно просто самому триггерить нужные методы из класса PriceSocket.
     // WebSockets
-    @objc let priceSocket = PriceSocket()
+	@objc let priceSocket: PriceSocket = {
+		let priceSocket = PriceSocket()
+		priceSocket.delegate = self
+		return priceSocket
+	}()
     var priceObservation: NSKeyValueObservation?
     var tickerObservation: NSKeyValueObservation?
     var tickerKVO: String?

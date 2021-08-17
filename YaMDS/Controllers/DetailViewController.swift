@@ -9,6 +9,7 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+	/// OPINION: странно что он optional, думаю лучше в инит
     var detailCard: StockTableCard?
     private var stockAPIData = StockAPIData()
     
@@ -59,6 +60,7 @@ class DetailViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func backButtonDidPressed(_ sender: UIButton) {
+		/// FIXME: не лучший способ получать контроллер
         if let presenter = presentingViewController as? ViewController {
             if let key = detailCard?.ticker {
                 presenter.stockCards[key] = detailCard
@@ -108,6 +110,7 @@ class DetailViewController: UIViewController {
     // MARK: - Load Views in VC
     
     private func loadDetailViewBlank() {
+		/// OPINION: не лучшее решение показываь так думаю, просто лоадера достаточно, а если не скачалось то ошибка и обратно на главную
         guard detailCard != nil else { return }
         tickerLabel.text = detailCard!.ticker
         companyNameLabel.text = detailCard!.name
