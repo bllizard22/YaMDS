@@ -16,12 +16,12 @@ class StockAPIData {
     let session = URLSession.shared
 
 	/// OPINION: точно необходимо столько свойств?
-    var dataStockInfo = Array<Data>()
-    var dataStockPrice = Array<(String, Data)>()
+    var dataStockInfo = [Data]()
+    var dataStockPrice = [(String, Data)]()
     var dataMetricCard = Data()
     
-    var stockCards = Dictionary<String, StockTableCard>()   // Dict for all Cards
-    var stockTickerList = Array<String>()   // List of tickers for Cards
+    var stockCards = [String: StockTableCard]()   // Dict for all Cards
+    var stockTickerList = [String]()   // List of tickers for Cards
     
     var remainingRequests = 60
     var isAlert = false
@@ -60,14 +60,12 @@ class StockAPIData {
       
     // MARK: - Batch load from API
     
-    func loadAllCards(forGroup externalDispatchGroup: DispatchGroup, rootVC: ViewController) {
-        
+    func loadAllCards(rootVC: ViewController) {
         let innerDispatchGroup = DispatchGroup()
         innerDispatchGroup.enter()
         loadCardsFromAPI { (stockCards, error) in
             if let error = error {
                 DispatchQueue.main.async {
-//                    innerDispatchGroup.leave()
                     rootVC.showAlert(request: error)
                 }
                 return
@@ -82,7 +80,6 @@ class StockAPIData {
         }
         
         innerDispatchGroup.notify(queue: .global(qos: .userInitiated)) {
-            externalDispatchGroup.enter()
             self.loadPricesFromAPI { (stockCards, error) in
                 if let error = error {
                     DispatchQueue.main.async {

@@ -12,11 +12,11 @@ import Kingfisher
 import SwiftyJSON
 
 /// FIXME: ну этот класс точно будем дробить, обсудим лично как
-class ViewController: UIViewController {
-    
+class ViewController: UIViewController, PriceSocketDelegate {
+
     // Stock Data
-    var stockCards = Dictionary<String, StockTableCard>() // Dict for all Cards
-    var stockTickerList = Array<String>()   // List of tickers for Cards
+    var stockCards = [String: StockTableCard]() // Dict for all Cards
+    var stockTickerList = [String]()   // List of tickers for Cards
     var favouriteIsSelected =  false {
         didSet {
             stockTableView.reloadData()
@@ -33,17 +33,12 @@ class ViewController: UIViewController {
     // DispatchGroup
     let dispatchGroup = DispatchGroup()
 
-	/// Не уверен что здесь KVO лучшее решение, возможно просто самому триггерить нужные методы из класса PriceSocket.
     // WebSockets
-	@objc let priceSocket: PriceSocket = {
+	let priceSocket: PriceSocket = {
 		let priceSocket = PriceSocket()
-		priceSocket.delegate = self
 		return priceSocket
 	}()
-    var priceObservation: NSKeyValueObservation?
-    var tickerObservation: NSKeyValueObservation?
-    var tickerKVO: String?
-    
+
     // IBOutlets
     @IBOutlet weak var stocksButton: UIButton!
     @IBOutlet weak var favouriteButton: UIButton!
@@ -52,10 +47,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var stockTableView: StockTableView!
     @IBOutlet weak var activityIndicator: CustomActivityIndicator!
     
-    var indexPathForLastSelectedRow: IndexPath?
+    var indexPathForLastSelectedRow = IndexPath()
     
     // SearchController
-    var filteredStockTickerList = Array<String>()
+    var filteredStockTickerList = [String]()
     var isFiltering: Bool {
         guard let text = searchBar.text else { return false }
         return !text.isEmpty
@@ -78,6 +73,13 @@ class ViewController: UIViewController {
             }
         }
     }
+
+    // MARK: - PriceSocketDelegate
+
+    func currentPriceDidChange(value: Float, ticker: String) {
+        self.stockCards[ticker]?.currentPrice = value
+        self.stockTableView.reloadData()
+    }
     
     // MARK: - View Load Actions
     
@@ -85,19 +87,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         isDataLoaded = false
-        
-        priceObservation = observe(\ViewController.priceSocket.currentPrice, options: [.new], changeHandler: { [self] (vc, change) in
-            guard let updatedPrice = change.newValue else { return }
-            self.stockCards[self.tickerKVO!]?.currentPrice = Float(updatedPrice)
-            self.stockTableView.reloadData()
-        })
-        tickerObservation = observe(\ViewController.priceSocket.currentTicker, options: [.new], changeHandler: { (vc, change) in
-            guard let updatedTicker = change.newValue as? String else { return }
-            self.tickerKVO = updatedTicker
-        })
-        
+        priceSocket.delegate = self
         loadStocksInView()
-        
     }
 
     func loadStocksInView() {
@@ -111,7 +102,7 @@ class ViewController: UIViewController {
             priceSocket.startWebSocket(tickerArray: stockTickerList)
             
         } else {
-            stockAPIData.loadAllCards(forGroup: dispatchGroup, rootVC: self)
+            stockAPIData.loadAllCards(rootVC: self)
         }
     }
     
@@ -193,62 +184,15 @@ class ViewController: UIViewController {
         favouriteIsSelected = true
     }
     
-    // MARK: - API load funcs
-    
-    // API request for company profile data
-//    func loadNewCards() {
-//        stockAPIData.loadCardsFromAPI { (stockCards, error) in
-//            if let error = error {
-//                DispatchQueue.main.async {
-//                    self.dispatchGroup.leave()
-//                    self.showAlert(request: error)
-//                }
-//                return
-//            }
-//            self.stockTickerList = Array(stockCards!.keys).sorted()
-//            self.stockCards = stockCards!
-//
-//            DispatchQueue.main.async { [self] in
-//                if stockAPIData.stockCards.count == StockList().stockList.count {
-//                    print("\n\nLeave! \(stockAPIData.stockCards.count)\n\n")
-//                    dispatchGroup.leave()
-//                    stockTableView.reloadData()
-//                    saveCardsToCoreData()
-//                }
-//            }
-//        }
-//    }
-//
-//    // API request for prices data of Cards
-//    func loadPrices() {
-//        stockAPIData.loadPricesFromAPI { (stockCards, error) in
-//            if let error = error {
-//                DispatchQueue.main.async {
-//                    self.showAlert(request: error)
-//                }
-//                return
-//            }
-//            self.stockTickerList = Array(stockCards!.keys).sorted()
-//            self.stockCards = stockCards!
-//            DispatchQueue.main.async {
-//                self.stockTableView.reloadData()
-//                self.saveCardsToCoreData()
-//            }
-//        }
-//    }
-    
     // MARK: - Segue to DetailView
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetailView" {
-            guard let indexPath = indexPathForLastSelectedRow else {
-                print("IndexPath error")
-                return
-            }
-            let key = isFiltering ? filteredStockTickerList[indexPath.row] : stockTickerList[indexPath.row]
-            
-            let detailViewController = segue.destination as! DetailViewController
-            detailViewController.detailCard = stockCards[key]
+            let key = isFiltering ? filteredStockTickerList[indexPathForLastSelectedRow.row] : stockTickerList[indexPathForLastSelectedRow.row]
+            guard let cardForDetailVC = stockCards[key] else { return }
+            let detailViewController = segue.destination as? DetailViewController
+            detailViewController?.detailCard = cardForDetailVC
+            detailViewController?.presentingVC = self
         }
     }
     
@@ -313,7 +257,9 @@ extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let list = favouriteIsSelected ? favourites.liked : stockTickerList
         filteredStockTickerList = list.filter({ (ticker: String) -> Bool in
-            guard let card = stockCards[ticker]?.name else { return ticker.lowercased().contains(searchText.lowercased())}
+            guard let card = stockCards[ticker]?.name else {
+                return ticker.lowercased().contains(searchText.lowercased())
+            }
             let result = ticker.lowercased().contains(searchText.lowercased()) || card.lowercased().contains(searchText.lowercased())
             return result
         })

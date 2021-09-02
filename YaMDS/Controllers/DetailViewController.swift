@@ -11,6 +11,7 @@ class DetailViewController: UIViewController {
 
 	/// OPINION: странно что он optional, думаю лучше в инит
     var detailCard: StockTableCard?
+    var presentingVC: ViewController?
     private var stockAPIData = StockAPIData()
     
     private let stringFormatter = NumberFormatter()
@@ -61,7 +62,7 @@ class DetailViewController: UIViewController {
     
     @IBAction func backButtonDidPressed(_ sender: UIButton) {
 		/// FIXME: не лучший способ получать контроллер
-        if let presenter = presentingViewController as? ViewController {
+        if let presenter = presentingVC {
             if let key = detailCard?.ticker {
                 presenter.stockCards[key] = detailCard
                 presenter.saveCardsToCoreData()
@@ -111,7 +112,11 @@ class DetailViewController: UIViewController {
     
     private func loadDetailViewBlank() {
 		/// OPINION: не лучшее решение показываь так думаю, просто лоадера достаточно, а если не скачалось то ошибка и обратно на главную
-        guard detailCard != nil else { return }
+        guard detailCard != nil else {
+            dismiss(animated: true, completion: nil)
+            showAlert(request: AlertMessage.unknown)
+            return
+        }
         tickerLabel.text = detailCard!.ticker
         companyNameLabel.text = detailCard!.name
         industryLabel.text = detailCard!.industry
@@ -160,7 +165,7 @@ class DetailViewController: UIViewController {
         isDataLoaded = true
     }
     
-    func loadDetailViewData(ticker: String) {
+    private func loadDetailViewData(ticker: String) {
         if detailCard?.psValue != 0.0 || detailCard?.peValue != 0.0 {
             loadDetailViewFromCard()
         } else {
