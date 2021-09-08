@@ -38,6 +38,16 @@
                ReferencedContainer = "container:YaMDS.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "85F634F726E8F76200177327"
+               BuildableName = "APITests.xctest"
+               BlueprintName = "APITests"
+               ReferencedContainer = "container:YaMDS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
