@@ -57,7 +57,7 @@ class PriceSocket: WebSocketDelegate {
             }
     }
 
-    func startWebSocket(tickerArray: Array<String>) {
+    func startWebSocket(tickerArray: [String]) {
         webSocket.connect()
 		/// OPINION: что за магическая задержка 2 секунды
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) { [self] in

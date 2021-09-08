@@ -16,6 +16,7 @@
 		854FAE7825F4C351006B3122 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 854FAE7725F4C351006B3122 /* Kingfisher */; };
 		854FAE7D25F737CB006B3122 /* FavouriteStocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */; };
 		854FAE8425F94357006B3122 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854FAE8325F94357006B3122 /* DetailViewController.swift */; };
+		85517B0026E5F3DF00057B12 /* PriceSocketsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85517AFF26E5F3DF00057B12 /* PriceSocketsTests.swift */; };
 		855A459325F29A68006DD798 /* StockTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855A459225F29A68006DD798 /* StockTableCard.swift */; };
 		8560A08E2609AC530026D429 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A08D2609AC530026D429 /* AlertMessage.swift */; };
 		8560A09C260E4A070026D429 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8560A09B260E4A070026D429 /* AlertViewController.swift */; };
@@ -37,6 +38,16 @@
 		85B58D5F25F0AC9900206828 /* StockList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B58D5E25F0AC9900206828 /* StockList.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		85517B0226E5F3DF00057B12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85A163B725EF495F00600654 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85A163BE25EF495F00600654;
+			remoteInfo = YaMDS;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		01A268E42600F1970097E848 /* WebSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSockets.swift; sourceTree = "<group>"; };
 		01B54628260360E400ED3666 /* CustomSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchBar.swift; sourceTree = "<group>"; };
@@ -44,6 +55,9 @@
 		01D53E4325F7AF410061BF91 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		854FAE7C25F737CB006B3122 /* FavouriteStocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteStocks.swift; sourceTree = "<group>"; };
 		854FAE8325F94357006B3122 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		85517AFD26E5F3DE00057B12 /* PriceSocketsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PriceSocketsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85517AFF26E5F3DF00057B12 /* PriceSocketsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceSocketsTests.swift; sourceTree = "<group>"; };
+		85517B0126E5F3DF00057B12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		855A459225F29A68006DD798 /* StockTableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableCard.swift; sourceTree = "<group>"; };
 		8560A08D2609AC530026D429 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		8560A09B260E4A070026D429 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +82,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		85517AFA26E5F3DE00057B12 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85A163BC25EF495F00600654 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -81,10 +102,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		85517AFE26E5F3DF00057B12 /* PriceSocketsTests */ = {
+			isa = PBXGroup;
+			children = (
+				85517AFF26E5F3DF00057B12 /* PriceSocketsTests.swift */,
+				85517B0126E5F3DF00057B12 /* Info.plist */,
+			);
+			path = PriceSocketsTests;
+			sourceTree = "<group>";
+		};
 		85A163B625EF495F00600654 = {
 			isa = PBXGroup;
 			children = (
 				85A163C125EF495F00600654 /* YaMDS */,
+				85517AFE26E5F3DF00057B12 /* PriceSocketsTests */,
 				85A163C025EF495F00600654 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				85A163BF25EF495F00600654 /* YaMDS.app */,
+				85517AFD26E5F3DE00057B12 /* PriceSocketsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,6 +197,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		85517AFC26E5F3DE00057B12 /* PriceSocketsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85517B0626E5F3DF00057B12 /* Build configuration list for PBXNativeTarget "PriceSocketsTests" */;
+			buildPhases = (
+				85517AF926E5F3DE00057B12 /* Sources */,
+				85517AFA26E5F3DE00057B12 /* Frameworks */,
+				85517AFB26E5F3DE00057B12 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85517B0326E5F3DF00057B12 /* PBXTargetDependency */,
+			);
+			name = PriceSocketsTests;
+			productName = PriceSocketsTests;
+			productReference = 85517AFD26E5F3DE00057B12 /* PriceSocketsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		85A163BE25EF495F00600654 /* YaMDS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85A163D625EF496200600654 /* Build configuration list for PBXNativeTarget "YaMDS" */;
@@ -193,9 +243,13 @@
 		85A163B725EF495F00600654 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
+					85517AFC26E5F3DE00057B12 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 85A163BE25EF495F00600654;
+					};
 					85A163BE25EF495F00600654 = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -220,11 +274,19 @@
 			projectRoot = "";
 			targets = (
 				85A163BE25EF495F00600654 /* YaMDS */,
+				85517AFC26E5F3DE00057B12 /* PriceSocketsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		85517AFB26E5F3DE00057B12 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85A163BD25EF495F00600654 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -241,6 +303,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		85517AF926E5F3DE00057B12 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85517B0026E5F3DF00057B12 /* PriceSocketsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85A163BB25EF495F00600654 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +339,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		85517B0326E5F3DF00057B12 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85A163BE25EF495F00600654 /* YaMDS */;
+			targetProxy = 85517B0226E5F3DF00057B12 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		85A163C825EF495F00600654 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -289,6 +367,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		85517B0426E5F3DF00057B12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RTRWQZT32D;
+				INFOPLIST_FILE = PriceSocketsTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bllizard.PriceSocketsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YaMDS.app/YaMDS";
+			};
+			name = Debug;
+		};
+		85517B0526E5F3DF00057B12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RTRWQZT32D;
+				INFOPLIST_FILE = PriceSocketsTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bllizard.PriceSocketsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YaMDS.app/YaMDS";
+			};
+			name = Release;
+		};
 		85A163D425EF496200600654 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -448,6 +568,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		85517B0626E5F3DF00057B12 /* Build configuration list for PBXNativeTarget "PriceSocketsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85517B0426E5F3DF00057B12 /* Debug */,
+				85517B0526E5F3DF00057B12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		85A163BA25EF495F00600654 /* Build configuration list for PBXProject "YaMDS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
